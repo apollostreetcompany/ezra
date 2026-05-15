@@ -521,3 +521,223 @@ p {
     min-height: auto;
   }
 }
+
+/* === Ezra MCP additions === */
+
+.hero {
+  flex-wrap: wrap;
+  gap: 48px;
+}
+
+.hero-copy {
+  flex: 1 1 540px;
+}
+
+.hero-example {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 380px;
+  margin: 0;
+  padding: 22px 26px;
+  background: var(--ink);
+  color: var(--cream);
+  border: 2px solid var(--ink);
+  box-shadow: 8px 8px 0 var(--gold);
+  font: 14px/1.55 ui-monospace, Menlo, monospace;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.hero-example code {
+  font: inherit;
+  color: inherit;
+}
+
+.c-comment { color: #8a99a8; font-style: italic; }
+.c-key     { color: #f4d29a; }
+.c-str     { color: #c5e1a5; }
+.c-num     { color: #b9914b; }
+
+.how {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 80px 0 56px;
+}
+
+.how-steps {
+  list-style: none;
+  margin: 28px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 28px;
+}
+
+.how-steps li {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.how-steps .step-mark {
+  font-family: var(--display);
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--red);
+  line-height: 1;
+}
+
+.how-steps h3 {
+  margin: 0 0 8px;
+  font-size: 1.55rem;
+}
+
+.how-steps p,
+.how-steps li code,
+.how-steps pre {
+  max-width: 720px;
+}
+
+.how-steps pre {
+  margin: 8px 0 0;
+  padding: 16px 20px;
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  font: 13px/1.55 ui-monospace, Menlo, monospace;
+  overflow-x: auto;
+}
+
+.how-steps em {
+  font-style: italic;
+  color: var(--night);
+}
+
+.pricing {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 72px 0 80px;
+}
+
+.tier-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 36px;
+}
+
+.tier {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 28px 28px 32px;
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.tier-pro {
+  background: var(--ink);
+  color: var(--cream);
+  box-shadow: 6px 6px 0 var(--red);
+}
+
+.tier h3 {
+  margin: 0;
+  font-size: 1.7rem;
+}
+
+.tier-price {
+  margin: 4px 0 0;
+  font-family: var(--display);
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.tier-amount {
+  font-size: 3rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.tier-period {
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.tier-pro .tier-period {
+  color: var(--bone);
+}
+
+.tier ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.tier li {
+  position: relative;
+  padding-left: 22px;
+}
+
+.tier li::before {
+  content: "+";
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: var(--display);
+  font-weight: 900;
+  color: var(--red);
+}
+
+.tier-pro li::before {
+  color: var(--gold);
+}
+
+.tier .button {
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+@media (max-width: 880px) {
+  .tier-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-example {
+    width: 100%;
+    box-shadow: 4px 4px 0 var(--gold);
+    font-size: 12.5px;
+  }
+
+  .how-steps li {
+    grid-template-columns: 44px 1fr;
+  }
+
+  .how-steps .step-mark {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .hero {
+    gap: 24px;
+  }
+
+  .hero-example {
+    padding: 16px 18px;
+    box-shadow: 3px 3px 0 var(--gold);
+  }
+
+  .tier {
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+
+  .tier-pro {
+    box-shadow: 4px 4px 0 var(--red);
+  }
+}

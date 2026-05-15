@@ -3,74 +3,156 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bibe Code | Stop Vibe Coding. Start Bibe Coding.</title>
-    <meta name="description" content="Get Scripture in your coding rhythm, a calmer build cadence, and a prayerful pause before the next push.">
+    <title>Ezra MCP — Bible verses by topic, story, or parable</title>
+    <meta name="description" content="An MCP endpoint your LLM can call to look up real Bible verses by theme, story, or parable. 31,103 verses, 387 topics, no hallucinations. Free tier: 20 calls/month.">
+    <meta property="og:title" content="Ezra MCP — Bible verses by topic for any LLM">
+    <meta property="og:description" content="One endpoint. Every verse, indexed by 387 themes, stories, and parables. Free tier 20 calls/month.">
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
     <div class="shell">
       <header class="top">
-        <a class="brand" href="/">Bibe Code</a>
+        <a class="brand" href="/">Ezra MCP</a>
         <nav class="nav" aria-label="Main">
-          <a href="#what-you-get">What you get</a>
-          <a href="/docs/">Get started</a>
-          <a href="/pro/">Go Pro</a>
-          <a href="/privacy/">Trust</a>
-          <a href="/terms/">Terms</a>
+          <a href="#what-you-get">What it does</a>
+          <a href="#how">Use it</a>
+          <a href="#pricing">Pricing</a>
+          <a href="/mcp/">MCP docs</a>
         </nav>
       </header>
       <main class="main landing">
+
         <section class="hero" aria-labelledby="hero-title">
-          <img class="hero-art" src="/assets/jesus-one.png" alt="Radiant vector portrait of Jesus">
           <div class="hero-copy">
-            <p class="eyebrow">Bibe Code</p>
-            <h1 id="hero-title"><span>Stop Vibe Coding.</span> <span>Start Bibe Coding.</span></h1>
-            <p class="sub">Get Scripture in your coding rhythm, a calmer build cadence, and a prayerful pause before the next push.</p>
+            <p class="eyebrow">An MCP endpoint, not another chatbot</p>
+            <h1 id="hero-title"><span>Real Bible verses</span> <span>for your LLM.</span></h1>
+            <p class="sub">Ask for a theme. Get the verses, with refs your LLM can't fabricate. 31,103 verses across 66 books, indexed by 387 themes, stories, and parables.</p>
             <div class="actions">
-              <a class="button primary" href="/docs/">Get started free</a>
-              <a class="button pro" href="/pro/">See what Pro adds</a>
+              <a class="button primary" href="/pro/#signup">Get a free API key</a>
+              <a class="button quiet" href="#how">See it in action</a>
             </div>
           </div>
-          <div class="proof-strip" aria-label="What you get right away">
-            <span>You get local WEB/KJV</span>
-            <span>You get a steady coda</span>
-            <span>You get a push-time pause</span>
-          </div>
+          <pre class="hero-example" aria-label="Example response"><code><span class="c-comment"># tool call</span>
+<span class="c-key">get_verses_by_topic</span>(<span class="c-str">"Anxiety"</span>, limit=<span class="c-num">3</span>)
+
+<span class="c-comment"># response</span>
+[
+  { <span class="c-key">ref</span>:  <span class="c-str">"Philippians 4:6"</span>,
+    <span class="c-key">text</span>: <span class="c-str">"In nothing be anxious, but in</span>
+           <span class="c-str">everything by prayer and</span>
+           <span class="c-str">supplication with thanksgiving,</span>
+           <span class="c-str">let your requests be made known</span>
+           <span class="c-str">to God."</span>,
+    <span class="c-key">topics</span>: [<span class="c-str">"Anxiety"</span>, <span class="c-str">"Prayer"</span>,
+              <span class="c-str">"Peace"</span>, <span class="c-str">"Gratitude"</span>] },
+  { <span class="c-key">ref</span>: <span class="c-str">"1 Peter 5:7"</span>, … },
+  { <span class="c-key">ref</span>: <span class="c-str">"Matthew 6:34"</span>, … }
+]</code></pre>
         </section>
+
         <section class="benefits" id="what-you-get" aria-labelledby="benefits-title">
-          <div class="section-kicker">What you get</div>
-          <h2 id="benefits-title">A coding day with more Scripture, more intention, less drift.</h2>
+          <div class="section-kicker">What it does</div>
+          <h2 id="benefits-title">Authoritative lookups your LLM can't hallucinate.</h2>
           <div class="benefit-grid">
             <article class="panel">
               <span class="panel-mark">01</span>
-              <h3>Get a calmer build rhythm</h3>
-              <p>A focused verse can meet you between decisions so deep work feels anchored, not frantic.</p>
+              <h3>Look up by topic</h3>
+              <p>387 hand-curated topics. Faith, Anxiety, Forgiveness, Marriage, Lust, Hope. The model asks for a name; we return the verses that actually carry that theme.</p>
             </article>
             <article class="panel">
               <span class="panel-mark">02</span>
-              <h3>Get your Bible goal everywhere you code</h3>
-              <p>Your daily thread stays close across Codex, Claude Code, Gemini CLI, and terminal sessions.</p>
+              <h3>Look up by story or parable</h3>
+              <p>189 named narrative episodes (David and Goliath, Crossing the Red Sea, Pentecost) and 41 parables (Sower, Prodigal Son, Good Samaritan) with their exact verse ranges.</p>
             </article>
             <article class="panel">
               <span class="panel-mark">03</span>
-              <h3>Get a prayer pause before the push</h3>
-              <p>Pro gives you a deliberate moment to slow down before work leaves your machine.</p>
+              <h3>One MCP endpoint, every client</h3>
+              <p>Works with Claude Code, ChatGPT, Cursor, Cline, or any MCP-aware LLM. JSON-RPC over HTTP. Bearer-token auth. Free key in under a minute.</p>
             </article>
           </div>
         </section>
-        <section class="closing-band" aria-label="Start free">
-          <p class="eyebrow">Free to start</p>
-          <h2>Get the habit before the upgrade.</h2>
-          <p>Goals stay free. Pro adds the bigger guardrails when you are ready for more weight on the ritual.</p>
-          <div class="actions">
-            <a class="button primary" href="/docs/">Get started free</a>
-            <a class="button quiet" href="/mcp/">Get agent setup notes</a>
+
+        <section class="how" id="how" aria-labelledby="how-title">
+          <div class="section-kicker">Three calls, three minutes</div>
+          <h2 id="how-title">From a signup to a working tool call.</h2>
+          <ol class="how-steps">
+            <li>
+              <span class="step-mark">1.</span>
+              <div>
+                <h3>Get a key</h3>
+                <p>Enter an email, click the magic link, copy your <code>ezra_live_…</code> key. Twenty free calls every month. No card required.</p>
+              </div>
+            </li>
+            <li>
+              <span class="step-mark">2.</span>
+              <div>
+                <h3>Point your MCP client at it</h3>
+                <pre><code>{
+  "ezra": {
+    "transport": "http",
+    "url": "https://ezramcp.com/v1/mcp",
+    "headers": { "Authorization": "Bearer ezra_live_…" }
+  }
+}</code></pre>
+              </div>
+            </li>
+            <li>
+              <span class="step-mark">3.</span>
+              <div>
+                <h3>Ask</h3>
+                <p>Tell your LLM: <em>"Use the Ezra tool to find verses about loneliness for a friend going through divorce."</em> The model picks the right topics and returns refs with full text.</p>
+              </div>
+            </li>
+          </ol>
+        </section>
+
+        <section class="pricing" id="pricing" aria-labelledby="pricing-title">
+          <div class="section-kicker">Pricing</div>
+          <h2 id="pricing-title">Three tiers. Cancel anytime.</h2>
+          <div class="tier-grid">
+            <article class="tier">
+              <header>
+                <h3>Free</h3>
+                <p class="tier-price"><span class="tier-amount">$0</span> <span class="tier-period">forever</span></p>
+              </header>
+              <ul>
+                <li>20 calls / month</li>
+                <li>All 7 MCP tools</li>
+                <li>Full verse + topic data</li>
+              </ul>
+              <a class="button quiet" href="/pro/#signup">Get a free key</a>
+            </article>
+            <article class="tier tier-pro">
+              <header>
+                <h3>Pro</h3>
+                <p class="tier-price"><span class="tier-amount">$20</span> <span class="tier-period">/ month</span></p>
+              </header>
+              <ul>
+                <li>10,000 calls / month</li>
+                <li>Production use</li>
+                <li>Email support</li>
+              </ul>
+              <a class="button primary" href="/pro/#pro">Start Pro</a>
+            </article>
+            <article class="tier">
+              <header>
+                <h3>Max</h3>
+                <p class="tier-price"><span class="tier-amount">$100</span> <span class="tier-period">/ month</span></p>
+              </header>
+              <ul>
+                <li>100,000 calls / month</li>
+                <li>Higher rate limits</li>
+                <li>Priority support</li>
+              </ul>
+              <a class="button quiet" href="/pro/#max">Start Max</a>
+            </article>
           </div>
         </section>
+
       </main>
       <footer class="footer">
-        <span>Bibe Code</span>
-        <span><a href="/privacy/">Privacy</a> / <a href="/terms/">Terms</a></span>
+        <span>Ezra MCP</span>
+        <span><a href="/mcp/">Docs</a> · <a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></span>
       </footer>
     </div>
   </body>

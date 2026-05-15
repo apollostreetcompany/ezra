@@ -3,48 +3,84 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MCP - Bibe Code</title>
-    <meta name="description" content="Use Bibe Code from Codex, Claude Code, and Gemini CLI.">
+    <title>MCP setup — Ezra MCP</title>
+    <meta name="description" content="Configure Claude Code, Cursor, ChatGPT, or any MCP client to call Ezra MCP for Bible verses by topic.">
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
     <div class="shell">
       <header class="top">
-        <a class="brand" href="/">Bibe Code</a>
+        <a class="brand" href="/">Ezra MCP</a>
         <nav class="nav" aria-label="Main">
-          <a href="/docs/">Docs</a>
-          <a href="/mcp/">MCP</a>
-          <a href="/pro/">Pro</a>
+          <a href="/">Home</a>
+          <a href="/mcp/">MCP docs</a>
+          <a href="/pro/">Get a key</a>
           <a href="/privacy/">Privacy</a>
           <a href="/terms/">Terms</a>
         </nav>
       </header>
       <main class="main doc">
-        <p class="eyebrow">MCP</p>
-        <h1>Use the same Bible goal in your coding agent.</h1>
-        <h2>Install</h2>
-        <pre class="copy-block"><code>pnpm add -g bible-coder
-bible-coder</code></pre>
-        <h2>Codex</h2>
-        <pre class="copy-block"><code>codex mcp add bible-coder -- bible-coder-mcp</code></pre>
+        <p class="eyebrow">MCP setup</p>
+        <h1>Wire Ezra into any MCP client.</h1>
+        <p>The endpoint is <code>https://ezramcp.com/v1/mcp</code>. Auth header is <code>Authorization: Bearer ezra_live_…</code>. JSON-RPC 2.0 over HTTP.</p>
+
+        <h2>Get a key first</h2>
+        <p><a class="button primary" href="/pro/#signup">Sign up for a free key</a> — 20 calls / month, no card.</p>
+
         <h2>Claude Code</h2>
-        <pre class="copy-block"><code>claude mcp add bible-coder bible-coder-mcp</code></pre>
-        <h2>Gemini CLI</h2>
-        <pre class="copy-block"><code>gemini mcp add bible-coder bible-coder-mcp</code></pre>
-        <h2>Tools</h2>
+        <pre class="copy-block"><code>claude mcp add ezra https://ezramcp.com/v1/mcp \
+  --header "Authorization: Bearer ezra_live_..."</code></pre>
+
+        <h2>Cursor / Cline / any MCP client</h2>
+        <pre class="copy-block"><code>{
+  "mcpServers": {
+    "ezra": {
+      "transport": "http",
+      "url": "https://ezramcp.com/v1/mcp",
+      "headers": {
+        "Authorization": "Bearer ezra_live_..."
+      }
+    }
+  }
+}</code></pre>
+
+        <h2>The 7 tools</h2>
         <ul>
-          <li><code>bible_get_passage</code></li>
-          <li><code>bible_search</code></li>
-          <li><code>plan_create</code></li>
-          <li><code>progress_status</code></li>
-          <li><code>review_next</code></li>
-          <li><code>sync_status</code></li>
+          <li><code>get_verses_by_topic(topic, limit?)</code> — primary lookup, returns verses with refs and text</li>
+          <li><code>list_topics(category?, limit?)</code> — discovery; filter by theme / story / parable</li>
+          <li><code>get_pericope(name)</code> — return a story or parable with its verses</li>
+          <li><code>find_topic(query)</code> — fuzzy search topic names</li>
+          <li><code>get_related_topics(topic, limit?)</code> — topics that co-occur with this one</li>
+          <li><code>get_verse(ref)</code> — single-verse lookup with topics and pericopes</li>
+          <li><code>get_chapter(book, chapter)</code> — full chapter with per-verse topics</li>
         </ul>
-        <p>Paid Bible text is not returned inline to model-visible MCP output by default.</p>
+
+        <h2>Example tool call</h2>
+        <pre class="copy-block"><code>curl https://ezramcp.com/v1/mcp \
+  -H "Authorization: Bearer ezra_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0", "id": 1, "method": "tools/call",
+    "params": {
+      "name": "get_verses_by_topic",
+      "arguments": { "topic": "Forgiveness", "limit": 5 }
+    }
+  }'</code></pre>
+
+        <h2>Rate limits</h2>
+        <ul>
+          <li>Free — 20 tool calls per month per key</li>
+          <li>Pro — 10,000 per month</li>
+          <li>Max — 100,000 per month</li>
+        </ul>
+        <p>Rate-limit errors return JSON-RPC <code>code: -32004</code> with an <code>upgrade_url</code>. Counts reset at the start of each UTC month.</p>
+
+        <h2>Source data</h2>
+        <p>World English Bible (public domain). Topic, story, and parable tags are an original derivative work released under AGPL-3.0 in the <a href="https://github.com">ezra-bible-data</a> repository.</p>
       </main>
       <footer class="footer">
-        <span>Bibe Code</span>
-        <span><a href="/privacy/">Privacy</a> / <a href="/terms/">Terms</a></span>
+        <span>Ezra MCP</span>
+        <span><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></span>
       </footer>
     </div>
   </body>
