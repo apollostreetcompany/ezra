@@ -1,0 +1,46 @@
+{
+  "name": "bible-coder",
+  "version": "0.1.0",
+  "description": "Bibe Code setup, free Bible goals, synced progress, and premium Prayer Gate for agentic coding workflows.",
+  "author": {
+    "name": "Apollo Street Company",
+    "email": "support@apollostreet.com",
+    "url": "https://github.com/apollostreetcompany"
+  },
+  "homepage": "https://github.com/apollostreetcompany/bible-coder",
+  "repository": "https://github.com/apollostreetcompany/bible-coder",
+  "license": "UNLICENSED",
+  "keywords": [
+    "bible",
+    "reading-plan",
+    "mcp",
+    "spaced-repetition",
+    "prayer-gate"
+  ],
+  "skills": "./skills/",
+  "hooks": "./hooks.json",
+  "mcpServers": "./.mcp.json",
+  "apps": "./.app.json",
+  "interface": {
+    "displayName": "Bibe Code",
+    "shortDescription": "Free Bible goals and Prayer Gate for coding sessions",
+    "longDescription": "Run setup, read local WEB/KJV Scripture for free, create reference-first goals, track progress across agent clients, and use premium Prayer Gate or custom Bibles when enabled.",
+    "developerName": "Apollo Street Company",
+    "category": "Education",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/apollostreetcompany/bible-coder",
+    "privacyPolicyURL": "https://github.com/apollostreetcompany/bible-coder/blob/main/docs/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/apollostreetcompany/bible-coder/blob/main/docs/BILLING.md",
+    "defaultPrompt": [
+      "Run Bibe Code setup",
+      "Show my free Bible goal with /biblegoal",
+      "Update my Bible goal with /biblegoal-update",
+      "Check Prayer Gate status"
+    ],
+    "brandColor": "#2563EB"
+  }
+}

@@ -1,0 +1,249 @@
+beads:
+  - bead_id: bead-1
+    title: Scaffold project governance
+    status: approved
+    branch: codex/feat/bead-1-scaffold
+    commit_sha: e379358069b8900d07e73a33d2f25018d540e464
+    validations:
+      - make verify
+  - bead_id: bead-2
+    title: Plugin scaffold
+    status: approved
+    branch: codex/feat/bead-2-plugin-scaffold
+    commit_sha: 448a68216b397082a37ba75e7328eb0abe629fa5
+    validations:
+      - make verify
+  - bead_id: bead-3
+    title: TypeScript monorepo baseline
+    status: approved
+    branch: codex/feat/bead-3-monorepo-baseline
+    commit_sha: 2c7c8532b9547943c994651e3011ca54f51af5a2
+    validations:
+      - pnpm install
+      - pnpm lint
+      - pnpm test
+      - pnpm build
+      - make verify
+  - bead_id: bead-4
+    title: Core Bible engine
+    status: approved
+    branch: codex/feat/bead-4-core-engine
+    commit_sha: 1ae73d1f5c6ce33e2649e18bf62cdb6a8eb3fd6a
+    validations:
+      - pnpm --filter @bible-coder/core lint
+      - pnpm --filter @bible-coder/core test
+      - pnpm --filter @bible-coder/core build
+      - make verify
+  - bead_id: bead-5
+    title: CLI free tier
+    status: approved
+    branch: codex/feat/bead-5-cli-free-tier
+    commit_sha: 4d6fe54749ba6d04de2c63601d95ef49743bdaf0
+    validations:
+      - pnpm --filter @bible-coder/cli lint
+      - pnpm --filter @bible-coder/cli test
+      - pnpm --filter @bible-coder/cli build
+      - make cli-read
+      - make verify
+  - bead_id: bead-6
+    title: Server sync foundation
+    status: approved
+    branch: codex/feat/bead-6-server-sync
+    commit_sha: 3b20662585e65c5a65ed88c15813afc17626c54a
+    validations:
+      - pnpm --filter @bible-coder/server lint
+      - pnpm --filter @bible-coder/server test
+      - pnpm --filter @bible-coder/server build
+      - pnpm --filter @bible-coder/server drizzle:check
+      - local /health smoke on port 4177
+      - make verify
+  - bead_id: bead-7
+    title: API.Bible proxy
+    status: approved
+    branch: codex/feat/bead-7-api-bible-proxy
+    commit_sha: 7fb8cc6cd019a75e03472e0056c9f4a1b4a37c0c
+    validations:
+      - pnpm --filter @bible-coder/server lint
+      - pnpm --filter @bible-coder/server test
+      - pnpm --filter @bible-coder/server build
+      - pnpm --filter @bible-coder/server drizzle:check
+      - make verify
+  - bead_id: bead-8
+    title: Stripe billing
+    status: approved
+    branch: codex/feat/bead-8-stripe-billing
+    commit_sha: 26766bc271e27091a38515ad6b65d304468a56ce
+    validations:
+      - pnpm --filter @bible-coder/cli lint
+      - pnpm --filter @bible-coder/cli test
+      - pnpm --filter @bible-coder/server lint
+      - pnpm --filter @bible-coder/server test
+      - pnpm --filter @bible-coder/server build
+      - make verify
+  - bead_id: bead-9
+    title: MCP integration
+    status: approved
+    branch: codex/feat/bead-9-mcp-integration
+    commit_sha: 7ad4a7ef4c9e26cde0b0bf93b73ed04960a34157
+    validations:
+      - pnpm --filter @bible-coder/mcp lint
+      - pnpm --filter @bible-coder/mcp test
+      - pnpm --filter @bible-coder/mcp build
+      - make verify
+      - MCP stdio smoke
+  - bead_id: bead-10
+    title: Prayer Gate /block
+    status: approved
+    branch: codex/feat/bead-10-prayer-gate
+    commit_sha: ecc0ac4fbedeb7bfa78de6de96eb629b3269b30a
+    validations:
+      - pnpm --filter @bible-coder/cli lint
+      - pnpm --filter @bible-coder/cli test
+      - pnpm --filter @bible-coder/cli build
+      - pnpm --filter @bible-coder/server lint
+      - pnpm --filter @bible-coder/server test
+      - pnpm --filter @bible-coder/server build
+      - pnpm --filter @bible-coder/server drizzle:check
+      - make verify
+      - make cli-block-status
+  - bead_id: bead-11
+    title: Leaderboard + polish
+    status: approved
+    branch: codex/feat/bead-11-leaderboard-polish
+    commit_sha: ad59d1c67cbc171967472f663eee67151e1ef195
+    validations:
+      - pnpm --filter @bible-coder/server lint
+      - pnpm --filter @bible-coder/server test
+      - pnpm --filter @bible-coder/server build
+      - pnpm --filter @bible-coder/server drizzle:check
+      - make release-check
+  - bead_id: bead-12
+    title: Live API.Bible/Stripe validation
+    status: approved
+    branch: codex/feat/live-api-stripe-validation
+    commit_sha: f5559dcaaae873220b86564bfe56abce31440ee4
+    validations:
+      - pnpm --filter @bible-coder/server lint
+      - pnpm --filter @bible-coder/server test
+      - pnpm --filter @bible-coder/server build
+      - pnpm --filter @bible-coder/mcp lint
+      - pnpm --filter @bible-coder/mcp test
+      - pnpm --filter @bible-coder/mcp build
+      - make live-api-bible-smoke
+      - make live-stripe-smoke
+      - Stripe CLI filtered price lookup
+      - make release-check
+  - bead_id: bead-13
+    title: Runnable CLI/server demo
+    status: approved
+    branch: codex/feat/live-api-stripe-validation
+    commit_sha: 7c91e3a25a957be019a63aac311c1cd8b8057407
+    validations:
+      - pnpm --filter @bible-coder/cli lint
+      - pnpm --filter @bible-coder/cli test
+      - pnpm --filter @bible-coder/cli build
+      - local server demo on port 3187
+      - make live-api-bible-smoke
+      - make live-stripe-smoke
+      - make release-check
+  - bead_id: bead-14
+    title: Install plugin into this Codex
+    status: approved
+    branch: codex/feat/live-api-stripe-validation
+    commit_sha: 585e6b8be79a323bf3641e64a6f42a6019097a09
+    validations:
+      - Codex marketplace added
+      - Codex plugin enabled
+      - Codex MCP server registered
+      - global commands linked
+      - MCP install smoke
+      - pnpm --filter @bible-coder/mcp lint
+      - pnpm --filter @bible-coder/mcp test
+      - pnpm --filter @bible-coder/mcp build
+      - make release-check
+  - bead_id: bead-15
+    title: Bibe setup and Cloudflare API
+    status: approved
+    branch: codex/feat/live-api-stripe-validation
+    commit_sha: 6a47e9b85d4eb7349e0ad14592df2490833be937
+    validations:
+      - pnpm --filter @bible-coder/cli lint
+      - pnpm --filter @bible-coder/cli test
+      - pnpm --filter @bible-coder/worker lint
+      - pnpm --filter @bible-coder/worker test
+      - piped bible-coder first-run smoke
+      - make release-check
+  - bead_id: bead-16
+    title: Cloudflare Worker deploy
+    status: approved
+    branch: codex/feat/live-api-stripe-validation
+    commit_sha: cb9a58186a1694dd2c5fe80fe57b694494298dca
+    validations:
+      - D1 created and migrated
+      - Worker secrets uploaded
+      - Worker deployed to https://bibecoder-api.ryan-borker.workers.dev
+      - /health smoke
+      - /v1/bibles launch-gate smoke
+      - /v1/device-tokens token issuance smoke
+      - make release-check
+  - bead_id: bead-17
+    title: Bibe site, setup goals, billing email
+    status: approved
+    branch: codex/feat/live-api-stripe-validation
+    commit_sha: b32381809a957145ca0aa148b6de2199378105f9
+    validations:
+      - pnpm --filter @bible-coder/site lint
+      - pnpm --filter @bible-coder/site test
+      - pnpm --filter @bible-coder/site build
+      - pnpm --filter @bible-coder/cli lint
+      - pnpm --filter @bible-coder/cli test
+      - pnpm --filter @bible-coder/mcp lint
+      - pnpm --filter @bible-coder/mcp test
+      - pnpm --filter @bible-coder/worker lint
+      - pnpm --filter @bible-coder/worker test
+      - pnpm --filter @bible-coder/worker build
+      - D1 remote write smoke
+      - Cloud setup smoke
+      - Cloudflare Pages deploy
+      - make release-check
+  - bead_id: bead-18
+    title: Ambient coda primitive
+    status: approved
+    branch: codex/feat/live-api-stripe-validation
+    commit_sha: 56562164368ebde504c41239f5ad377f8bee6c14
+    validations:
+      - pnpm --filter @bible-coder/cli test
+      - pnpm --filter @bible-coder/mcp test
+      - make link-local
+      - bible-coder coda
+      - make release-check
+  - bead_id: bead-21
+    title: Install-time ambient coda hooks
+    status: approved
+    branch: codex/feat/bead-20-landing-page-dns
+    commit_sha: ff251e03dd2c350c1b8a779cee283c59eaf94548
+    validations:
+      - pnpm --filter @bible-coder/cli test
+      - pnpm --filter @bible-coder/cli lint
+      - pnpm --filter @bible-coder/cli build
+      - make link-local
+      - bible-coder hooks doctor --client all
+      - bible-coder hooks install --client all --scope user --mode coda --yes
+      - bible-coder hooks run --client codex --event SessionStart --mode coda
+      - make release-check
+      - make cli-hooks-doctor
+  - bead_id: bead-22
+    title: Landing page refresh and DNS remediation
+    status: concerns
+    branch: codex/feat/bead-20-landing-page-dns
+    commit_sha: befb0aeceb5bb1f7e60b19ee8a3f99605682920f
+    validations:
+      - OpenProse run trace
+      - pnpm --filter @bible-coder/site lint
+      - pnpm --filter @bible-coder/site test
+      - pnpm --filter @bible-coder/site build
+      - Chrome screenshots at 390/768/1280
+      - make validate-docs
+      - make release-check
+      - Cloudflare Pages deploy smoke
+    concern: bibecoder.com remains pending until DNS edit access can create CNAME @ -> bibecoder.pages.dev

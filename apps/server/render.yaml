@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: bible-coder-server
+    runtime: node
+    plan: starter
+    buildCommand: pnpm install --frozen-lockfile && pnpm --filter @bible-coder/server build
+    startCommand: node apps/server/dist/server.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: TOKEN_HASH_PEPPER
+        sync: false
+      - key: DATABASE_URL
+        sync: false

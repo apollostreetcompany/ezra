@@ -1,0 +1,31 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "ezra-mcp-api",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-05-15",
+	"workers_dev": true,
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"vars": {
+		"EZRA_MCP_UPGRADE_URL": "https://ezra-mcp.com/upgrade",
+		"KLAVIYO_REVISION": "2026-04-15"
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "ezra-mcp-prod",
+			"database_id": "daf7cf0b-9d54-4948-a815-fc798d28978a",
+			"migrations_dir": "migrations"
+		}
+	],
+	"secrets": {
+		"required": [
+			"STRIPE_SECRET_KEY",
+			"STRIPE_WEBHOOK_SECRET",
+			"STRIPE_PRICE_EZRA_PRO_MONTHLY",
+			"STRIPE_PRICE_EZRA_MAX_MONTHLY",
+			"TOKEN_HASH_PEPPER"
+		]
+	}
+}

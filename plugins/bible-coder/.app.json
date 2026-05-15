@@ -1,0 +1,9 @@
+{
+  "apps": [
+    {
+      "name": "bible-coder-cli",
+      "description": "Bible Coder command line interface for local reading, sync, billing, and Prayer Gate.",
+      "command": "bible-coder"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "ezra-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.16.1",
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "pnpm --filter @bible-coder/server dev",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "verify": "pnpm lint && pnpm test && pnpm build && pnpm validate:docs && pnpm validate:plugin",
+    "validate:docs": "./scripts/validate-docs.sh",
+    "validate:plugin": "node scripts/validate-plugin.mjs",
+    "markdown:validate": "./scripts/validate-docs.sh",
+    "plugin:validate": "node scripts/validate-plugin.mjs",
+    "secret:scan": "node scripts/secret-scan.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.0",
+    "vitest": "^3.1.0"
+  }
+}

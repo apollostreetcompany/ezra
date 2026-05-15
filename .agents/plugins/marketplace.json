@@ -1,0 +1,20 @@
+{
+  "name": "bible-coder",
+  "interface": {
+    "displayName": "Bible Coder"
+  },
+  "plugins": [
+    {
+      "name": "bible-coder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/bible-coder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Education"
+    }
+  ]
+}
