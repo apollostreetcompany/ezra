@@ -5,7 +5,7 @@ Ezra MCP is an HTTP-only [Model Context Protocol](https://spec.modelcontextproto
 ## Endpoint
 
 ```
-POST https://api.ezra-mcp.com/v1/mcp
+POST https://ezramcp.com/v1/mcp
 Content-Type: application/json
 Authorization: Bearer <api-key>
 ```
@@ -59,7 +59,7 @@ When you exceed the quota, `tools/call` returns HTTP 429 with a tool error conta
 ## Example
 
 ```bash
-curl -sS https://api.ezra-mcp.com/v1/mcp \
+curl -sS https://ezramcp.com/v1/mcp \
   -H 'authorization: Bearer ezra_live_…' \
   -H 'content-type: application/json' \
   -d '{

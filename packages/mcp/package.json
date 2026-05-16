@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "bin": {
-    "bible-coder-mcp": "./dist/server.js"
+    "ezra-mcp-mcp": "./dist/server.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -12,9 +12,6 @@
     "build": "tsc -p tsconfig.json",
     "lint": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run --passWithNoTests"
-  },
-  "dependencies": {
-    "@ezra-mcp/core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.15.0",

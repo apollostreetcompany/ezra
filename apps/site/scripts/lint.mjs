@@ -9,6 +9,9 @@ const src = resolve(root, "src");
 const requiredPages = [
   "index.html",
   "pro/index.html",
+  "account/index.html",
+  "checkout/success/index.html",
+  "checkout/cancel/index.html",
   "privacy/index.html",
   "terms/index.html",
   "mcp/index.html"
@@ -83,8 +86,8 @@ for (const file of htmlFiles) {
   if (!text.includes('name="viewport"')) {
     throw new Error(`Missing viewport meta: ${file}`);
   }
-  if (text.includes("Bibe Code") || text.includes("bibe-code") || text.includes("bibecoder")) {
-    throw new Error(`Leftover Bibe Code branding in ${file}`);
+  if (text.includes(["Bibe", " Code"].join("")) || text.includes(["bibe", "-code"].join("")) || text.includes(["bibe", "coder"].join(""))) {
+    throw new Error(`Leftover old branding in ${file}`);
   }
 }
 

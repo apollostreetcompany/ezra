@@ -17,8 +17,13 @@ interface D1Database {
   prepare(query: string): D1PreparedStatement;
 }
 
+interface AssetsBinding {
+  fetch(request: Request): Promise<Response>;
+}
+
 interface Env {
   DB: D1Database;
+  ASSETS?: AssetsBinding;
   STRIPE_SECRET_KEY?: string;
   STRIPE_WEBHOOK_SECRET?: string;
   STRIPE_PRICE_EZRA_PRO_MONTHLY?: string;
@@ -45,6 +50,7 @@ interface DeviceTokenRow {
 
 interface EntitlementRow {
   status: string;
+  current_period_end?: string | null;
   grace_until: string | null;
 }
 
@@ -66,18 +72,22 @@ interface StripeEventObject {
 }
 
 const MCP_SCOPE = "mcp:call";
-const SYNC_SCOPES = JSON.stringify(["sync:read", "sync:write"]);
+const ACCOUNT_SCOPES = JSON.stringify(["account:read", "account:write"]);
 const MCP_SCOPES = JSON.stringify([MCP_SCOPE]);
+const EZRA_SITE_ID = "ezra-mcp";
+const DEFAULT_CHECKOUT_SUCCESS_URL = "https://ezramcp.com/checkout/success/?session_id={CHECKOUT_SESSION_ID}";
+const DEFAULT_CHECKOUT_CANCEL_URL = "https://ezramcp.com/checkout/cancel/";
+const DEFAULT_ACCOUNT_URL = "https://ezramcp.com/account/";
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     if (request.method === "OPTIONS") {
-      return json({}, 204);
+      return optionsResponse(request);
     }
     const url = new URL(request.url);
     try {
       if (url.pathname === "/health") {
-        return json({ ok: true, service: "ezra-mcp-api", version: "0.1.0" });
+        return jsonForRequest(request, { ok: true, service: "ezra-mcp-api", version: "0.1.0" });
       }
       if (url.pathname === "/v1/mcp" && request.method === "POST") {
         return handleMcp(request, env);
@@ -91,8 +101,17 @@ export default {
       if (url.pathname === "/v1/magic-links/verify" && request.method === "POST") {
         return handleMagicLinkVerify(request, env);
       }
+      if (url.pathname === "/v1/checkout/public-session" && request.method === "POST") {
+        return handlePublicCheckout(request, env);
+      }
       if (url.pathname === "/v1/checkout/session" && request.method === "POST") {
         return handleCheckout(request, env);
+      }
+      if (url.pathname === "/v1/checkout/session-status" && request.method === "GET") {
+        return handleCheckoutSessionStatus(request, env);
+      }
+      if (url.pathname === "/v1/account/status" && request.method === "GET") {
+        return handleAccountStatus(request, env);
       }
       if (url.pathname === "/v1/billing/portal" && request.method === "POST") {
         return handleBillingPortal(request, env);
@@ -103,11 +122,14 @@ export default {
       if (url.pathname === "/v1/stripe/webhook" && request.method === "POST") {
         return handleStripeWebhook(request, env);
       }
-      return json({ error: "not_found" }, 404);
+      if (!url.pathname.startsWith("/v1/") && env.ASSETS) {
+        return env.ASSETS.fetch(request);
+      }
+      return jsonForRequest(request, { error: "not_found" }, 404);
     } catch (error) {
       const message = error instanceof Error ? error.message : "worker_error";
-      const status = message === "unauthorized" ? 401 : 500;
-      return json({ error: message }, status);
+      const status = message === "unauthorized" ? 401 : message.endsWith("_required") || message === "invalid_tier" || message === "invalid_return_url" ? 400 : 500;
+      return jsonForRequest(request, { error: message }, status);
     }
   }
 };
@@ -175,18 +197,30 @@ async function handleMagicLinkRequest(request: Request, env: Env): Promise<Respo
   const now = new Date();
   const body = await readJson<{ email?: string }>(request);
   const email = normalizeEmail(body.email);
-  const userId = `usr_${crypto.randomUUID()}`;
+  const userId = await findOrCreateUserForEmail(env, email, now.toISOString());
   const code = randomHex(18);
   const codeHash = await sha256Hex(`${required(env.TOKEN_HASH_PEPPER, "TOKEN_HASH_PEPPER")}:${code}`);
   const expiresAt = new Date(now.getTime() + 15 * 60 * 1000).toISOString();
-  await env.DB.prepare("INSERT OR IGNORE INTO users (id, email, created_at) VALUES (?, ?, ?)").bind(userId, email, now.toISOString()).run();
   await env.DB
     .prepare("INSERT INTO magic_links (id, email, code_hash, user_id, created_at, expires_at) VALUES (?, ?, ?, ?, ?, ?)")
     .bind(`mlink_${crypto.randomUUID()}`, email, codeHash, userId, now.toISOString(), expiresAt)
     .run();
+  const delivery = env.MAGIC_LINK_DEV_ECHO === "true"
+    ? "dev_echo"
+    : (await sendKlaviyoEvent(env, {
+      email,
+      metric: "Magic Link Requested",
+      uniqueId: `mlink_${codeHash.slice(0, 16)}`,
+      time: now.toISOString(),
+      properties: {
+        userId,
+        site: EZRA_SITE_ID,
+        loginUrl: "https://ezramcp.com/account/"
+      }
+    })).sent ? "klaviyo" : "email_provider_skipped";
   return json({
     ok: true,
-    delivery: env.MAGIC_LINK_DEV_ECHO === "true" ? "dev_echo" : "email_provider_pending",
+    delivery,
     ...(env.MAGIC_LINK_DEV_ECHO === "true" ? { devCode: code } : {})
   });
 }
@@ -213,41 +247,135 @@ async function handleMagicLinkVerify(request: Request, env: Env): Promise<Respon
     .prepare(
       "INSERT INTO device_tokens (id, user_id, token_hash, token_prefix, device_name, scopes, created_at, last_seen_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
     )
-    .bind(`dtok_${crypto.randomUUID()}`, row.user_id, token.hash, token.prefix, body.deviceName?.trim() || "Magic link session", SYNC_SCOPES, now, now)
+    .bind(`dtok_${crypto.randomUUID()}`, row.user_id, token.hash, token.prefix, body.deviceName?.trim() || "Ezra MCP account session", ACCOUNT_SCOPES, now, now)
     .run();
   return json({ token: token.value });
+}
+
+async function handlePublicCheckout(request: Request, env: Env): Promise<Response> {
+  const body = await readJson<{ email?: string; tier?: string; successUrl?: string; cancelUrl?: string }>(request);
+  const email = normalizeEmail(body.email);
+  const tier = parseRequestedTier(body.tier);
+  const now = new Date().toISOString();
+  const userId = await findOrCreateUserForEmail(env, email, now);
+  const params = checkoutParams({
+    env,
+    userId,
+    tier,
+    successUrl: normalizeReturnUrl(body.successUrl, DEFAULT_CHECKOUT_SUCCESS_URL),
+    cancelUrl: normalizeReturnUrl(body.cancelUrl, DEFAULT_CHECKOUT_CANCEL_URL),
+    email,
+    deviceId: "public_site",
+    source: "public_site"
+  });
+  const response = await stripePost(env, "/v1/checkout/sessions", params);
+  if (!response.ok) {
+    return json({ error: "stripe_checkout_failed" }, 502);
+  }
+  const session = await response.json() as { url?: string; id?: string };
+  return json({ url: session.url ?? null, tier, sessionId: session.id ?? null });
 }
 
 async function handleCheckout(request: Request, env: Env): Promise<Response> {
   const auth = await requireAuth(request, env);
   const body = await readJson<{ successUrl?: string; cancelUrl?: string; tier?: string }>(request);
-  const tier = body.tier === "max" ? "max" : "pro";
-  const price = tier === "max"
-    ? required(env.STRIPE_PRICE_EZRA_MAX_MONTHLY, "STRIPE_PRICE_EZRA_MAX_MONTHLY")
-    : required(env.STRIPE_PRICE_EZRA_PRO_MONTHLY, "STRIPE_PRICE_EZRA_PRO_MONTHLY");
-  const params = new URLSearchParams();
-  params.set("mode", "subscription");
-  params.set("success_url", body.successUrl || "https://ezra-mcp.com/checkout/success");
-  params.set("cancel_url", body.cancelUrl || "https://ezra-mcp.com/checkout/cancel");
-  params.set("client_reference_id", auth.userId);
-  params.set("line_items[0][price]", price);
-  params.set("line_items[0][quantity]", "1");
-  params.set("metadata[user_id]", auth.userId);
-  params.set("metadata[device_id]", auth.deviceId);
-  params.set("metadata[tier]", tier);
-  const response = await fetch("https://api.stripe.com/v1/checkout/sessions", {
-    method: "POST",
-    headers: {
-      authorization: `Bearer ${required(env.STRIPE_SECRET_KEY, "STRIPE_SECRET_KEY")}`,
-      "content-type": "application/x-www-form-urlencoded"
-    },
-    body: params
-  });
+  const tier = parseRequestedTier(body.tier);
+  const email = await findUserEmail(env, auth.userId);
+  const checkoutInput: Parameters<typeof checkoutParams>[0] = {
+    env,
+    userId: auth.userId,
+    tier,
+    successUrl: normalizeReturnUrl(body.successUrl, DEFAULT_CHECKOUT_SUCCESS_URL),
+    cancelUrl: normalizeReturnUrl(body.cancelUrl, DEFAULT_CHECKOUT_CANCEL_URL),
+    deviceId: auth.deviceId,
+    source: "authenticated_account"
+  };
+  if (email) {
+    checkoutInput.email = email;
+  }
+  const params = checkoutParams(checkoutInput);
+  const response = await stripePost(env, "/v1/checkout/sessions", params);
   if (!response.ok) {
     return json({ error: "stripe_checkout_failed" }, 502);
   }
-  const session = await response.json() as { url?: string };
-  return json({ url: session.url ?? null, tier });
+  const session = await response.json() as { url?: string; id?: string };
+  return json({ url: session.url ?? null, tier, sessionId: session.id ?? null });
+}
+
+async function handleCheckoutSessionStatus(request: Request, env: Env): Promise<Response> {
+  const url = new URL(request.url);
+  const sessionId = cleanText(url.searchParams.get("session_id"), 200);
+  if (!sessionId || !sessionId.startsWith("cs_")) {
+    return json({ error: "valid_session_id_required" }, 400);
+  }
+  const response = await stripeGet(env, `/v1/checkout/sessions/${encodeURIComponent(sessionId)}`);
+  if (!response.ok) {
+    return json({ error: "stripe_session_status_failed" }, 502);
+  }
+  const session = await response.json() as StripeEventObject & {
+    id?: string;
+    payment_status?: string;
+    customer_email?: string | null;
+  };
+  const userId = session.metadata?.user_id;
+  const tier = parseTierFromMetadata(session.metadata);
+  const customerId = stripeCustomerId(session);
+  const now = new Date().toISOString();
+  const isComplete = session.status === "complete";
+  if (isComplete && userId && tier) {
+    if (customerId) {
+      await env.DB.prepare("INSERT OR REPLACE INTO stripe_customers (customer_id, user_id, created_at) VALUES (?, ?, ?)").bind(customerId, userId, now).run();
+    }
+    await setEntitlement(env, userId, tier, null, now);
+    const email = normalizeOptionalEmail(session.customer_details?.email ?? session.customer_email);
+    if (email) {
+      await env.DB.prepare("UPDATE users SET email = ? WHERE id = ?").bind(email, userId).run();
+    }
+  }
+  return json({
+    id: session.id ?? sessionId,
+    checkout: { status: session.status ?? "unknown", payment_status: session.payment_status ?? null },
+    tier: tier ?? "free",
+    premium: isComplete && Boolean(tier),
+    next: isComplete ? "/account/" : "/pro/"
+  });
+}
+
+async function handleAccountStatus(request: Request, env: Env): Promise<Response> {
+  const auth = await requireAuth(request, env);
+  const tier = await getUserTier(env, auth.userId);
+  const used = await currentMonthUsage(env, auth.userId, new Date());
+  const limit = TIER_LIMITS[tier];
+  const entitlement = await env.DB
+    .prepare("SELECT status, current_period_end, grace_until FROM entitlements WHERE user_id = ?")
+    .bind(auth.userId)
+    .first<EntitlementRow>();
+  return json({
+    user: {
+      id: auth.userId,
+      email: await findUserEmail(env, auth.userId) ?? null
+    },
+    tier,
+    usage: {
+      used,
+      limit,
+      remaining: Math.max(0, limit - used),
+      period: monthKey(new Date())
+    },
+    entitlement: entitlement
+      ? {
+        status: entitlement.status,
+        currentPeriodEnd: entitlement.current_period_end ?? null,
+        graceUntil: entitlement.grace_until ?? null
+      }
+      : null,
+    apiKey: {
+      prefix: await findLatestApiKeyPrefix(env, auth.userId)
+    },
+    billing: {
+      portal: "/v1/billing/portal"
+    }
+  });
 }
 
 async function handleBillingPortal(request: Request, env: Env): Promise<Response> {
@@ -262,7 +390,7 @@ async function handleBillingPortal(request: Request, env: Env): Promise<Response
   }
   const params = new URLSearchParams();
   params.set("customer", customer.customer_id);
-  params.set("return_url", normalizeReturnUrl(body.returnUrl, "https://ezra-mcp.com/account"));
+  params.set("return_url", normalizeReturnUrl(body.returnUrl, DEFAULT_ACCOUNT_URL));
   const response = await stripePost(env, "/v1/billing_portal/sessions", params);
   if (!response.ok) {
     return json({ error: "stripe_billing_portal_failed" }, 502);
@@ -529,6 +657,43 @@ function parseTierFromMetadata(metadata: Record<string, string> | undefined): Ti
   return null;
 }
 
+function parseRequestedTier(value: unknown): Extract<Tier, "pro" | "max"> {
+  if (value === "max") return "max";
+  if (value === undefined || value === null || value === "" || value === "pro") return "pro";
+  throw new Error("invalid_tier");
+}
+
+function checkoutParams(input: {
+  env: Env;
+  userId: string;
+  tier: Extract<Tier, "pro" | "max">;
+  successUrl: string;
+  cancelUrl: string;
+  email?: string;
+  deviceId: string;
+  source: string;
+}): URLSearchParams {
+  const price = input.tier === "max"
+    ? required(input.env.STRIPE_PRICE_EZRA_MAX_MONTHLY, "STRIPE_PRICE_EZRA_MAX_MONTHLY")
+    : required(input.env.STRIPE_PRICE_EZRA_PRO_MONTHLY, "STRIPE_PRICE_EZRA_PRO_MONTHLY");
+  const params = new URLSearchParams();
+  params.set("mode", "subscription");
+  params.set("success_url", input.successUrl);
+  params.set("cancel_url", input.cancelUrl);
+  params.set("client_reference_id", input.userId);
+  params.set("line_items[0][price]", price);
+  params.set("line_items[0][quantity]", "1");
+  params.set("metadata[user_id]", input.userId);
+  params.set("metadata[device_id]", input.deviceId);
+  params.set("metadata[tier]", input.tier);
+  params.set("metadata[site]", EZRA_SITE_ID);
+  params.set("metadata[source]", input.source);
+  if (input.email) {
+    params.set("customer_email", input.email);
+  }
+  return params;
+}
+
 function firstPriceId(object: StripeEventObject | undefined): string | undefined {
   return object?.items?.data?.[0]?.price?.id;
 }
@@ -541,7 +706,7 @@ function priceTier(env: Env, priceId: string | undefined): Tier | null {
 }
 
 function upgradeUrl(env: Env): string {
-  return env.EZRA_MCP_UPGRADE_URL || "https://ezra-mcp.com/upgrade";
+  return env.EZRA_MCP_UPGRADE_URL || "https://ezramcp.com/pro/";
 }
 
 async function stripePost(env: Env, path: string, params: URLSearchParams): Promise<Response> {
@@ -552,6 +717,15 @@ async function stripePost(env: Env, path: string, params: URLSearchParams): Prom
       "content-type": "application/x-www-form-urlencoded"
     },
     body: params
+  });
+}
+
+async function stripeGet(env: Env, path: string): Promise<Response> {
+  return fetch(`https://api.stripe.com${path}`, {
+    method: "GET",
+    headers: {
+      authorization: `Bearer ${required(env.STRIPE_SECRET_KEY, "STRIPE_SECRET_KEY")}`
+    }
   });
 }
 
@@ -595,6 +769,30 @@ async function sendKlaviyoEvent(
 async function findUserEmail(env: Env, userId: string): Promise<string | undefined> {
   const row = await env.DB.prepare("SELECT email FROM users WHERE id = ?").bind(userId).first<{ email: string | null }>();
   return normalizeOptionalEmail(row?.email);
+}
+
+async function findUserIdByEmail(env: Env, email: string): Promise<string | undefined> {
+  const row = await env.DB.prepare("SELECT id FROM users WHERE email = ?").bind(email).first<{ id: string }>();
+  return row?.id;
+}
+
+async function findOrCreateUserForEmail(env: Env, email: string, now: string): Promise<string> {
+  const existing = await findUserIdByEmail(env, email);
+  if (existing) {
+    return existing;
+  }
+  const userId = `usr_${crypto.randomUUID()}`;
+  await env.DB.prepare("INSERT OR IGNORE INTO users (id, email, created_at) VALUES (?, ?, ?)").bind(userId, email, now).run();
+  const raced = await findUserIdByEmail(env, email);
+  return raced ?? userId;
+}
+
+async function findLatestApiKeyPrefix(env: Env, userId: string): Promise<string | null> {
+  const row = await env.DB
+    .prepare("SELECT token_prefix FROM device_tokens WHERE user_id = ? AND scopes LIKE ? AND revoked_at IS NULL ORDER BY created_at DESC LIMIT 1")
+    .bind(userId, `%${MCP_SCOPE}%`)
+    .first<{ token_prefix: string }>();
+  return row?.token_prefix ?? null;
 }
 
 async function audit(env: Env, userId: string | null, deviceId: string | null, event: string, metadata: Record<string, unknown>, now: string): Promise<void> {
@@ -648,12 +846,29 @@ async function readJson<T>(request: Request): Promise<T> {
   return text ? JSON.parse(text) as T : {} as T;
 }
 
+function optionsResponse(request: Request): Response {
+  return new Response(null, {
+    status: 204,
+    headers: corsHeaders(request)
+  });
+}
+
+function jsonForRequest(request: Request, payload: unknown, status = 200): Response {
+  return new Response(status === 204 ? null : JSON.stringify(payload), {
+    status,
+    headers: {
+      "content-type": "application/json",
+      ...corsHeaders(request)
+    }
+  });
+}
+
 function json(payload: unknown, status = 200): Response {
   return new Response(status === 204 ? null : JSON.stringify(payload), {
     status,
     headers: {
       "content-type": "application/json",
-      "access-control-allow-origin": "https://ezra-mcp.com",
+      "access-control-allow-origin": "https://ezramcp.com",
       "access-control-allow-methods": "GET,POST,OPTIONS",
       "access-control-allow-headers": "authorization,content-type,stripe-signature"
     }
@@ -670,6 +885,37 @@ function jsonRpcResponse(payload: JsonRpcResponse, status: number): Response {
       "access-control-allow-headers": "authorization,content-type"
     }
   });
+}
+
+function corsHeaders(request: Request): Record<string, string> {
+  return {
+    "access-control-allow-origin": allowedCorsOrigin(request),
+    "access-control-allow-methods": "GET,POST,OPTIONS",
+    "access-control-allow-headers": "authorization,content-type,stripe-signature"
+  };
+}
+
+function allowedCorsOrigin(request: Request): string {
+  const origin = request.headers.get("origin");
+  if (!origin) {
+    return "https://ezramcp.com";
+  }
+  try {
+    const url = new URL(origin);
+    const host = url.hostname;
+    if (
+      origin === "https://ezramcp.com" ||
+      origin === "https://www.ezramcp.com" ||
+      host === "localhost" ||
+      host === "127.0.0.1" ||
+      host.endsWith(".workers.dev")
+    ) {
+      return origin;
+    }
+  } catch {
+    return "https://ezramcp.com";
+  }
+  return "https://ezramcp.com";
 }
 
 function normalizeEmail(value: unknown): string {
@@ -693,8 +939,15 @@ function normalizeReturnUrl(value: unknown, fallback: string): string {
   }
   const candidate = String(value);
   try {
-    const url = new URL(candidate);
-    if (url.protocol !== "https:" && url.hostname !== "localhost" && url.hostname !== "127.0.0.1") {
+    const parseTarget = candidate.replace("{CHECKOUT_SESSION_ID}", "cs_test_placeholder");
+    const url = new URL(parseTarget);
+    const hostAllowed =
+      url.hostname === "ezramcp.com" ||
+      url.hostname === "www.ezramcp.com" ||
+      url.hostname === "localhost" ||
+      url.hostname === "127.0.0.1";
+    const protocolAllowed = url.protocol === "https:" || url.hostname === "localhost" || url.hostname === "127.0.0.1";
+    if (!hostAllowed || !protocolAllowed) {
       throw new Error("invalid_return_url");
     }
     return url.toString();

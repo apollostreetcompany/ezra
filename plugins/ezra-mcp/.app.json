@@ -1,0 +1,14 @@
+{
+  "apps": [
+    {
+      "name": "ezra-mcp-cli",
+      "description": "Ezra MCP command line interface for setup, login, API keys, checkout, account status, and billing.",
+      "command": "ezra-mcp"
+    },
+    {
+      "name": "ezra-mcp-bridge",
+      "description": "Ezra MCP stdio bridge that forwards MCP JSON-RPC calls to the hosted Ezra endpoint.",
+      "command": "ezra-mcp-mcp"
+    }
+  ]
+}

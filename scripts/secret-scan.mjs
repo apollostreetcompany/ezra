@@ -12,7 +12,8 @@ const patterns = [
   /sk_live_[A-Za-z0-9]+/,
   /whsec_[A-Za-z0-9]+/,
   /AIza[0-9A-Za-z_-]{35}/,
-  /bc_live_[A-Za-z0-9_-]+_[A-Za-z0-9_-]{32,}/
+  /bc_live_[A-Za-z0-9_-]+_[A-Za-z0-9_-]{32,}/,
+  /ezra_live_[0-9a-f]{12}_[0-9a-f]{64}/i
 ];
 
 for (const file of files) {

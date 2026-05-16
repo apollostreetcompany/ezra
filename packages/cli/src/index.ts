@@ -1,1 +1,8 @@
-export { bibleCoderCliVersion, runBibleCoderCli, type CliRunOptions } from "./cli.js";
+export {
+  defaultEzraApiUrl,
+  ezraCliVersion,
+  resolveEzraPaths,
+  runEzraCli,
+  type EzraAuth,
+  type EzraCliOptions
+} from "./cli.js";

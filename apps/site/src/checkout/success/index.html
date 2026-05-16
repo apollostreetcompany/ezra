@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Checkout complete — Ezra MCP</title>
+    <meta name="description" content="Ezra MCP checkout success verification.">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="shell">
+      <header class="top">
+        <a class="brand" href="/">Ezra MCP</a>
+        <nav class="nav" aria-label="Main">
+          <a href="/account/">Account</a>
+          <a href="/mcp/">MCP docs</a>
+          <a href="/pro/">Pricing</a>
+        </nav>
+      </header>
+      <main class="main doc">
+        <p class="eyebrow">Checkout</p>
+        <h1>Payment received.</h1>
+        <p class="sub">We are checking Stripe now so your account updates even if the webhook is still in flight.</p>
+        <pre id="checkout-status" class="copy-block" aria-live="polite">Checking checkout status...</pre>
+        <p><a class="button primary" href="/account/">Open account</a></p>
+      </main>
+      <footer class="footer">
+        <span>Ezra MCP</span>
+        <span><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></span>
+      </footer>
+    </div>
+    <script>
+      const output = document.querySelector("#checkout-status");
+      const sessionId = new URLSearchParams(window.location.search).get("session_id");
+      if (!sessionId) {
+        output.textContent = "Missing checkout session id.";
+      } else {
+        fetch(`/v1/checkout/session-status?session_id=${encodeURIComponent(sessionId)}`)
+          .then(async (response) => {
+            const body = await response.json();
+            output.textContent = JSON.stringify(body, null, 2);
+          })
+          .catch(() => {
+            output.textContent = "Checkout status could not be verified.";
+          });
+      }
+    </script>
+  </body>
+</html>

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
-import { runBibleCoderCli } from "./index.js";
+import { runEzraCli } from "./index.js";
 
-process.exitCode = await runBibleCoderCli(process.argv.slice(2));
+const code = await runEzraCli(process.argv.slice(2));
+process.exitCode = code;

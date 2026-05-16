@@ -12,7 +12,7 @@
       <header class="top">
         <a class="brand" href="/">Ezra MCP</a>
         <nav class="nav" aria-label="Main">
-          <a href="/docs/">Docs</a>
+          <a href="/mcp/">Docs</a>
           <a href="/mcp/">MCP</a>
           <a href="/pro/">Pro</a>
           <a href="/privacy/">Privacy</a>
@@ -23,12 +23,12 @@
         <p class="eyebrow">Privacy</p>
         <h1>Privacy basics.</h1>
         <ul>
-          <li>Free local reading can stay on your machine.</li>
-          <li>Cloud sync uses an opaque token.</li>
-          <li>Paid Bible text is handled by the server.</li>
-          <li>Prayer Gate stores personal attestation status, not prayer content.</li>
+          <li>The CLI stores local account and API keys in a private config file.</li>
+          <li>The server stores normalized email, token hashes, usage counters, and billing state.</li>
+          <li>Stripe handles payment details.</li>
+          <li>Long-lived account and billing links are not embedded in static pages.</li>
         </ul>
-        <p><a href="/docs/">Start Free</a></p>
+        <p><a href="/account/">Start Free</a></p>
       </main>
       <footer class="footer">
         <span>Ezra MCP</span>

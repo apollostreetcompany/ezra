@@ -13,9 +13,6 @@
     "lint": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run --passWithNoTests"
   },
-  "dependencies": {
-    "@ezra-mcp/core": "workspace:*"
-  },
   "devDependencies": {
     "@types/node": "^22.15.0",
     "typescript": "^5.8.0",

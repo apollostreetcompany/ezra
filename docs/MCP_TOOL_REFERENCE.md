@@ -1,195 +1,87 @@
-# MCP Tool Reference
+# Ezra MCP Tool Reference
 
-Bible Coder's MCP server is a portability layer for Codex, Claude, Gemini, and other MCP clients. It is not the trust boundary for local system mutation: v1 exposes only read or server-backed actions through MCP, and local Git hook mutation stays in the CLI.
+Endpoint:
 
-## Setup
-
-Build the MCP package and configure the client to run `bible-coder-mcp`.
-
-Server-backed tools require:
-
-```json
-{
-  "BIBLE_CODER_API_URL": "https://your-bible-coder-server.example.com"
-}
+```text
+POST https://ezramcp.com/v1/mcp
 ```
 
-Run `bible-coder login` once with `BIBLE_CODER_API_URL` set. The CLI saves the sync token in private local storage, and the MCP server reads that saved token automatically. You may also set `BIBLE_CODER_TOKEN` explicitly, but do not paste it into docs, chat, logs, or screenshots.
-
-Free local WEB/KJV passage and plan tools can run without server env vars. Billing, sync, progress, and review tools return a structured `CONFIGURATION_ERROR` when the server URL or token is missing.
-
-## Error Shape
-
-Tool errors are returned as MCP tool results with `isError: true`, human-readable text, and machine-readable structured content:
-
-```json
-{
-  "isError": true,
-  "structuredContent": {
-    "error": {
-      "type": "CONFIGURATION_ERROR",
-      "message": "Server-backed MCP tool requires BIBLE_CODER_API_URL and BIBLE_CODER_TOKEN.",
-      "recoverable": true,
-      "data": {
-        "fix_hint": "Set BIBLE_CODER_API_URL and run bible-coder login to save a local sync token, or set BIBLE_CODER_TOKEN explicitly, then restart the MCP client."
-      }
-    }
-  }
-}
-```
-
-Error types:
-
-- `CONFIGURATION_ERROR`: missing MCP server env vars.
-- `INVALID_ARGUMENT`: missing required input or invalid input shape.
-- `UPSTREAM_ERROR`: Bible Coder server or billing response issue.
-- `INTERNAL_ERROR`: unexpected local MCP failure.
+The request body is JSON-RPC 2.0. `initialize` and `tools/list` are unmetered; `tools/call` is metered by tier.
 
 ## Tools
 
-### `bible_get_passage`
+### `get_verses_by_topic`
 
-Gets a passage by reference.
-
-Inputs:
-
-- `reference` string, required. Example: `John 3:16`.
-- `translation` string, optional. Use `web`, `kjv`, or an API.Bible Bible ID.
-
-Behavior:
-
-- Free local `web` and `kjv` return Scripture text inline with attribution.
-- Paid API.Bible translations return reference, translation, entitlement/display metadata, and redaction status only. Paid text is not returned inline to model-visible MCP output by default.
-
-Example:
+Input:
 
 ```json
-{
-  "name": "bible_get_passage",
-  "arguments": {
-    "reference": "John 3:16",
-    "translation": "web"
-  }
-}
+{ "topic": "Anxiety", "limit": 10 }
 ```
 
-### `bible_search`
+Returns exact verse rows for a canonical topic.
 
-Searches local WEB/KJV text or returns a redacted paid-search instruction.
+### `list_topics`
 
-Inputs:
+Input:
 
-- `query` string, required.
-- `translation` string, optional.
-- `limit` number, optional.
+```json
+{ "category": "theme", "limit": 50 }
+```
 
-Behavior:
+`category` is optional and may be `theme`, `story`, or `parable`.
 
-- Free local results include matching text and attribution.
-- Paid API.Bible search snippets are redacted from MCP output by default.
+### `get_pericope`
 
-### `plan_create`
+Input:
 
-Creates a reference-first reading plan.
+```json
+{ "name": "Good Samaritan" }
+```
 
-Inputs:
+Returns named story or parable metadata and verse refs.
 
-- `goal` string, required.
-- `title` string, optional.
-- `days` number, optional.
-- `references` string array, optional.
+### `find_topic`
 
-Behavior:
+Input:
 
-- The tool creates plan items from canonical references.
-- It does not fetch paid Scripture text.
-- It must not include API.Bible paid text, copyright metadata, FUMS tokens, or cached paid passage HTML in plan output.
+```json
+{ "query": "worry", "limit": 10 }
+```
 
-### `session_coda`
+Returns matching canonical topic names.
 
-Returns the next free local goal verse for an ambient prompt/session coda.
+### `get_related_topics`
 
-Inputs:
+Input:
 
-- `translation` string, optional. Use `web` or `kjv`.
-- `record` boolean, optional. When true, mark the displayed local goal item complete.
+```json
+{ "topic": "Anxiety", "limit": 10 }
+```
 
-Behavior:
+Returns nearby curated topics based on shared verse refs.
 
-- Uses local WEB/KJV only.
-- Reads the same free local goal state as `bible-coder coda`.
-- Advances progress locally when `record` is true so the next coda shows the next goal item.
-- Does not fetch or return paid API.Bible text.
+### `get_verse`
 
-### `progress_record`
+Input:
 
-Records a progress event through the Bible Coder server.
+```json
+{ "ref": "John 3:16" }
+```
 
-Inputs:
+Returns one exact verse row.
 
-- `planId` string, required.
-- `referenceId` string, optional if `reference` is provided.
-- `reference` string, optional if `referenceId` is provided.
-- `action` string, optional. Defaults to `completed`.
-- `idempotencyKey` string, optional.
-- `occurredAt` string, optional ISO timestamp.
-- `payload` object, optional.
+### `get_chapter`
 
-Requires `BIBLE_CODER_API_URL` and `BIBLE_CODER_TOKEN`.
+Input:
 
-### `progress_status`
+```json
+{ "book": "John", "chapter": 3 }
+```
 
-Reads progress events and returns a compact progress summary.
+Returns all verses in a chapter.
 
-Inputs:
+## Errors
 
-- `planId` string, optional.
+Tool errors are returned as MCP text content containing structured JSON. Recoverable lookup errors include suggested follow-up calls, usually `find_topic`.
 
-Requires `BIBLE_CODER_API_URL` and `BIBLE_CODER_TOKEN`.
-
-### `review_next`
-
-Reads review events from the Bible Coder server. V1 reports synced review event state; deeper server-side next-review derivation is a later hardening pass.
-
-Inputs: none.
-
-Requires `BIBLE_CODER_API_URL` and `BIBLE_CODER_TOKEN`.
-
-### `billing_checkout`
-
-Creates a Stripe Checkout Session through the Bible Coder server.
-
-Inputs:
-
-- `successUrl` string, optional.
-- `cancelUrl` string, optional.
-
-Returns the Checkout URL only. It must not print Stripe secret keys, sync tokens, customer IDs, or webhook secrets.
-
-Requires `BIBLE_CODER_API_URL` and `BIBLE_CODER_TOKEN`.
-
-### `sync_status`
-
-Checks whether the MCP server is configured and whether the Bible Coder server health endpoint is reachable.
-
-Inputs: none.
-
-### `block_status`
-
-Reports Prayer Gate status and attestation copy.
-
-Inputs: none.
-
-Behavior:
-
-- Read-only only.
-- Does not install, disable, edit, or inspect Git hooks beyond reporting the static v1 MCP posture.
-- Hook mutation stays CLI-only because MCP tool calls can be model-initiated.
-
-## Common Mistakes
-
-- Do not expose Prayer Gate hook mutation through MCP.
-- Do not return paid API.Bible Scripture text inline to Claude, Gemini, Codex, or other model-visible MCP surfaces unless a future written policy explicitly permits it.
-- Do not call premium passage text from `plan_create`; plans are reference-first.
-- Do not include API.Bible keys, Stripe keys, sync tokens, FUMS tokens, or paid passage HTML in structured errors.
-- Do not assume a Bible abbreviation is an API.Bible ID. Discover allowed Bible IDs through the server `/v1/bibles` route or API.Bible catalog tooling.
+Rate-limit errors include `tier`, `limit`, `used`, and `upgrade_url`.

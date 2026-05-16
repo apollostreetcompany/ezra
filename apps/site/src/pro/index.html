@@ -13,6 +13,7 @@
         <a class="brand" href="/">Ezra MCP</a>
         <nav class="nav" aria-label="Main">
           <a href="/">Home</a>
+          <a href="/account/">Account</a>
           <a href="/mcp/">MCP docs</a>
           <a href="/privacy/">Privacy</a>
           <a href="/terms/">Terms</a>
@@ -27,6 +28,7 @@
           <label for="email">Email</label>
           <input id="email" name="email" type="email" required autocomplete="email" placeholder="you@example.com">
           <button class="button primary" type="submit">Send the magic link</button>
+          <p class="form-status" role="status"></p>
         </form>
 
         <h2 id="pro">Pro — $20 / month</h2>
@@ -36,7 +38,13 @@
           <li>Email support</li>
           <li>Cancel from the billing portal anytime</li>
         </ul>
-        <p><a class="button primary" href="#signup">Start with a free key</a> — upgrade from your account page.</p>
+        <form class="checkout-form wide" data-checkout-form>
+          <input type="hidden" name="tier" value="pro">
+          <label for="pro-email">Email</label>
+          <input id="pro-email" name="email" type="email" required autocomplete="email" placeholder="you@example.com">
+          <button class="button primary" type="submit">Buy Pro</button>
+          <p class="form-status" role="status"></p>
+        </form>
 
         <h2 id="max">Max — $100 / month</h2>
         <ul>
@@ -44,6 +52,13 @@
           <li>Higher per-minute throughput</li>
           <li>Priority email</li>
         </ul>
+        <form class="checkout-form wide" data-checkout-form>
+          <input type="hidden" name="tier" value="max">
+          <label for="max-email">Email</label>
+          <input id="max-email" name="email" type="email" required autocomplete="email" placeholder="you@example.com">
+          <button class="button quiet" type="submit">Buy Max</button>
+          <p class="form-status" role="status"></p>
+        </form>
 
         <h2>What you get on every tier</h2>
         <ul>
@@ -59,5 +74,52 @@
         <span><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></span>
       </footer>
     </div>
+    <script>
+      const signupForm = document.querySelector("#signup-form");
+      signupForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const status = signupForm.querySelector(".form-status");
+        const email = new FormData(signupForm).get("email");
+        status.textContent = "Sending magic link...";
+        try {
+          const response = await fetch("/v1/magic-links/request", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ email })
+          });
+          const body = await response.json();
+          if (!response.ok) throw new Error(body.error || "magic_link_failed");
+          status.innerHTML = 'Magic link requested. Finish in <a href="/account/">Account</a>.';
+        } catch {
+          status.textContent = "Magic link could not be sent.";
+        }
+      });
+
+      for (const form of document.querySelectorAll("[data-checkout-form]")) {
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const status = form.querySelector(".form-status");
+          const data = new FormData(form);
+          status.textContent = "Opening Stripe Checkout...";
+          try {
+            const response = await fetch("/v1/checkout/public-session", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({
+                email: data.get("email"),
+                tier: data.get("tier"),
+                successUrl: "https://ezramcp.com/checkout/success/?session_id={CHECKOUT_SESSION_ID}",
+                cancelUrl: "https://ezramcp.com/checkout/cancel/"
+              })
+            });
+            const body = await response.json();
+            if (!response.ok || !body.url) throw new Error(body.error || "checkout_failed");
+            window.location.assign(body.url);
+          } catch {
+            status.textContent = "Checkout could not start.";
+          }
+        });
+      }
+    </script>
   </body>
 </html>

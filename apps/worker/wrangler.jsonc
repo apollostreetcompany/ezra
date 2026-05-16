@@ -8,14 +8,22 @@
 		"nodejs_compat"
 	],
 	"vars": {
-		"EZRA_MCP_UPGRADE_URL": "https://ezra-mcp.com/upgrade",
+		"EZRA_MCP_UPGRADE_URL": "https://ezramcp.com/pro/",
 		"KLAVIYO_REVISION": "2026-04-15"
+	},
+	"assets": {
+		"directory": "../site/dist",
+		"binding": "ASSETS",
+		"run_worker_first": [
+			"/v1/*",
+			"/health"
+		]
 	},
 	"d1_databases": [
 		{
 			"binding": "DB",
 			"database_name": "ezra-mcp-prod",
-			"database_id": "daf7cf0b-9d54-4948-a815-fc798d28978a",
+			"database_id": "REPLACE_WITH_EZRA_MCP_PROD_D1_ID",
 			"migrations_dir": "migrations"
 		}
 	],

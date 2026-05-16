@@ -1,24 +1,34 @@
 #!/usr/bin/env node
-import { createInterface } from "node:readline";
-import { handleJsonRpcMessage } from "./index.js";
+import readline from "node:readline";
+import { handleBridgeRequest } from "./index.js";
 
-const input = createInterface({ input: process.stdin, crlfDelay: Number.POSITIVE_INFINITY });
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+  terminal: false
+});
 
-input.on("line", (line) => {
+rl.on("line", (line) => {
   void handleLine(line);
 });
 
 async function handleLine(line: string): Promise<void> {
-  if (!line.trim()) {
+  const trimmed = line.trim();
+  if (!trimmed) {
     return;
   }
   try {
-    const response = await handleJsonRpcMessage(JSON.parse(line));
-    if (response !== undefined) {
-      process.stdout.write(`${JSON.stringify(response)}\n`);
-    }
+    const payload = JSON.parse(trimmed);
+    const response = await handleBridgeRequest(payload);
+    process.stdout.write(`${JSON.stringify(response)}\n`);
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    process.stdout.write(`${JSON.stringify({ jsonrpc: "2.0", id: null, error: { code: -32700, message } })}\n`);
+    process.stdout.write(`${JSON.stringify({
+      jsonrpc: "2.0",
+      id: null,
+      error: {
+        code: -32700,
+        message: error instanceof SyntaxError ? "Parse error" : "Ezra MCP bridge error"
+      }
+    })}\n`);
   }
 }

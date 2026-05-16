@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Account — Ezra MCP</title>
+    <meta name="description" content="Log in to Ezra MCP, create an API key, check usage, and open the Stripe Billing Portal.">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="shell">
+      <header class="top">
+        <a class="brand" href="/">Ezra MCP</a>
+        <nav class="nav" aria-label="Main">
+          <a href="/">Home</a>
+          <a href="/pro/">Pricing</a>
+          <a href="/mcp/">MCP docs</a>
+          <a href="/privacy/">Privacy</a>
+        </nav>
+      </header>
+      <main class="main doc">
+        <p class="eyebrow">Account</p>
+        <h1>Keys, usage, billing.</h1>
+        <p class="sub">Use your email to get a short-lived code, then create an API key for your MCP client.</p>
+
+        <section class="account-grid" aria-label="Account actions">
+          <form id="request-form" class="signup-form">
+            <h2>1. Request code</h2>
+            <label for="request-email">Email</label>
+            <input id="request-email" name="email" type="email" required autocomplete="email" placeholder="you@example.com">
+            <button class="button primary" type="submit">Send magic link</button>
+            <p class="form-status" role="status"></p>
+          </form>
+
+          <form id="verify-form" class="signup-form">
+            <h2>2. Verify</h2>
+            <label for="verify-email">Email</label>
+            <input id="verify-email" name="email" type="email" required autocomplete="email" placeholder="you@example.com">
+            <label for="verify-code">Code</label>
+            <input id="verify-code" name="code" type="text" required autocomplete="one-time-code" placeholder="123456">
+            <button class="button primary" type="submit">Verify</button>
+            <p class="form-status" role="status"></p>
+          </form>
+
+          <div class="account-panel">
+            <h2>3. API key</h2>
+            <button id="create-key" class="button primary" type="button">Create API key</button>
+            <pre id="api-key-output" class="copy-block" aria-live="polite"></pre>
+          </div>
+
+          <div class="account-panel">
+            <h2>Status</h2>
+            <div class="account-actions">
+              <button id="refresh-status" class="button quiet" type="button">Refresh status</button>
+              <button id="open-portal" class="button quiet" type="button">Open billing portal</button>
+            </div>
+            <pre id="status-output" class="copy-block" aria-live="polite"></pre>
+          </div>
+        </section>
+      </main>
+      <footer class="footer">
+        <span>Ezra MCP</span>
+        <span><a href="/mcp/">Docs</a> · <a href="/terms/">Terms</a></span>
+      </footer>
+    </div>
+    <script>
+      let sessionToken = "";
+
+      const requestForm = document.querySelector("#request-form");
+      const verifyForm = document.querySelector("#verify-form");
+      const statusOutput = document.querySelector("#status-output");
+      const keyOutput = document.querySelector("#api-key-output");
+
+      requestForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const status = requestForm.querySelector(".form-status");
+        const email = new FormData(requestForm).get("email");
+        document.querySelector("#verify-email").value = email;
+        status.textContent = "Sending magic link...";
+        try {
+          const response = await fetch("/v1/magic-links/request", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ email })
+          });
+          const body = await response.json();
+          if (!response.ok) throw new Error(body.error || "magic_link_failed");
+          status.textContent = body.devCode ? `Dev code: ${body.devCode}` : "Check your email for the code.";
+        } catch {
+          status.textContent = "Magic link could not be sent.";
+        }
+      });
+
+      verifyForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const status = verifyForm.querySelector(".form-status");
+        const data = new FormData(verifyForm);
+        status.textContent = "Verifying...";
+        try {
+          const response = await fetch("/v1/magic-links/verify", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              email: data.get("email"),
+              code: data.get("code"),
+              deviceName: "Ezra MCP web account"
+            })
+          });
+          const body = await response.json();
+          if (!response.ok || !body.token) throw new Error(body.error || "verify_failed");
+          sessionToken = body.token;
+          status.textContent = "Account verified.";
+          await refreshStatus();
+        } catch {
+          status.textContent = "Code could not be verified.";
+        }
+      });
+
+      document.querySelector("#create-key").addEventListener("click", async () => {
+        if (!sessionToken) {
+          keyOutput.textContent = "Verify your email first.";
+          return;
+        }
+        const response = await fetch("/v1/api-keys", {
+          method: "POST",
+          headers: {
+            authorization: `Bearer ${sessionToken}`,
+            "content-type": "application/json"
+          },
+          body: JSON.stringify({ name: "Ezra MCP web key" })
+        });
+        const body = await response.json();
+        if (!response.ok || !body.key) {
+          keyOutput.textContent = body.error || "api_key_failed";
+          return;
+        }
+        keyOutput.textContent = body.key;
+        await refreshStatus();
+      });
+
+      document.querySelector("#refresh-status").addEventListener("click", refreshStatus);
+
+      document.querySelector("#open-portal").addEventListener("click", async () => {
+        if (!sessionToken) {
+          statusOutput.textContent = "Verify your email first.";
+          return;
+        }
+        const response = await fetch("/v1/billing/portal", {
+          method: "POST",
+          headers: {
+            authorization: `Bearer ${sessionToken}`,
+            "content-type": "application/json"
+          },
+          body: JSON.stringify({ returnUrl: "https://ezramcp.com/account/" })
+        });
+        const body = await response.json();
+        if (!response.ok || !body.url) {
+          statusOutput.textContent = body.error || "billing_portal_failed";
+          return;
+        }
+        window.location.assign(body.url);
+      });
+
+      async function refreshStatus() {
+        if (!sessionToken) {
+          statusOutput.textContent = "Verify your email first.";
+          return;
+        }
+        const response = await fetch("/v1/account/status", {
+          headers: { authorization: `Bearer ${sessionToken}` }
+        });
+        const body = await response.json();
+        statusOutput.textContent = JSON.stringify(body, null, 2);
+      }
+    </script>
+  </body>
+</html>

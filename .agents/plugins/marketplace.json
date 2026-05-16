@@ -1,14 +1,14 @@
 {
-  "name": "bible-coder",
+  "name": "ezra-mcp",
   "interface": {
-    "displayName": "Bible Coder"
+    "displayName": "Ezra MCP"
   },
   "plugins": [
     {
-      "name": "bible-coder",
+      "name": "ezra-mcp",
       "source": {
         "source": "local",
-        "path": "./plugins/bible-coder"
+        "path": "./plugins/ezra-mcp"
       },
       "policy": {
         "installation": "AVAILABLE",

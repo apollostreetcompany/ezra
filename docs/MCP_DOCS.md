@@ -1,58 +1,56 @@
-# Bibe Code MCP Docs
+# Ezra MCP Client Docs
 
-Bibe Code exposes a local MCP server through the `bible-coder-mcp` binary.
+Ezra MCP exposes a hosted HTTP MCP endpoint:
 
-## Install
-
-```bash
-pnpm add -g bible-coder
-bible-coder setup
+```text
+https://ezramcp.com/v1/mcp
 ```
 
-The first run configures the free goal, cloud sync when available, and asks whether to install ambient coda hooks for Codex, Claude Code, and Gemini CLI. Those hooks are the default way to show a verse in every supported coding session.
+Every `tools/call` request requires:
 
-## Codex
-
-```bash
-codex mcp add bible-coder -- bible-coder-mcp
+```http
+Authorization: Bearer ezra_live_...
 ```
 
-## Claude Code
+## Codex Plugin
 
-```bash
-claude mcp add bible-coder bible-coder-mcp
+The repo-local plugin lives at:
+
+```text
+plugins/ezra-mcp
 ```
 
-## Gemini CLI
+It declares the stdio bridge:
 
-```bash
-gemini mcp add bible-coder bible-coder-mcp
+```json
+{
+  "mcpServers": {
+    "ezra-mcp": {
+      "command": "ezra-mcp-mcp"
+    }
+  }
+}
 ```
 
-## Free Tools
+## Local Bridge Setup
 
-- `bible_get_passage`
-- `bible_search`
-- `plan_create`
-- `session_coda`
-- `progress_status`
-- `review_next`
-- `sync_status`
-
-## Pro Tools
-
-- `billing_checkout`
-- `block_status`
-
-Goals are free. Pro gates custom bibles, `/block`, and future leaderboard features.
-
-Paid Bible text is not returned inline to model-visible MCP output by default.
-
-`session_coda` is the MCP-side primitive for an ambient verse. When called with `record: true`, it displays the next local goal verse and advances local progress.
-
-Prefer prompt hooks when the client supports them:
-
-```bash
-bible-coder hooks install --client all --scope user --mode coda --yes
-bible-coder hooks doctor --client all
+```sh
+make link-local
+ezra-mcp login --email you@example.com
+ezra-mcp login --email you@example.com --code <code>
+ezra-mcp key create
 ```
+
+The bridge reads `EZRA_MCP_API_KEY` or the saved local key.
+
+## Tool Surface
+
+- `get_verses_by_topic`
+- `list_topics`
+- `get_pericope`
+- `find_topic`
+- `get_related_topics`
+- `get_verse`
+- `get_chapter`
+
+V1 uses curated topics, pericopes, references, and exact verse text from D1 lookup tables.

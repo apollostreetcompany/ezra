@@ -22,7 +22,7 @@ describe("Ezra MCP worker — /v1/mcp", () => {
 
   it("returns 401 with structured MCP error when API key is missing", async () => {
     const db = new FakeD1();
-    const response = await fetch_("https://api.ezra-mcp.com/v1/mcp", {
+    const response = await fetch_("https://ezramcp.com/v1/mcp", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ jsonrpc: "2.0", id: 7, method: "initialize" })
@@ -82,7 +82,7 @@ describe("Ezra MCP worker — /v1/mcp", () => {
     expect(payload.code).toBe("rate_limit_exceeded");
     expect(payload.tier).toBe("free");
     expect(payload.limit).toBe(20);
-    expect(payload.upgrade_url).toContain("upgrade");
+    expect(payload.upgrade_url).toBe("https://ezramcp.com/pro/");
   });
 
   it("returns a structured tool error when a topic is unknown, with a suggested find_topic call", async () => {
@@ -128,7 +128,7 @@ interface RpcResult {
 }
 
 async function rpc(db: FakeD1, token: string, body: { id: number | string; method: string; params?: unknown }): Promise<Response> {
-  return fetch_("https://api.ezra-mcp.com/v1/mcp", {
+  return fetch_("https://ezramcp.com/v1/mcp", {
     method: "POST",
     headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
     body: JSON.stringify({ jsonrpc: "2.0", ...body })
@@ -147,7 +147,7 @@ function env(db: FakeD1): Parameters<typeof worker.fetch>[1] {
     STRIPE_WEBHOOK_SECRET: "whsec",
     STRIPE_PRICE_EZRA_PRO_MONTHLY: "price_pro",
     STRIPE_PRICE_EZRA_MAX_MONTHLY: "price_max",
-    EZRA_MCP_UPGRADE_URL: "https://ezra-mcp.com/upgrade"
+    EZRA_MCP_UPGRADE_URL: "https://ezramcp.com/pro/"
   };
 }
 

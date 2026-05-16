@@ -8,28 +8,22 @@ required_files=(
   "MISTAKES.md"
   "DEPLOYMENT.md"
   "Makefile"
+  "package.json"
   ".agents/plugins/marketplace.json"
-  "plugins/bible-coder/.codex-plugin/plugin.json"
-  "plugins/bible-coder/.mcp.json"
-  "plugins/bible-coder/.app.json"
-  "plugins/bible-coder/hooks.json"
-  "plugins/bible-coder/skills/bible-reading/SKILL.md"
-  "plugins/bible-coder/skills/plan-create/SKILL.md"
-  "plugins/bible-coder/skills/block/SKILL.md"
+  "plugins/ezra-mcp/.codex-plugin/plugin.json"
+  "plugins/ezra-mcp/.mcp.json"
+  "plugins/ezra-mcp/.app.json"
+  "plugins/ezra-mcp/skills/setup/SKILL.md"
+  "plugins/ezra-mcp/skills/lookup/SKILL.md"
+  "plugins/ezra-mcp/skills/billing/SKILL.md"
   "docs/V1_PLAN.md"
-  "docs/API_BIBLE_COMPLIANCE.md"
-  "docs/PRAYER_GATE.md"
-  "docs/MCP_INSTALL_CLAUDE.md"
-  "docs/MCP_INSTALL_GEMINI.md"
   "docs/BILLING.md"
-  "docs/LEADERBOARD.md"
+  "docs/INSTALLATION.md"
   "docs/LIVE_SMOKE_TESTING.md"
   "docs/MCP_TOOL_REFERENCE.md"
   "docs/MCP_DOCS.md"
   "docs/RELEASE_CHECKLIST.md"
   "docs/SITE_DEPLOYMENT.md"
-  "docs/SETUP_UX_AND_INFRA.md"
-  "docs/PROMPT_BLOCKING_MATRIX.md"
   "docs/PRIVACY.md"
   "handoff/beads.schema.json"
   "handoff/beads.jsonl"
@@ -85,22 +79,38 @@ from pathlib import Path
 
 json.loads(Path("handoff/beads.schema.json").read_text())
 json.loads(Path(".agents/plugins/marketplace.json").read_text())
-json.loads(Path("plugins/bible-coder/.codex-plugin/plugin.json").read_text())
-json.loads(Path("plugins/bible-coder/.mcp.json").read_text())
-json.loads(Path("plugins/bible-coder/.app.json").read_text())
-json.loads(Path("plugins/bible-coder/hooks.json").read_text())
+json.loads(Path("plugins/ezra-mcp/.codex-plugin/plugin.json").read_text())
+json.loads(Path("plugins/ezra-mcp/.mcp.json").read_text())
+json.loads(Path("plugins/ezra-mcp/.app.json").read_text())
+wrangler = json.loads(Path("apps/worker/wrangler.jsonc").read_text())
+dbs = wrangler.get("d1_databases") or []
+if not dbs or dbs[0].get("database_id") != "REPLACE_WITH_EZRA_MCP_PROD_D1_ID":
+    raise SystemExit("Wrangler database_id must remain the Ezra placeholder until a distinct D1 id is confirmed.")
+assets = wrangler.get("assets") or {}
+if assets.get("directory") != "../site/dist" or assets.get("binding") != "ASSETS":
+    raise SystemExit("Wrangler assets binding must point at apps/site/dist through ../site/dist.")
 for index, line in enumerate(Path("handoff/beads.jsonl").read_text().splitlines(), start=1):
     if line.strip():
         json.loads(line)
 PY
 
-if grep -R "\[TODO\|TODO:" .agents/plugins plugins/bible-coder docs >/dev/null; then
+if grep -R "\[TODO\|TODO:" .agents/plugins plugins/ezra-mcp docs >/dev/null; then
   echo "Generated scaffold TODOs remain in plugin/docs." >&2
   exit 1
 fi
 
-if grep -R '"block_enable"\|"block_disable"' plugins/bible-coder docs >/dev/null; then
-  echo "MCP mutation tools for Prayer Gate are forbidden in v1." >&2
+if grep -R --exclude=validate-docs.sh --exclude-dir=node_modules --exclude-dir=dist "plugins/bible-coder\|@bible-coder\|BIBLE_CODER_\|bible-coder-mcp\|bible-coder setup\|Bibe Code\|bibecoder\|Prayer Gate\|API_BIBLE" apps packages plugins docs scripts Makefile package.json >/dev/null; then
+  echo "Leftover active Bible Coder/Bibe surface found." >&2
+  exit 1
+fi
+
+if ! grep -Fq "/v1/checkout/public-session" docs/BILLING.md apps/site/src/index.html apps/site/src/pro/index.html; then
+  echo "Public checkout endpoint is not documented and wired." >&2
+  exit 1
+fi
+
+if ! grep -Fq "/v1/checkout/session-status" docs/BILLING.md apps/site/src/checkout/success/index.html; then
+  echo "Checkout success verification endpoint is not documented and wired." >&2
   exit 1
 fi
 

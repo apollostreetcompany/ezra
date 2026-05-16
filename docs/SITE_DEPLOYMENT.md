@@ -1,41 +1,38 @@
-# Bibe Code Site Deployment
+# Ezra MCP Site Deployment
 
-The site lives in `apps/site` and builds to static files in `apps/site/dist`.
+Ezra uses Cloudflare Worker Static Assets so one Worker serves both:
+
+- Site pages from `apps/site/dist`.
+- API/MCP routes under `/v1/*` and `/health`.
+
+`apps/worker/wrangler.jsonc` must include:
+
+```json
+{
+  "assets": {
+    "directory": "../site/dist",
+    "binding": "ASSETS",
+    "run_worker_first": ["/v1/*", "/health"]
+  }
+}
+```
 
 ## Build
 
-```bash
-pnpm --dir apps/site lint
-pnpm --dir apps/site test
-pnpm --dir apps/site build
+```sh
+pnpm --filter @ezra-mcp/site build
+pnpm --filter @ezra-mcp/worker build
 ```
 
-## Deploy
+## Deploy Gate
 
-Use Cloudflare Pages for `bibecoder.com`.
+Do not deploy until:
 
-```bash
-pnpm --dir apps/site build
-wrangler pages deploy apps/site/dist --project-name bibecoder
-```
-
-Cloudflare assumptions:
-
-- `bibecoder.com` is on Cloudflare DNS.
-- Pages project name: `bibecoder`.
-- Production branch: `main`.
-- Build command: `pnpm --dir apps/site build`.
-- Build output directory: `apps/site/dist`.
-
-## Routes
-
-- `/` landing page
-- `/docs/` free install
-- `/pro/` upgrade
-- `/mcp/` MCP setup
-- `/privacy/` privacy basics
-- `/terms/` terms basics
+- The D1 `database_id` is a distinct Ezra id.
+- Stripe price ids are uploaded as Worker secrets.
+- DNS for `ezramcp.com` points at the Worker.
+- Stripe webhook target is `https://ezramcp.com/v1/stripe/webhook`.
 
 ## Rollback
 
-Use the Cloudflare Pages deployment list and promote the previous deployment.
+Use Cloudflare Worker version rollback from the dashboard or redeploy the last known-good git commit.

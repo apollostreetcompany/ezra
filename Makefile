@@ -1,8 +1,8 @@
 SHELL := /bin/bash
 
-.PHONY: verify validate-docs validate-plugin secret-scan drizzle-check worker-check lint test build dev link-local cli-help cli-read cli-coda cli-hooks-doctor cli-block-status live-api-bible-smoke live-stripe-smoke release-check
+.PHONY: verify validate-docs validate-plugin secret-scan worker-check seed-build lint test build dev link-local cli-help cli-status mcp-bridge-smoke live-stripe-smoke release-check
 
-verify: validate-docs validate-plugin secret-scan build drizzle-check worker-check lint test
+verify: validate-docs validate-plugin secret-scan build worker-check seed-build lint test
 
 validate-docs:
 	./scripts/validate-docs.sh
@@ -13,11 +13,11 @@ validate-plugin:
 secret-scan:
 	@if [ -f package.json ]; then pnpm secret:scan; else echo "No package.json yet; skipping secret scan."; fi
 
-drizzle-check:
-	@if [ -f apps/server/package.json ]; then pnpm --filter @ezra-mcp/server drizzle:check; else echo "No server package yet; skipping Drizzle check."; fi
-
 worker-check:
 	@if [ -f apps/worker/package.json ]; then pnpm --filter @ezra-mcp/worker lint; else echo "No worker package yet; skipping Worker check."; fi
+
+seed-build:
+	@if [ -f apps/worker/package.json ]; then pnpm --filter @ezra-mcp/worker seed:build; else echo "No worker package yet; skipping seed build."; fi
 
 lint:
 	@if [ -f package.json ]; then pnpm lint; else echo "No package.json yet; skipping lint."; fi
@@ -37,22 +37,13 @@ link-local:
 cli-help:
 	@if [ -f package.json ]; then pnpm --filter @ezra-mcp/cli build && node packages/cli/dist/bin.js help; else echo "No package.json yet; CLI not configured."; fi
 
-cli-read:
-	@if [ -f package.json ]; then pnpm --filter @ezra-mcp/cli build && node packages/cli/dist/bin.js read John 3:16 --translation web; else echo "No package.json yet; CLI not configured."; fi
+cli-status:
+	@if [ -f package.json ]; then pnpm --filter @ezra-mcp/cli build && node packages/cli/dist/bin.js status; else echo "No package.json yet; CLI not configured."; fi
 
-cli-coda:
-	@if [ -f package.json ]; then pnpm --filter @ezra-mcp/cli build && node packages/cli/dist/bin.js coda; else echo "No package.json yet; CLI not configured."; fi
-
-cli-hooks-doctor:
-	@if [ -f package.json ]; then pnpm --filter @ezra-mcp/cli build && node packages/cli/dist/bin.js hooks doctor --client all; else echo "No package.json yet; CLI not configured."; fi
-
-cli-block-status:
-	@if [ -f package.json ]; then pnpm --filter @ezra-mcp/cli build && node packages/cli/dist/bin.js block status; else echo "No package.json yet; CLI not configured."; fi
-
-live-api-bible-smoke:
-	@if [ -f .env.local ]; then set -a; source .env.local; set +a; pnpm --filter @ezra-mcp/server exec tsx ../../scripts/live-api-bible-smoke.ts; else echo "Missing .env.local with API_BIBLE_KEY."; exit 1; fi
+mcp-bridge-smoke:
+	@if [ -f package.json ]; then pnpm --filter @ezra-mcp/mcp build && printf '{"jsonrpc":"2.0","id":1,"method":"tools/list"}\n' | EZRA_MCP_CONFIG_DIR="$$(mktemp -d)" node packages/mcp/dist/server.js | grep -q '"code":-32001'; else echo "No package.json yet; MCP bridge not configured."; fi
 
 live-stripe-smoke:
-	@if [ -f /Users/kikimac/.hermes/.env ]; then set -a; source /Users/kikimac/.hermes/.env; [ -f .env.local ] && source .env.local; set +a; UPDATE_ENV_LOCAL=true pnpm --filter @ezra-mcp/server exec tsx ../../scripts/live-stripe-smoke.ts; else echo "Missing /Users/kikimac/.hermes/.env with STRIPE_SECRET_KEY."; exit 1; fi
+	@if [ -f /Users/kikimac/.hermes/.env ]; then set -a; source /Users/kikimac/.hermes/.env; [ -f .env.local ] && source .env.local; set +a; pnpm exec tsx scripts/live-stripe-smoke.ts; else echo "Missing /Users/kikimac/.hermes/.env with STRIPE_SECRET_KEY."; exit 1; fi
 
-release-check: verify cli-read cli-block-status
+release-check: verify mcp-bridge-smoke

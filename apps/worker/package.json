@@ -9,6 +9,7 @@
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
     "lint": "tsc -p tsconfig.json --noEmit",
+    "seed:build": "node scripts/build_seed_sql.mjs",
     "test": "vitest run --passWithNoTests"
   },
   "devDependencies": {

@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "ezra-mcp": {
+      "command": "ezra-mcp-mcp",
+      "args": [],
+      "env": {
+        "EZRA_MCP_API_URL": "${EZRA_MCP_API_URL}",
+        "EZRA_MCP_API_KEY": "${EZRA_MCP_API_KEY}",
+        "EZRA_MCP_CONFIG_DIR": "${EZRA_MCP_CONFIG_DIR}"
+      }
+    }
+  }
+}

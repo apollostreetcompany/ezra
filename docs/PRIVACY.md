@@ -1,31 +1,21 @@
-# Privacy
+# Ezra MCP Privacy
 
-Bible Coder stores the minimum data needed for sync, billing, entitlements, progress, reviews, and optional leaderboard participation.
+Ezra MCP stores only the data needed for login, API access, usage metering, billing, and support.
 
 ## Local Data
-- Auth token: `~/.config/bible-coder/auth.json`, mode `0600`.
-- Local state: `~/.config/bible-coder/state.sqlite`, mode `0600`.
 
-## Tokens
-Device sync tokens are opaque long-lived tokens:
+- Auth file: `~/.config/ezra-mcp/auth.json`, mode `0600`.
+- Optional env override: `EZRA_MCP_CONFIG_DIR`.
+- Local file contents are not uploaded by the CLI or bridge.
 
-```text
-bc_live_<prefix>_<random_256_bits>
-```
+## Server Data
 
-The server stores only `SHA256(TOKEN_HASH_PEPPER + token)`.
+- Normalized email for login and checkout identity.
+- Opaque token hashes and token prefixes.
+- Stripe customer id and entitlement status.
+- Monthly usage counter.
+- Minimal audit records for billing/support events.
 
-## Prayer Gate
-Prayer Gate does not verify prayer. Local attestation logs, if enabled, should store only timestamp, repo hash, branch, and commit SHA. Prayer details do not sync by default.
+## Secrets
 
-Server attestation sync is opt-in through `/v1/block/settings`. When enabled, the server accepts only timestamp, repo hash, branch, and commit SHA. It does not store the attestation phrase.
-
-## Leaderboard
-Leaderboard participation is off by default. When enabled, public leaderboard entries expose only:
-- Display name
-- Completed progress count
-
-Leaderboard output must not expose user IDs, device IDs, plan IDs, references, branch names, repo hashes, prayer details, or Scripture text.
-
-## Paid Scripture
-Paid API.Bible text is display-only and is redacted from model-visible MCP outputs by default.
+The Worker owns Stripe and Klaviyo secrets. The client stores only opaque session/API tokens. Do not paste long-lived tokens into chat, docs, screenshots, or issue trackers.

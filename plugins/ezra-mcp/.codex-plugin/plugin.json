@@ -1,0 +1,44 @@
+{
+  "name": "ezra-mcp",
+  "version": "0.1.0",
+  "description": "Ezra MCP setup, hosted Bible lookup tools, API key management, checkout, and billing for MCP clients.",
+  "author": {
+    "name": "Apollo Street Company",
+    "email": "support@apollostreet.com",
+    "url": "https://github.com/apollostreetcompany"
+  },
+  "homepage": "https://ezramcp.com",
+  "repository": "https://github.com/apollostreetcompany/ezra-mcp",
+  "license": "UNLICENSED",
+  "keywords": [
+    "bible",
+    "mcp",
+    "json-rpc",
+    "cloudflare-worker",
+    "topic-lookup"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "apps": "./.app.json",
+  "interface": {
+    "displayName": "Ezra MCP",
+    "shortDescription": "Hosted Bible verse lookup tools for any MCP client",
+    "longDescription": "Install the Ezra MCP CLI and stdio bridge, create a private API key, and let Codex or another MCP client call hosted Bible lookup tools for topics, verses, chapters, stories, and parables.",
+    "developerName": "Apollo Street Company",
+    "category": "Education",
+    "capabilities": [
+      "Interactive",
+      "Read"
+    ],
+    "websiteURL": "https://ezramcp.com",
+    "privacyPolicyURL": "https://ezramcp.com/privacy/",
+    "termsOfServiceURL": "https://ezramcp.com/terms/",
+    "defaultPrompt": [
+      "Run Ezra MCP setup",
+      "Create an Ezra MCP API key",
+      "Use Ezra MCP to look up verses by topic",
+      "Open Ezra MCP account or billing"
+    ],
+    "brandColor": "#B82024"
+  }
+}

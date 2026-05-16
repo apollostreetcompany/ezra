@@ -23,10 +23,10 @@ const TOPICS_PATH = resolve(DATA_DIR, "bible_topics.json");
 const PERICOPES_PATH = resolve(DATA_DIR, "bible_pericopes.json");
 const TEXTS_PATH = resolve(DATA_DIR, "web_text.json"); // {ref: text}
 
-for (const p of [VERSES_PATH, TOPICS_PATH, PERICOPES_PATH]) {
+for (const p of [VERSES_PATH, TOPICS_PATH, PERICOPES_PATH, TEXTS_PATH]) {
   if (!existsSync(p)) {
     console.error(`Missing input: ${p}`);
-    console.error("Copy bible_verses.json, bible_topics.json, bible_pericopes.json into apps/worker/data/");
+    console.error("Copy bible_verses.json, bible_topics.json, bible_pericopes.json, and web_text.json into apps/worker/data/");
     process.exit(1);
   }
 }
@@ -34,10 +34,18 @@ for (const p of [VERSES_PATH, TOPICS_PATH, PERICOPES_PATH]) {
 const verses = JSON.parse(readFileSync(VERSES_PATH, "utf8"));
 const topics = JSON.parse(readFileSync(TOPICS_PATH, "utf8"));
 const pericopes = JSON.parse(readFileSync(PERICOPES_PATH, "utf8"));
-const texts = existsSync(TEXTS_PATH) ? JSON.parse(readFileSync(TEXTS_PATH, "utf8")) : {};
+const texts = JSON.parse(readFileSync(TEXTS_PATH, "utf8"));
+const validVerses = verses.filter((verse) => texts[verse.ref]);
+const validRefs = new Set(validVerses.map((verse) => verse.ref));
+const missingRefs = verses.filter((verse) => !texts[verse.ref]).map((verse) => verse.ref);
+
+if (missingRefs.length) {
+  console.error(`Skipping ${missingRefs.length} verse refs with no WEB text: ${missingRefs.join(", ")}`);
+}
 
 const sqlEsc = (s) => "'" + String(s).replace(/'/g, "''") + "'";
 const j = (v) => sqlEsc(JSON.stringify(v));
+const onlyValidRefs = (refs) => (refs || []).filter((ref) => validRefs.has(ref));
 
 const lines = [
   "-- Auto-generated. Do not edit. Re-run scripts/build_seed_sql.mjs.",
@@ -49,14 +57,15 @@ const lines = [
 
 // topics
 for (const [name, info] of Object.entries(topics)) {
+  const verseRefs = onlyValidRefs(info.verse_refs);
   lines.push(
-    `INSERT INTO topics (name, category, verse_count, verse_refs) VALUES (${sqlEsc(name)}, ${sqlEsc(info.category)}, ${info.verse_count}, ${j(info.verse_refs || [])});`
+    `INSERT INTO topics (name, category, verse_count, verse_refs) VALUES (${sqlEsc(name)}, ${sqlEsc(info.category)}, ${verseRefs.length}, ${j(verseRefs)});`
   );
 }
 
-// verses (with text from web_text.json if available, else empty)
-for (const v of verses) {
-  const text = texts[v.ref] || "";
+// verses
+for (const v of validVerses) {
+  const text = texts[v.ref];
   lines.push(
     `INSERT INTO verses (ref, book, chapter, verse, text, topics, pericopes) VALUES (${sqlEsc(v.ref)}, ${sqlEsc(v.book)}, ${v.chapter}, ${v.verse}, ${sqlEsc(text)}, ${j(v.topics || [])}, ${j(v.pericopes || [])});`
   );
@@ -64,12 +73,13 @@ for (const v of verses) {
 
 // pericopes
 for (const p of pericopes) {
+  const verseRefs = onlyValidRefs(p.verse_refs);
   lines.push(
-    `INSERT INTO pericopes (name, category, book, verse_range, verse_refs, topics) VALUES (${sqlEsc(p.name)}, ${sqlEsc(p.category)}, ${p.book ? sqlEsc(p.book) : "NULL"}, ${sqlEsc(p.verse_range)}, ${j(p.verse_refs || [])}, ${j(p.topics || [])});`
+    `INSERT INTO pericopes (name, category, book, verse_range, verse_refs, topics) VALUES (${sqlEsc(p.name)}, ${sqlEsc(p.category)}, ${p.book ? sqlEsc(p.book) : "NULL"}, ${sqlEsc(p.verse_range)}, ${j(verseRefs)}, ${j(p.topics || [])});`
   );
 }
 
 lines.push("COMMIT;");
 
 writeFileSync(OUT_FILE, lines.join("\n") + "\n");
-console.log(`wrote ${OUT_FILE}: ${Object.keys(topics).length} topics, ${verses.length} verses, ${pericopes.length} pericopes`);
+console.log(`wrote ${OUT_FILE}: ${Object.keys(topics).length} topics, ${validVerses.length} verses, ${pericopes.length} pericopes`);

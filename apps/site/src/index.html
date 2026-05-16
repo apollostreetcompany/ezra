@@ -17,6 +17,7 @@
           <a href="#what-you-get">What it does</a>
           <a href="#how">Use it</a>
           <a href="#pricing">Pricing</a>
+          <a href="/account/">Account</a>
           <a href="/mcp/">MCP docs</a>
         </nav>
       </header>
@@ -28,7 +29,7 @@
             <h1 id="hero-title"><span>Real Bible verses</span> <span>for your LLM.</span></h1>
             <p class="sub">Ask for a theme. Get the verses, with refs your LLM can't fabricate. 31,103 verses across 66 books, indexed by 387 themes, stories, and parables.</p>
             <div class="actions">
-              <a class="button primary" href="/pro/#signup">Get a free API key</a>
+              <a class="button primary" href="/account/">Get a free API key</a>
               <a class="button quiet" href="#how">See it in action</a>
             </div>
           </div>
@@ -120,7 +121,7 @@
                 <li>All 7 MCP tools</li>
                 <li>Full verse + topic data</li>
               </ul>
-              <a class="button quiet" href="/pro/#signup">Get a free key</a>
+              <a class="button quiet" href="/account/">Get a free key</a>
             </article>
             <article class="tier tier-pro">
               <header>
@@ -132,7 +133,13 @@
                 <li>Production use</li>
                 <li>Email support</li>
               </ul>
-              <a class="button primary" href="/pro/#pro">Start Pro</a>
+              <form class="checkout-form" data-checkout-form>
+                <input type="hidden" name="tier" value="pro">
+                <label for="landing-pro-email">Email</label>
+                <input id="landing-pro-email" name="email" type="email" required autocomplete="email" placeholder="you@example.com">
+                <button class="button primary" type="submit">Buy Pro</button>
+                <p class="form-status" role="status"></p>
+              </form>
             </article>
             <article class="tier">
               <header>
@@ -144,7 +151,13 @@
                 <li>Higher rate limits</li>
                 <li>Priority support</li>
               </ul>
-              <a class="button quiet" href="/pro/#max">Start Max</a>
+              <form class="checkout-form" data-checkout-form>
+                <input type="hidden" name="tier" value="max">
+                <label for="landing-max-email">Email</label>
+                <input id="landing-max-email" name="email" type="email" required autocomplete="email" placeholder="you@example.com">
+                <button class="button quiet" type="submit">Buy Max</button>
+                <p class="form-status" role="status"></p>
+              </form>
             </article>
           </div>
         </section>
@@ -155,5 +168,32 @@
         <span><a href="/mcp/">Docs</a> · <a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></span>
       </footer>
     </div>
+    <script>
+      for (const form of document.querySelectorAll("[data-checkout-form]")) {
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const status = form.querySelector(".form-status");
+          const data = new FormData(form);
+          status.textContent = "Opening Stripe Checkout...";
+          try {
+            const response = await fetch("/v1/checkout/public-session", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({
+                email: data.get("email"),
+                tier: data.get("tier"),
+                successUrl: "https://ezramcp.com/checkout/success/?session_id={CHECKOUT_SESSION_ID}",
+                cancelUrl: "https://ezramcp.com/checkout/cancel/"
+              })
+            });
+            const body = await response.json();
+            if (!response.ok || !body.url) throw new Error(body.error || "checkout_failed");
+            window.location.assign(body.url);
+          } catch (error) {
+            status.textContent = "Checkout could not start. Try again from /pro/ or /account/.";
+          }
+        });
+      }
+    </script>
   </body>
 </html>

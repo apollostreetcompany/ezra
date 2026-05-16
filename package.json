@@ -6,10 +6,10 @@
   "packageManager": "pnpm@10.16.1",
   "scripts": {
     "build": "pnpm -r build",
-    "dev": "pnpm --filter @bible-coder/server dev",
+    "dev": "pnpm --filter @ezra-mcp/worker dev",
     "lint": "pnpm -r lint",
     "test": "pnpm -r test",
-    "verify": "pnpm lint && pnpm test && pnpm build && pnpm validate:docs && pnpm validate:plugin",
+    "verify": "pnpm validate:docs && pnpm validate:plugin && pnpm secret:scan && pnpm build && pnpm lint && pnpm test",
     "validate:docs": "./scripts/validate-docs.sh",
     "validate:plugin": "node scripts/validate-plugin.mjs",
     "markdown:validate": "./scripts/validate-docs.sh",

@@ -1,31 +1,41 @@
-# Release Checklist
+# Ezra MCP Release Checklist
 
-## Required Validation
-- `make release-check`
-- `pnpm --filter @bible-coder/server drizzle:check`
-- MCP stdio smoke with `initialize` and `tools/list`
-- MCP tool docs checked against `docs/MCP_TOOL_REFERENCE.md`
-- `make live-api-bible-smoke` in a secret-safe local environment
-- `make live-stripe-smoke` in a secret-safe local environment
-- Stripe CLI price lookup for `bible_coder_premium_monthly`
-- Secret scan passes
-- Plugin manifest validation passes
+## Local Validation
 
-## Launch Gates
-- API.Bible confirms the commercial subscription model in writing.
-- API.Bible confirms exact premium translations allowed for this app.
-- API.Bible confirms overage pricing and license brackets.
-- API.Bible confirms FUMS handling for CLI, MCP, and native-style display.
-- API.Bible confirms cache semantics for repeated display from cache.
-- Stripe live-mode webhook and entitlement tests pass.
-- Paid text remains blocked from AI prompts and model-visible MCP outputs by tests.
-- Prayer Gate copy states only personal attestation, never verification.
-- Existing pre-push hooks are preserved by install and uninstall tests.
-- Docs clearly state `/block` is bypassable local soft mode unless future hard mode is configured.
+```sh
+pnpm verify
+make release-check
+```
 
-## Deployment Preflight
-- Confirm `pnpm-lock.yaml` matches package manifests.
-- Confirm Render service binds `0.0.0.0:$PORT`.
-- Confirm `/health` responds after deploy.
-- Confirm rollback path in Render is available.
-- Confirm premium API.Bible catalog feature flag remains disabled until written approval is attached.
+Required checks:
+
+- Docs validation.
+- Plugin validation.
+- Secret scan.
+- Worker build/lint/test.
+- CLI build/lint/test.
+- MCP bridge build/lint/test.
+- Site lint/test/build.
+- Seed SQL build.
+
+## Launch Blockers
+
+- GitHub remote is configured.
+- CI required checks are configured and passing.
+- `apps/worker/wrangler.jsonc` has a real Ezra D1 `database_id`.
+- `seed.sql` has been loaded into the Ezra D1 database only.
+- Stripe Pro and Max price ids are set as Worker secrets.
+- Stripe webhook target points at `https://ezramcp.com/v1/stripe/webhook`.
+- `EZRA_MCP_UPGRADE_URL=https://ezramcp.com/pro/`.
+- Site has been checked at 390px, 768px, and 1280px.
+
+## Smoke
+
+After deploy:
+
+```sh
+curl -sS https://ezramcp.com/health
+curl -sS https://ezramcp.com/mcp/
+```
+
+Then create a test account, create an API key, call `tools/list`, start a test checkout, and confirm account status moves to the purchased tier.
