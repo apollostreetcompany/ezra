@@ -7,10 +7,10 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - Repo path: `/Users/kikimac/ezra-mcp`.
 - Separate data repo: `/Users/kikimac/ezra-bible-data`.
 - Graphify is out of scope; D1 inverted indexes are the v1 query path.
-- No remote is configured yet; do not push until the user adds one.
-- No remote deploy, seed, or Stripe webhook cutover until `ezra-mcp-prod` has a distinct D1 database id and Stripe price ids are configured.
+- GitHub remote `origin`: `https://github.com/apollostreetcompany/ezra.git`.
+- Production Worker is deployed; `ezramcp.com` is attached as a Worker custom domain and route, but this Mac's system resolver is still caching the earlier missing-host response. Public DNS answers now exist.
 - Current branch: `codex/feat/ezra-full-plugin-launch`.
-- Bead 1 risk class: High because it touches plugin packaging, CLI/MCP bridge, public Worker APIs, auth, billing, deployment config, and launch pages.
+- Bead 26 risk class: High because it touches deployment, D1 schema/seed behavior, public MCP response shape for duplicate pericopes, DNS routing, and launch screenshots.
 
 ## Key Decisions
 1. Ezra MCP is a separate product from Bible Coder/Bibe Code; old Bibe files are process input only.
@@ -24,6 +24,11 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 9. Public checkout supports Pro and Max; checkout success can verify Stripe session status and repair entitlement if the webhook is delayed.
 10. The inherited Bible Coder D1 database id must not be used for Ezra deployment.
 11. Seed generation excludes catalog refs with no WEB text instead of writing empty verse text. Current excluded refs: `Psalms 114:9`, `Psalms 114:10`, and `Psalms 137:10`.
+12. Confirmed Cloudflare D1 database `ezra-mcp-prod` id: `13f487c0-02fc-44da-814c-252925bb59da`.
+13. Stripe live prices were created: Pro `price_1TXZF0G0PuTic3weMLi26vTU`, Max `price_1TXZF0G0PuTic3weRYdzZTBh`.
+14. D1 pericopes use `(name, verse_range)` as the primary key because canonical pericope names can repeat across multiple ranges.
+15. `get_pericope` aggregates all ranges for a repeated name and returns top-level combined `verse_refs`, `topics`, `verses`, plus per-range `segments`.
+16. Worker deployment version `a7071023-096d-421f-81ad-c9643026e61a` is live on `https://ezra-mcp-api.ryan-borker.workers.dev` and attached to `ezramcp.com`.
 
 ## State
 
@@ -35,21 +40,25 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - [x] Branch `codex/feat/ezra-full-plugin-launch` created from `main`.
 - [x] Bead 1 implementation completed: Ezra plugin, CLI, MCP bridge, Worker checkout/account APIs, Worker static assets config, site checkout/account pages, docs, and validation scripts.
 - [x] Automated validation passed: `pnpm build`, `pnpm lint`, `pnpm test`, `make verify`, `make release-check`, `pnpm secret:scan`, Worker seed build.
+- [x] Remote origin configured as `https://github.com/apollostreetcompany/ezra.git`.
+- [x] Browser visual evidence captured under `docs/visual-evidence/` for landing, Pro, account, MCP docs, checkout success, and pricing at 390px/768px/1280px.
+- [x] Mobile MCP docs overflow fixed after browser screenshot review.
+- [x] Distinct Cloudflare D1 database created, migrations applied through `0005_pericope_ranges.sql`, and seed loaded: 386 topics, 23,396 verses, 709 pericope ranges.
+- [x] Stripe Pro/Max products and prices created; Worker Stripe/Klaviyo/token secrets uploaded without printing secret values.
+- [x] Worker deployed with static assets and custom domain attachment.
+- [x] Production smoke passed on `workers.dev`: health, static home, unauthenticated MCP error, authenticated `get_verse` against D1, and public Pro checkout.
+- [x] Root-domain smoke passed with forced DNS resolution: health, static home, unauthenticated MCP error, and public Max checkout.
 
 ### Now
-- Bead 1 is ready for review with concerns: browser visual testing at 390px/768px/1280px is still pending because no Browser tool or Playwright runtime is available in this session.
+- Bead 26 finalization: update docs/evidence, commit, and push branch to origin.
 
 ### Next
-- Capture browser visual evidence for `/`, `/pro/`, `/account/`, `/checkout/success/`, and `/mcp/` at 390px, 768px, and 1280px before launch.
-- Create a distinct Cloudflare D1 database for `ezra-mcp-prod` and update `apps/worker/wrangler.jsonc`.
-- Create Stripe products/prices for Ezra Pro Monthly and Ezra Max Monthly and upload Worker secrets.
-- Point `ezramcp.com` at the Worker and configure Stripe webhook target `https://ezramcp.com/v1/stripe/webhook`.
+- Wait for local macOS resolver cache to pick up `ezramcp.com`; `dig` already returns Cloudflare A/AAAA records and `curl --resolve` succeeds.
+- Add optional `www.ezramcp.com` route/DNS later if desired.
+- Run a live account magic-link test with a real inbox before public announcement.
 
 ## Open Questions
-- UNCONFIRMED: Final GitHub remote URL.
-- UNCONFIRMED: Distinct Cloudflare D1 database id for `ezra-mcp-prod`.
-- UNCONFIRMED: Stripe price ids for Ezra Pro and Ezra Max.
-- UNCONFIRMED: Whether Klaviyo should be enabled for launch or kept skipped.
+- UNCONFIRMED: Whether Klaviyo events are landing in the intended production list/flow.
 - UNCONFIRMED: Whether the three missing-text source refs should be repaired upstream in `/Users/kikimac/ezra-bible-data` or intentionally excluded from v1 seed output.
 
 ## Working Set

@@ -84,11 +84,23 @@ json.loads(Path("plugins/ezra-mcp/.mcp.json").read_text())
 json.loads(Path("plugins/ezra-mcp/.app.json").read_text())
 wrangler = json.loads(Path("apps/worker/wrangler.jsonc").read_text())
 dbs = wrangler.get("d1_databases") or []
-if not dbs or dbs[0].get("database_id") != "REPLACE_WITH_EZRA_MCP_PROD_D1_ID":
-    raise SystemExit("Wrangler database_id must remain the Ezra placeholder until a distinct D1 id is confirmed.")
+if not dbs:
+    raise SystemExit("Wrangler must define an Ezra D1 database binding.")
+db = dbs[0]
+if db.get("database_name") != "ezra-mcp-prod":
+    raise SystemExit("Wrangler database_name must be ezra-mcp-prod.")
+database_id = db.get("database_id")
+if database_id in {None, "", "REPLACE_WITH_EZRA_MCP_PROD_D1_ID", "daf7cf0b-9d54-4948-a815-fc798d28978a"}:
+    raise SystemExit("Wrangler database_id must be the confirmed distinct Ezra D1 id, not a placeholder or Bible Coder id.")
+if database_id != "13f487c0-02fc-44da-814c-252925bb59da":
+    raise SystemExit("Wrangler database_id differs from the confirmed ezra-mcp-prod D1 id.")
 assets = wrangler.get("assets") or {}
 if assets.get("directory") != "../site/dist" or assets.get("binding") != "ASSETS":
     raise SystemExit("Wrangler assets binding must point at apps/site/dist through ../site/dist.")
+routes = wrangler.get("routes") or []
+patterns = {route.get("pattern") for route in routes}
+if "ezramcp.com/*" not in patterns:
+    raise SystemExit("Wrangler routes must include ezramcp.com/*.")
 for index, line in enumerate(Path("handoff/beads.jsonl").read_text().splitlines(), start=1):
     if line.strip():
         json.loads(line)

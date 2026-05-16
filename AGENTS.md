@@ -82,7 +82,7 @@ Branch naming: `codex/feat/bead-N-description`, `codex/fix/...`, or `codex/chore
 
 No direct commits to `main`. Keep `main` deployable. Squash merge only once a remote exists.
 
-Remote: UNCONFIRMED; local repo currently has no `origin`.
+Remote: `https://github.com/apollostreetcompany/ezra.git`.
 
 ## 6. Continuity Ledger
 Protocol for `CONTINUITY.md`:
@@ -104,11 +104,11 @@ Before implementation starts:
 4. Risk class declared as `Low`, `Medium`, or `High`.
 
 Current bead:
-- Bead 1 - Full plugin launch cleanup and account/checkout implementation.
-- Workstream: code/docs/deploy prep.
-- Risk: High because it changes auth, billing, public APIs, deployment config, and plugin packaging.
+- Bead 26 - Launch deployment, browser evidence, and production smoke.
+- Workstream: deploy/code/design.
+- Risk: High because it changes deployment routing, D1 schema/seed behavior, and public MCP response behavior for repeated pericope names.
 - Agent: Primary Codex with in-thread architect/engineer/reviewer passes.
-- Tools: RepoPrompt, plugin-creator guidance, pnpm/Vitest, Wrangler config inspection.
+- Tools: RepoPrompt, Browser plugin, pnpm/Vitest, Wrangler, Stripe API, Cloudflare D1.
 
 ### Bead Exit Gate (Mandatory)
 

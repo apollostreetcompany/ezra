@@ -4,6 +4,12 @@
 	"main": "src/index.ts",
 	"compatibility_date": "2026-05-15",
 	"workers_dev": true,
+	"routes": [
+		{
+			"pattern": "ezramcp.com/*",
+			"zone_name": "ezramcp.com"
+		}
+	],
 	"compatibility_flags": [
 		"nodejs_compat"
 	],
@@ -23,7 +29,7 @@
 		{
 			"binding": "DB",
 			"database_name": "ezra-mcp-prod",
-			"database_id": "REPLACE_WITH_EZRA_MCP_PROD_D1_ID",
+			"database_id": "13f487c0-02fc-44da-814c-252925bb59da",
 			"migrations_dir": "migrations"
 		}
 	],

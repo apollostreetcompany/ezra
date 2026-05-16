@@ -49,7 +49,6 @@ const onlyValidRefs = (refs) => (refs || []).filter((ref) => validRefs.has(ref))
 
 const lines = [
   "-- Auto-generated. Do not edit. Re-run scripts/build_seed_sql.mjs.",
-  "BEGIN TRANSACTION;",
   "DELETE FROM topics;",
   "DELETE FROM verses;",
   "DELETE FROM pericopes;",
@@ -78,8 +77,6 @@ for (const p of pericopes) {
     `INSERT INTO pericopes (name, category, book, verse_range, verse_refs, topics) VALUES (${sqlEsc(p.name)}, ${sqlEsc(p.category)}, ${p.book ? sqlEsc(p.book) : "NULL"}, ${sqlEsc(p.verse_range)}, ${j(verseRefs)}, ${j(p.topics || [])});`
   );
 }
-
-lines.push("COMMIT;");
 
 writeFileSync(OUT_FILE, lines.join("\n") + "\n");
 console.log(`wrote ${OUT_FILE}: ${Object.keys(topics).length} topics, ${validVerses.length} verses, ${pericopes.length} pericopes`);

@@ -118,6 +118,52 @@ describe("Ezra MCP worker — /v1/mcp", () => {
     const body = await response.json() as RpcResult;
     expect(body.result?.isError).toBe(false);
   });
+
+  it("returns all ranges for a pericope name that appears more than once", async () => {
+    const db = new FakeD1();
+    db.pericopes.push(
+      {
+        name: "John on Patmos",
+        category: "story",
+        book: "Revelation",
+        verse_range: "Revelation 7:1-8",
+        verse_refs: JSON.stringify(["Revelation 7:1"]),
+        topics: JSON.stringify(["Protection"])
+      },
+      {
+        name: "John on Patmos",
+        category: "story",
+        book: "Revelation",
+        verse_range: "Revelation 7:9-17",
+        verse_refs: JSON.stringify(["Revelation 7:9"]),
+        topics: JSON.stringify(["Worship"])
+      }
+    );
+    db.verses.set("Revelation 7:1", {
+      ref: "Revelation 7:1", book: "Revelation", chapter: 7, verse: 1,
+      text: "After this, I saw four angels standing at the four corners of the earth...",
+      topics: JSON.stringify(["Protection"]), pericopes: JSON.stringify(["John on Patmos"])
+    });
+    db.verses.set("Revelation 7:9", {
+      ref: "Revelation 7:9", book: "Revelation", chapter: 7, verse: 9,
+      text: "After these things I looked, and behold, a great multitude...",
+      topics: JSON.stringify(["Worship"]), pericopes: JSON.stringify(["John on Patmos"])
+    });
+    const token = await issueMcpKey(db, "usr_patmos");
+    const response = await rpc(db, token, {
+      id: 6,
+      method: "tools/call",
+      params: { name: "get_pericope", arguments: { name: "John on Patmos" } }
+    });
+    const body = await response.json() as RpcResult;
+    expect(body.result?.isError).toBe(false);
+    const data = JSON.parse((body.result?.content as Array<{ text: string }>)[0].text);
+    expect(data.verse_range).toBe("Revelation 7:1-8; Revelation 7:9-17");
+    expect(data.verse_refs).toEqual(["Revelation 7:1", "Revelation 7:9"]);
+    expect(data.topics).toEqual(["Protection", "Worship"]);
+    expect(data.segments).toHaveLength(2);
+    expect(data.verses.map((verse: { ref: string }) => verse.ref)).toEqual(["Revelation 7:1", "Revelation 7:9"]);
+  });
 });
 
 interface RpcResult {
@@ -204,12 +250,22 @@ interface VerseRow {
   pericopes: string;
 }
 
+interface PericopeRow {
+  name: string;
+  category: string;
+  book: string | null;
+  verse_range: string;
+  verse_refs: string;
+  topics: string;
+}
+
 class FakeD1 {
   deviceTokensByHash = new Map<string, DeviceTokenRow>();
   usage = new Map<string, UsageRow>();
   entitlements = new Map<string, EntitlementRow>();
   topics = new Map<string, TopicRow>();
   verses = new Map<string, VerseRow>();
+  pericopes: PericopeRow[] = [];
   users = new Map<string, { email: string | null }>();
 
   prepare(query: string): FakeStatement {
@@ -272,6 +328,13 @@ class FakeStatement {
       if (q.includes("WHERE category =")) {
         rows = rows.filter((row) => row.category === String(this.values[0]));
       }
+      return { results: rows as unknown as T[] };
+    }
+    if (q.includes("FROM pericopes WHERE name")) {
+      const name = String(this.values[0]);
+      const rows = this.db.pericopes
+        .filter((row) => row.name === name)
+        .sort((a, b) => a.verse_range.localeCompare(b.verse_range));
       return { results: rows as unknown as T[] };
     }
     if (q.includes("FROM verses WHERE book")) {

@@ -13,3 +13,6 @@
 - Full workspace validation can pass partially while stale workspace packages still break `pnpm test`/`pnpm build`; remove or fully rewrite inherited packages instead of leaving them half-renamed.
 - Public checkout and account login must share a normalized email identity, otherwise a paid user can purchase on the site and later log in as a separate free user.
 - Seed generation must not write blank verse text. If catalog refs have no WEB text, exclude them from generated seed output and record the exact refs for upstream data cleanup.
+- Remote D1 import rejects explicit SQL transaction wrappers in uploaded seed files. Keep generated seed SQL free of raw `BEGIN TRANSACTION`/`COMMIT`.
+- Pericope labels are not unique ids. Use `(name, verse_range)` for storage and aggregate repeated labels in `get_pericope`.
+- Do not deploy routes while sourcing a limited Cloudflare API token from `.env`; use the Wrangler OAuth session when route/custom-domain permissions are needed.

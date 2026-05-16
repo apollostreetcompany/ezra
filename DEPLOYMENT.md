@@ -7,6 +7,8 @@
 - MCP endpoint: `POST /v1/mcp`.
 - Static site build output: `apps/site/dist`.
 - Database: Cloudflare D1, database name `ezra-mcp-prod`.
+- D1 id: `13f487c0-02fc-44da-814c-252925bb59da`.
+- Current deployed Worker version: `a7071023-096d-421f-81ad-c9643026e61a`.
 - Package manager: pnpm.
 - Runtime: Node 22+ for local CLI/MCP bridge, Cloudflare Workers for production.
 
@@ -40,33 +42,35 @@ Local CLI/MCP:
 - MCP bridge smoke: `make mcp-bridge-smoke`.
 
 ## Cloudflare Worker Run Path
-Remote deployment is blocked until a distinct D1 id is configured.
+Production deployment is live. Use this path for redeploys.
 
-1. Create D1:
+1. Confirm D1:
    ```bash
-   wrangler d1 create ezra-mcp-prod
+   wrangler d1 list | rg ezra-mcp-prod
    ```
-2. Replace `REPLACE_WITH_EZRA_MCP_PROD_D1_ID` in `apps/worker/wrangler.jsonc`.
-3. Apply migrations:
+2. Apply migrations:
    ```bash
    cd apps/worker
-   wrangler d1 migrations apply ezra-mcp-prod --remote
+   wrangler d1 migrations apply DB --remote
    ```
-4. Load seed SQL:
+3. Load seed SQL:
    ```bash
-   wrangler d1 execute ezra-mcp-prod --file=seed.sql --remote
+   wrangler d1 execute DB --remote --file seed.sql
    ```
-5. Deploy:
+4. Deploy:
    ```bash
    pnpm --filter @ezra-mcp/site build
-   pnpm --filter @ezra-mcp/worker deploy
+   cd apps/worker
+   wrangler deploy --domain ezramcp.com
    ```
 
-If D1 rejects the single seed file, split it by table or chunked statement groups before retrying.
+Do not source `/Users/kikimac/.hermes/.env` for `wrangler deploy`; that file's Cloudflare API token can upload Worker code but cannot manage routes. The local Wrangler OAuth session has the route/custom-domain permissions.
 
 Current seed builder behavior:
 - Requires `bible_verses.json`, `bible_topics.json`, `bible_pericopes.json`, and `web_text.json`.
 - Excludes refs with no WEB text instead of writing empty verse rows.
+- Does not emit explicit `BEGIN TRANSACTION`/`COMMIT`; remote D1 import rejects raw transaction wrappers.
+- Stores repeated pericope names as separate `(name, verse_range)` rows.
 - Current excluded refs from local data: `Psalms 114:9`, `Psalms 114:10`, `Psalms 137:10`.
 
 ## Cloudflare Static Assets
@@ -74,6 +78,34 @@ Worker static assets are configured from `apps/worker/wrangler.jsonc`:
 - `assets.directory = ../site/dist`
 - `assets.binding = ASSETS`
 - `assets.run_worker_first = ["/v1/*", "/health"]`
+- route: `ezramcp.com/*`
+- custom domain: `ezramcp.com`
+
+`www.ezramcp.com` is not configured in the current Worker file. Add it later only after confirming Cloudflare DNS/route permissions for the `www` hostname.
+
+## Production Smoke Evidence
+Captured on 2026-05-16:
+- `pnpm verify` passed.
+- D1 seed counts: 386 topics, 23,396 verses, 709 pericope ranges.
+- Worker deployed version: `a7071023-096d-421f-81ad-c9643026e61a`.
+- `https://ezra-mcp-api.ryan-borker.workers.dev/health` returned 200.
+- Live authenticated MCP smoke on `workers.dev` returned `John 3:16` with verse text.
+- Public Pro checkout smoke on `workers.dev` returned a Stripe Checkout URL.
+- `dig` returns Cloudflare A/AAAA records for `ezramcp.com`.
+- `curl --resolve ezramcp.com:443:172.67.189.11 https://ezramcp.com/health` returned 200.
+- Root-domain static home, unauthenticated MCP, and Max checkout smokes passed with forced DNS resolution.
+
+Local caveat:
+- This Mac's `getaddrinfo`/curl resolver still cached the earlier missing-host result for `ezramcp.com` during the smoke window. Public DNS answered correctly via `dig`, and forced edge resolution hit the deployed Worker successfully.
+
+## Visual Evidence
+Browser screenshots are stored in `docs/visual-evidence/`:
+- Landing: `bead-26-landing-390.png`, `bead-26-landing-768.png`, `bead-26-landing-1280.png`
+- Pro: `bead-26-pro-390.png`, `bead-26-pro-768.png`, `bead-26-pro-1280.png`
+- Account: `bead-26-account-390.png`, `bead-26-account-768.png`, `bead-26-account-1280.png`
+- MCP docs: `bead-26-mcp-390.png`, `bead-26-mcp-768.png`, `bead-26-mcp-1280.png`
+- Checkout success: `bead-26-checkout-success-390.png`, `bead-26-checkout-success-768.png`, `bead-26-checkout-success-1280.png`
+- Pricing grid: `bead-26-pricing-390.png`, `bead-26-pricing-768.png`, `bead-26-pricing-1280.png`
 
 ## Deploy Preflight
 Before deploy-affecting beads are marked complete:

@@ -178,26 +178,42 @@ async function listTopics(env: McpEnv, args: Record<string, unknown>): Promise<u
 
 async function getPericope(env: McpEnv, args: Record<string, unknown>): Promise<unknown> {
   const name = requireString(args, "name");
-  const row = await env.DB
-    .prepare("SELECT name, category, book, verse_range, verse_refs, topics FROM pericopes WHERE name = ?")
+  const result = await env.DB
+    .prepare("SELECT name, category, book, verse_range, verse_refs, topics FROM pericopes WHERE name = ? ORDER BY verse_range ASC")
     .bind(name)
-    .first<PericopeRow>();
-  if (!row) {
+    .all<PericopeRow>();
+  const rows = result.results ?? [];
+  if (rows.length === 0) {
     throw toolError({
       code: "pericope_not_found",
       message: `No pericope named '${name}'. Pericope names are case-sensitive and usually a phrase like 'Anointing of David'.`,
       recoverable: true
     });
   }
-  const refs = parseJsonArray(row.verse_refs);
+  const refs = uniqueStrings(rows.flatMap((row) => parseJsonArray(row.verse_refs)));
   const verses = refs.length > 0 ? await fetchVerses(env, refs) : [];
+  const topics = uniqueStrings(rows.flatMap((row) => parseJsonArray(row.topics)));
+  const segments = rows.map((row) => {
+    const segmentRefs = parseJsonArray(row.verse_refs);
+    const segmentRefSet = new Set(segmentRefs);
+    return {
+      book: row.book,
+      verse_range: row.verse_range,
+      verse_refs: segmentRefs,
+      topics: parseJsonArray(row.topics),
+      verses: verses
+        .filter((verse) => segmentRefSet.has(verse.ref))
+        .map((verse) => ({ ref: verse.ref, text: verse.text }))
+    };
+  });
   return {
-    name: row.name,
-    category: row.category,
-    book: row.book,
-    verse_range: row.verse_range,
+    name,
+    category: rows[0]?.category,
+    book: uniqueStrings(rows.map((row) => row.book).filter((book): book is string => Boolean(book))).join("; ") || null,
+    verse_range: rows.map((row) => row.verse_range).join("; "),
     verse_refs: refs,
-    topics: parseJsonArray(row.topics),
+    topics,
+    segments,
     verses: verses.map((verse) => ({ ref: verse.ref, text: verse.text }))
   };
 }
@@ -360,6 +376,10 @@ function parseJsonArray(value: string): string[] {
   } catch {
     return [];
   }
+}
+
+function uniqueStrings(values: string[]): string[] {
+  return [...new Set(values)];
 }
 
 function requireString(args: Record<string, unknown>, key: string): string {
