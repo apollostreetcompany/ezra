@@ -15,9 +15,9 @@ The product plan:
 ## Implementation State
 Current branch: `codex/feat/ezra-full-plugin-launch`.
 
-Bead 25 was committed locally as `32c6ebbdd903745ca2bd91fbf2f6eecc3c18f1ed`.
+Bead 25 was committed as `32c6ebbdd903745ca2bd91fbf2f6eecc3c18f1ed`.
 
-Bead 26 is in finalization:
+Bead 26 was committed and pushed as `fb2d9b4`:
 - Removed active inherited surfaces and replaced the plugin path with `plugins/ezra-mcp`.
 - Rewrote CLI and stdio MCP bridge as Ezra account/key helpers.
 - Added public checkout, checkout status verification, and account status Worker endpoints.
@@ -31,7 +31,16 @@ Bead 26 is in finalization:
 - Created Stripe webhook endpoint for `https://ezramcp.com/v1/stripe/webhook`.
 - Uploaded Worker secrets without printing secret values.
 - Applied D1 migrations through `0005_pericope_ranges.sql` and loaded seed data.
-- Deployed Worker/static assets. Current version: `a7071023-096d-421f-81ad-c9643026e61a`.
+- Deployed Worker/static assets. Version: `a7071023-096d-421f-81ad-c9643026e61a`.
+
+Bead 27 is in finalization:
+- Forked the Bibe Code landing-page rhythm into Ezra without Bibe branding.
+- Used `/Users/kikimac/Downloads/ezra.png` as the header art source and generated site assets: `ezra.png`, `ezra-preview.png`, and `ezra-icon.png`.
+- Rewrote landing copy so visible page lines are benefits or setup actions, not process/meta language.
+- Added Open Graph, Twitter card, favicon, apple-touch-icon, canonical URL, and theme-color metadata.
+- Updated site tests/lint to require the Ezra art paths and reject visible landing-page meta copy.
+- Captured Browser screenshots for landing top and pricing at 390px, 768px, and 1280px under `docs/visual-evidence/`.
+- Deployed Worker/static assets. Version: `d486f56e-efeb-4714-b184-455e06946b72`.
 
 Validation passed:
 - `pnpm verify`
@@ -39,10 +48,11 @@ Validation passed:
 - remote D1 count check: 386 topics, 23,396 verses, 709 pericope ranges
 - live Worker smoke: health, home, unauthenticated MCP, authenticated `get_verse`, and public checkout
 - root-domain forced-resolution smoke: health, home, unauthenticated MCP, and public checkout
+- Bead 27 validation: `make verify`
+- Bead 27 live smoke: normal-DNS `https://ezramcp.com/health`, refreshed home HTML, `ezra-icon.png`, and unauthenticated MCP missing-key response
 
 Known concern:
 - Seed generation skipped `Psalms 114:9`, `Psalms 114:10`, and `Psalms 137:10` because those refs have no WEB text in local seed inputs.
-- This Mac's system resolver still cached the earlier NXDOMAIN for `ezramcp.com` after custom-domain creation. `dig` returns Cloudflare A/AAAA records, and `curl --resolve` reaches the Worker. Recheck normal `curl https://ezramcp.com/health` after local resolver cache catches up.
 - `www.ezramcp.com` is not configured yet.
 
 ## Important Constraints
@@ -55,6 +65,5 @@ Known concern:
 Start with `pnpm verify`. If it fails, prioritize full workspace package consistency before feature polish.
 
 Before launch:
-- Recheck normal DNS from a fresh resolver: `curl https://ezramcp.com/health`.
 - Run a real magic-link account test with a controlled inbox.
 - Optionally add `www.ezramcp.com` after DNS/route permissions are confirmed.

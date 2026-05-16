@@ -8,9 +8,9 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - Separate data repo: `/Users/kikimac/ezra-bible-data`.
 - Graphify is out of scope; D1 inverted indexes are the v1 query path.
 - GitHub remote `origin`: `https://github.com/apollostreetcompany/ezra.git`.
-- Production Worker is deployed; `ezramcp.com` is attached as a Worker custom domain and route, but this Mac's system resolver is still caching the earlier missing-host response. Public DNS answers now exist.
+- Production Worker is deployed; `ezramcp.com` is attached as a Worker custom domain and route, and normal DNS smoke passes from this Mac.
 - Current branch: `codex/feat/ezra-full-plugin-launch`.
-- Bead 26 risk class: High because it touches deployment, D1 schema/seed behavior, public MCP response shape for duplicate pericopes, DNS routing, and launch screenshots.
+- Bead 27 risk class: High because it changes the public landing page, social metadata/icon assets, launch screenshots, and production Worker static assets deployment.
 
 ## Key Decisions
 1. Ezra MCP is a separate product from Bible Coder/Bibe Code; old Bibe files are process input only.
@@ -29,6 +29,8 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 14. D1 pericopes use `(name, verse_range)` as the primary key because canonical pericope names can repeat across multiple ranges.
 15. `get_pericope` aggregates all ranges for a repeated name and returns top-level combined `verse_refs`, `topics`, `verses`, plus per-range `segments`.
 16. Worker deployment version `a7071023-096d-421f-81ad-c9643026e61a` is live on `https://ezra-mcp-api.ryan-borker.workers.dev` and attached to `ezramcp.com`.
+17. Bead 27 landing copy must stay user-facing: every visible landing-page line is either a benefit or a how-to, with no process/meta language about the project itself.
+18. Worker deployment version `d486f56e-efeb-4714-b184-455e06946b72` serves the refreshed landing assets with the Ezra portrait header, social preview, and favicon.
 
 ## State
 
@@ -48,12 +50,12 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - [x] Worker deployed with static assets and custom domain attachment.
 - [x] Production smoke passed on `workers.dev`: health, static home, unauthenticated MCP error, authenticated `get_verse` against D1, and public Pro checkout.
 - [x] Root-domain smoke passed with forced DNS resolution: health, static home, unauthenticated MCP error, and public Max checkout.
+- [x] Bead 27 landing refresh deployed: Bibe-style header rhythm, supplied Ezra portrait, benefit/how-to copy, social preview, favicon, local Browser evidence at 390px/768px/1280px, and normal `ezramcp.com` smoke checks.
 
 ### Now
-- Bead 26 finalization: update docs/evidence, commit, and push branch to origin.
+- Bead 27 finalization: record deployment evidence, commit, and push branch to origin.
 
 ### Next
-- Wait for local macOS resolver cache to pick up `ezramcp.com`; `dig` already returns Cloudflare A/AAAA records and `curl --resolve` succeeds.
 - Add optional `www.ezramcp.com` route/DNS later if desired.
 - Run a live account magic-link test with a real inbox before public announcement.
 

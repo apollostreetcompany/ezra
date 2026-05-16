@@ -160,9 +160,9 @@ a:focus-visible,
 .hero-art {
   position: absolute;
   z-index: 1;
-  right: -38px;
-  top: 22px;
-  width: min(620px, 53%);
+  right: -118px;
+  top: 12px;
+  width: min(780px, 64%);
   height: auto;
   mix-blend-mode: multiply;
   pointer-events: none;
@@ -797,6 +797,12 @@ input:focus-visible {
 
 .tier-pro .form-status {
   color: var(--bone);
+}
+
+.tier-pro .button.primary {
+  background: var(--cream);
+  border-color: var(--cream);
+  color: var(--ink);
 }
 
 .account-grid {

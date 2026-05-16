@@ -22,7 +22,7 @@ const requiredCopy = [
   "Ezra MCP",
   "Bible verses",
   "MCP",
-  "Get a free API key"
+  "Get a free key"
 ];
 
 // AI-slop and self-referential meta we will not ship.

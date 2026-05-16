@@ -8,7 +8,7 @@
 - Static site build output: `apps/site/dist`.
 - Database: Cloudflare D1, database name `ezra-mcp-prod`.
 - D1 id: `13f487c0-02fc-44da-814c-252925bb59da`.
-- Current deployed Worker version: `a7071023-096d-421f-81ad-c9643026e61a`.
+- Current deployed Worker version: `d486f56e-efeb-4714-b184-455e06946b72`.
 - Package manager: pnpm.
 - Runtime: Node 22+ for local CLI/MCP bridge, Cloudflare Workers for production.
 
@@ -95,8 +95,16 @@ Captured on 2026-05-16:
 - `curl --resolve ezramcp.com:443:172.67.189.11 https://ezramcp.com/health` returned 200.
 - Root-domain static home, unauthenticated MCP, and Max checkout smokes passed with forced DNS resolution.
 
-Local caveat:
-- This Mac's `getaddrinfo`/curl resolver still cached the earlier missing-host result for `ezramcp.com` during the smoke window. Public DNS answered correctly via `dig`, and forced edge resolution hit the deployed Worker successfully.
+Captured on 2026-05-16 after the Bead 27 landing refresh:
+- `make verify` passed.
+- Worker deployed version: `d486f56e-efeb-4714-b184-455e06946b72`.
+- `https://ezramcp.com/health` returned 200 through normal DNS.
+- `https://ezramcp.com/` served the refreshed landing page with the Ezra social preview, favicon, free key CTA, and choose-a-plan copy.
+- `https://ezramcp.com/assets/ezra-icon.png` returned 200.
+- Unauthenticated `POST https://ezramcp.com/v1/mcp` returned the expected missing-key error.
+
+Resolved local caveat:
+- This Mac's normal resolver now reaches `ezramcp.com`; the previous missing-host cache issue is no longer present in the latest smoke.
 
 ## Visual Evidence
 Browser screenshots are stored in `docs/visual-evidence/`:
@@ -106,6 +114,8 @@ Browser screenshots are stored in `docs/visual-evidence/`:
 - MCP docs: `bead-26-mcp-390.png`, `bead-26-mcp-768.png`, `bead-26-mcp-1280.png`
 - Checkout success: `bead-26-checkout-success-390.png`, `bead-26-checkout-success-768.png`, `bead-26-checkout-success-1280.png`
 - Pricing grid: `bead-26-pricing-390.png`, `bead-26-pricing-768.png`, `bead-26-pricing-1280.png`
+- Bead 27 refreshed landing top: `bead-27-landing-390.png`, `bead-27-landing-768.png`, `bead-27-landing-1280.png`
+- Bead 27 refreshed pricing: `bead-27-pricing-390.png`, `bead-27-pricing-768.png`, `bead-27-pricing-1280.png`
 
 ## Deploy Preflight
 Before deploy-affecting beads are marked complete:
@@ -119,4 +129,5 @@ Before deploy-affecting beads are marked complete:
 
 ## Rollback Path
 - Worker rollback: use Cloudflare Workers deployment rollback to the previous successful version.
+- Previous known-good Worker version before Bead 27: `a7071023-096d-421f-81ad-c9643026e61a`.
 - D1 rollback: use D1 time-travel backup/restore if a migration or seed corrupts production data.

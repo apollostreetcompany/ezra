@@ -13,11 +13,13 @@ const cancel = await readFile(resolve(root, "src/checkout/cancel/index.html"), "
 
 const assertions = [
   // Landing — concrete promises, not vague benefits
-  [landing.includes("Real Bible verses"), "landing hero promise"],
+  [landing.includes("Find the verse"), "landing hero promise"],
   [landing.includes("get_verses_by_topic"), "landing shows real tool call"],
-  [landing.includes("31,103 verses"), "landing names dataset scale"],
-  [landing.includes("387"), "landing names topic-count signature"],
-  [landing.includes("Get a free API key"), "landing primary CTA"],
+  [landing.includes("31,103 verses"), "landing names searchable verse count"],
+  [landing.includes("Get a free key"), "landing primary CTA"],
+  [landing.includes("/assets/ezra-preview.png"), "landing uses Ezra social preview"],
+  [landing.includes("/assets/ezra-icon.png"), "landing uses Ezra favicon"],
+  [landing.includes("/assets/ezra.png"), "landing uses Ezra header image"],
   [landing.includes("Pro") && landing.includes("$20"), "landing pro pricing"],
   [landing.includes("Max") && landing.includes("$100"), "landing max pricing"],
   [landing.includes("/v1/checkout/public-session"), "landing uses public checkout endpoint"],
@@ -58,6 +60,31 @@ const bannedLandingCopy = [
 for (const copy of bannedLandingCopy) {
   if (`${landing}\n${pro}\n${account}\n${success}\n${cancel}`.toLowerCase().includes(copy.toLowerCase())) {
     throw new Error(`Banned landing copy: ${copy}`);
+  }
+}
+
+const visibleLandingText = landing
+  .replace(/<script[\s\S]*?<\/script>/gi, " ")
+  .replace(/<style[\s\S]*?<\/style>/gi, " ")
+  .replace(/<[^>]+>/g, " ")
+  .replace(/\s+/g, " ")
+  .trim()
+  .toLowerCase();
+
+const bannedVisibleLandingMeta = [
+  "about the project",
+  "source data",
+  "agpl",
+  "derivative work",
+  "public domain",
+  "canonical label",
+  "graphify",
+  "anti-slop"
+];
+
+for (const copy of bannedVisibleLandingMeta) {
+  if (visibleLandingText.includes(copy)) {
+    throw new Error(`Banned visible landing meta copy: ${copy}`);
   }
 }
 
