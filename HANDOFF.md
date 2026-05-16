@@ -33,7 +33,7 @@ Bead 26 was committed and pushed as `fb2d9b4`:
 - Applied D1 migrations through `0005_pericope_ranges.sql` and loaded seed data.
 - Deployed Worker/static assets. Version: `a7071023-096d-421f-81ad-c9643026e61a`.
 
-Bead 27 is in finalization:
+Bead 27 was committed and pushed as `dc0ee3a`:
 - Forked the Bibe Code landing-page rhythm into Ezra without Bibe branding.
 - Used `/Users/kikimac/Downloads/ezra.png` as the header art source and generated site assets: `ezra.png`, `ezra-preview.png`, and `ezra-icon.png`.
 - Rewrote landing copy so visible page lines are benefits or setup actions, not process/meta language.
@@ -41,6 +41,13 @@ Bead 27 is in finalization:
 - Updated site tests/lint to require the Ezra art paths and reject visible landing-page meta copy.
 - Captured Browser screenshots for landing top and pricing at 390px, 768px, and 1280px under `docs/visual-evidence/`.
 - Deployed Worker/static assets. Version: `d486f56e-efeb-4714-b184-455e06946b72`.
+
+Bead 28 is in finalization:
+- Created local accounts with throwaway `example.test` emails against isolated local D1 state.
+- Verified local Worker health/static site, magic-link dev echo, account session creation, API key creation, account status, MCP `tools/list`, MCP `get_verse`, and Free-tier usage increment.
+- Verified the Ezra CLI login/key/status path stores tokens privately and does not print session/API key values.
+- Verified the stdio `ezra-mcp-mcp` bridge uses the saved key and returns `John 3:16`.
+- Used local-only `/tmp/ezra-mcp-local-e2e` and `/tmp/ezra-mcp-cli-e2e-config`; production D1, production secrets, and live Stripe were not touched.
 
 Validation passed:
 - `pnpm verify`
@@ -50,6 +57,7 @@ Validation passed:
 - root-domain forced-resolution smoke: health, home, unauthenticated MCP, and public checkout
 - Bead 27 validation: `make verify`
 - Bead 27 live smoke: normal-DNS `https://ezramcp.com/health`, refreshed home HTML, `ezra-icon.png`, and unauthenticated MCP missing-key response
+- Bead 28 validation: local account/API/MCP E2E, local CLI/MCP bridge E2E, `pnpm --filter @ezra-mcp/worker test`, `pnpm --filter @ezra-mcp/cli test`, and `pnpm --filter @ezra-mcp/mcp test`
 
 Known concern:
 - Seed generation skipped `Psalms 114:9`, `Psalms 114:10`, and `Psalms 137:10` because those refs have no WEB text in local seed inputs.
@@ -67,3 +75,4 @@ Start with `pnpm verify`. If it fails, prioritize full workspace package consist
 Before launch:
 - Run a real magic-link account test with a controlled inbox.
 - Optionally add `www.ezramcp.com` after DNS/route permissions are confirmed.
+- Use Wrangler 4.92.0+ for exact local parity with Worker compatibility date `2026-05-15`; Wrangler 4.87.0 requires a local-only compatibility-date override for smoke testing.

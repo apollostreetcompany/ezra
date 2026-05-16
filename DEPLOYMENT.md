@@ -11,6 +11,7 @@
 - Current deployed Worker version: `d486f56e-efeb-4714-b184-455e06946b72`.
 - Package manager: pnpm.
 - Runtime: Node 22+ for local CLI/MCP bridge, Cloudflare Workers for production.
+- Wrangler 4.92.0+ is recommended for local dev parity with `compatibility_date = "2026-05-15"`.
 
 ## Required Environment Variables
 Worker secrets:
@@ -37,6 +38,7 @@ Local CLI/MCP:
 - Build site: `pnpm --filter @ezra-mcp/site build`.
 - Build Worker: `pnpm --filter @ezra-mcp/worker build`.
 - Run Worker locally: `pnpm --filter @ezra-mcp/worker dev`.
+- Run local account/MCP E2E against an isolated D1 state: apply migrations and seed with `--persist-to /tmp/ezra-mcp-local-e2e`, start `wrangler dev --local` with `MAGIC_LINK_DEV_ECHO=true` and test-only secret values, then use a throwaway email to request a magic code, verify, create an API key, call `/v1/mcp`, and confirm usage increments.
 - Link local CLI/MCP bridge: `make link-local`.
 - CLI smoke: `make cli-status`.
 - MCP bridge smoke: `make mcp-bridge-smoke`.
@@ -102,6 +104,20 @@ Captured on 2026-05-16 after the Bead 27 landing refresh:
 - `https://ezramcp.com/` served the refreshed landing page with the Ezra social preview, favicon, free key CTA, and choose-a-plan copy.
 - `https://ezramcp.com/assets/ezra-icon.png` returned 200.
 - Unauthenticated `POST https://ezramcp.com/v1/mcp` returned the expected missing-key error.
+
+Captured on 2026-05-16 for local account/MCP E2E:
+- Local D1 migrations and `seed.sql` loaded into `/tmp/ezra-mcp-local-e2e`.
+- Local Worker served `/health` and `/` on `http://127.0.0.1:8787`.
+- Magic-link request with `MAGIC_LINK_DEV_ECHO=true` returned a local dev code.
+- Magic-link verification issued an `ezra_live_...` session token; the token value was not printed or stored in docs.
+- `POST /v1/api-keys` issued an `ezra_live_...` API key; only the prefix was recorded.
+- `GET /v1/account/status` reported the Free tier with 20 monthly calls before MCP usage.
+- Authenticated MCP `tools/list` returned 7 tools.
+- Authenticated MCP `get_verse` returned `John 3:16` from the local seeded D1 catalog.
+- Account usage incremented from 0/20 to 1/20 after the metered MCP `tools/call`.
+- CLI E2E saved the session token and API key privately in `/tmp/ezra-mcp-cli-e2e-config/auth.json` with mode `600` and printed no token/key value.
+- The stdio MCP bridge used the saved local key and returned `John 3:16`.
+- Local caveat: Wrangler 4.87.0 required a local-only `--compatibility-date 2026-05-07` override because its embedded runtime predates the configured `2026-05-15` compatibility date.
 
 Resolved local caveat:
 - This Mac's normal resolver now reaches `ezramcp.com`; the previous missing-host cache issue is no longer present in the latest smoke.

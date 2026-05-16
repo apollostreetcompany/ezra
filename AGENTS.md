@@ -104,11 +104,11 @@ Before implementation starts:
 4. Risk class declared as `Low`, `Medium`, or `High`.
 
 Current bead:
-- Bead 26 - Launch deployment, browser evidence, and production smoke.
-- Workstream: deploy/code/design.
-- Risk: High because it changes deployment routing, D1 schema/seed behavior, and public MCP response behavior for repeated pericope names.
-- Agent: Primary Codex with in-thread architect/engineer/reviewer passes.
-- Tools: RepoPrompt, Browser plugin, pnpm/Vitest, Wrangler, Stripe API, Cloudflare D1.
+- Bead 28 - Local account and MCP bridge end-to-end validation.
+- Workstream: ops/docs.
+- Risk: Low because it records validation evidence and local runtime caveats without changing production code, public API contracts, schema, billing, or deploy config.
+- Agent: Primary Codex with in-thread validation/review.
+- Tools: RepoPrompt, Wrangler local dev, local D1 persistence, Node fetch, Ezra CLI, Ezra MCP bridge, pnpm/Vitest.
 
 ### Bead Exit Gate (Mandatory)
 

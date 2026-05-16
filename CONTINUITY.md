@@ -10,7 +10,7 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - GitHub remote `origin`: `https://github.com/apollostreetcompany/ezra.git`.
 - Production Worker is deployed; `ezramcp.com` is attached as a Worker custom domain and route, and normal DNS smoke passes from this Mac.
 - Current branch: `codex/feat/ezra-full-plugin-launch`.
-- Bead 27 risk class: High because it changes the public landing page, social metadata/icon assets, launch screenshots, and production Worker static assets deployment.
+- Bead 28 risk class: Low because it records local account/MCP validation evidence without changing production code, schema, billing, or deployment config.
 
 ## Key Decisions
 1. Ezra MCP is a separate product from Bible Coder/Bibe Code; old Bibe files are process input only.
@@ -31,6 +31,8 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 16. Worker deployment version `a7071023-096d-421f-81ad-c9643026e61a` is live on `https://ezra-mcp-api.ryan-borker.workers.dev` and attached to `ezramcp.com`.
 17. Bead 27 landing copy must stay user-facing: every visible landing-page line is either a benefit or a how-to, with no process/meta language about the project itself.
 18. Worker deployment version `d486f56e-efeb-4714-b184-455e06946b72` serves the refreshed landing assets with the Ezra portrait header, social preview, and favicon.
+19. Local account E2E validation uses isolated local D1 persistence under `/tmp/ezra-mcp-local-e2e` and does not touch production D1 or production secrets.
+20. Local Wrangler 4.87.0 cannot run the configured Worker compatibility date `2026-05-15`; use Wrangler 4.92.0+ for exact local runtime parity, or a local-only `--compatibility-date 2026-05-07` override for account/MCP smoke tests.
 
 ## State
 
@@ -51,9 +53,10 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - [x] Production smoke passed on `workers.dev`: health, static home, unauthenticated MCP error, authenticated `get_verse` against D1, and public Pro checkout.
 - [x] Root-domain smoke passed with forced DNS resolution: health, static home, unauthenticated MCP error, and public Max checkout.
 - [x] Bead 27 landing refresh deployed: Bibe-style header rhythm, supplied Ezra portrait, benefit/how-to copy, social preview, favicon, local Browser evidence at 390px/768px/1280px, and normal `ezramcp.com` smoke checks.
+- [x] Bead 28 local E2E passed: local Worker/D1 health and static site, magic-link account creation, session token issuance, API key creation, account status, MCP `tools/list`, MCP `get_verse`, free usage increment, CLI private token/key storage, and stdio MCP bridge lookup.
 
 ### Now
-- Bead 27 finalization: record deployment evidence, commit, and push branch to origin.
+- Bead 28 finalization: record local E2E evidence, commit, and push branch to origin.
 
 ### Next
 - Add optional `www.ezramcp.com` route/DNS later if desired.
@@ -83,3 +86,5 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - `scripts/validate-plugin.mjs`
 - `scripts/link-local-bin.sh`
 - `handoff/beads.jsonl`
+- Local E2E persistence: `/tmp/ezra-mcp-local-e2e`
+- Local CLI E2E config: `/tmp/ezra-mcp-cli-e2e-config`
