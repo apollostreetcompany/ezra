@@ -35,6 +35,7 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 20. Local Wrangler 4.87.0 cannot run the configured Worker compatibility date `2026-05-15`; use Wrangler 4.92.0+ for exact local runtime parity, or a local-only `--compatibility-date 2026-05-07` override for account/MCP smoke tests.
 21. Real prompts asking for Jesus' beliefs, commands, or both are handled by the public `get_jesus_teachings(mode)` MCP tool. The response is intentionally labeled as a curated Gospel-grounded starter set, not an exhaustive list of every saying of Jesus.
 22. The robust next layer for prompts like "all of Jesus' beliefs" should be an LLM-backed tagging pipeline for verse collections: push refs/text into a staging collection, classify them with a strict schema, store confidence/provenance/reviewer state, then publish approved tags into D1 for deterministic MCP lookup.
+23. Custom verse collections should stay lightweight: store collection metadata plus JSON arrays for retrieval, but also maintain a small D1 inverted tag index for querying by tag, visibility, owner, and verse ref. Public/private sharing adds product and permission scope; storage itself is not the expensive part.
 
 ## State
 
@@ -60,10 +61,10 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - [x] Bead 29 committed and pushed as `23f1e05`.
 
 ### Now
-- Product direction: answer the real user prompt and define what Ezra needs to handle this class of request beyond a curated static starter tool.
+- Product direction: scope custom verse collections with manual tags, optional LLM suggested tags, and private/unlisted/public visibility.
 
 ### Next
-- Design Bead 30 as a staged LLM tagger and verse-collection publishing pipeline before implementation.
+- Design Bead 30 as a staged custom verse collection feature: schema, endpoints, MCP tools, account UI, visibility rules, and optional LLM tag suggestion/review.
 - Add optional `www.ezramcp.com` route/DNS later if desired.
 - Run an authenticated production `get_jesus_teachings` smoke once a production API key is available in the shell or a controlled inbox login is completed.
 - Run a live account magic-link test with a real inbox before public announcement.
