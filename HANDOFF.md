@@ -62,7 +62,14 @@ Bead 31 is in finalization:
 - Collection storage is reference-only: title, metadata, visibility, `bible_version`, `verse_refs`, `api_bible_tags`, and `global_tags`; no pasted verse text is stored.
 - Updated account UI, MCP docs, public docs, site tests, Worker tests, and plugin lookup skill for the 11-tool surface.
 - Found and fixed a production Worker 1101 issue by awaiting async route handlers inside the top-level `try`, so auth failures become JSON errors.
+- Fixed GitHub Actions seed validation by letting `make seed-build` use committed fixture data when the ignored production seed inputs are absent.
 - Applied the remote D1 migration and redeployed Worker/static assets. Version: `c2ee753a-4a4b-45ee-90a0-42541d76d37a`.
+
+Bead 32 is in finalization:
+- GitHub Actions initially failed because `make verify` ran `seed:build` without ignored `apps/worker/data/` inputs.
+- `apps/worker/scripts/build_seed_sql.mjs` now accepts `EZRA_SEED_DATA_DIR` and `EZRA_SEED_OUT_FILE`.
+- `make seed-build` uses real ignored seed data when present and committed fixture data under `apps/worker/test/fixtures/seed-data` when absent.
+- This keeps CI reproducible without committing the large generated seed or private/local data copies.
 
 Validation passed:
 - `pnpm verify`
@@ -75,8 +82,9 @@ Validation passed:
 - Bead 28 validation: local account/API/MCP E2E, local CLI/MCP bridge E2E, `pnpm --filter @ezra-mcp/worker test`, `pnpm --filter @ezra-mcp/cli test`, and `pnpm --filter @ezra-mcp/mcp test`
 - Bead 29 validation: `pnpm --filter @ezra-mcp/worker test -- mcp.test.ts`, `pnpm --filter @ezra-mcp/worker test`, `pnpm --filter @ezra-mcp/site test`, `pnpm --filter @ezra-mcp/site lint`, `pnpm validate:docs`, `pnpm secret:scan`, `pnpm build`, `pnpm lint`, `pnpm test`, `pnpm verify`, `make verify`, and `git diff --check`
 - Bead 29 live smoke: `https://ezramcp.com/health`, `/mcp/` docs containing `get_jesus_teachings` and "The 8 tools", and unauthenticated `/v1/mcp` missing-key response. Authenticated production new-tool smoke was skipped because this shell had no `EZRA_MCP_API_KEY` or saved production API key.
-- Bead 31 validation: TDD failure for collection API/tool contracts before implementation, `pnpm --filter @ezra-mcp/worker test -- mcp.test.ts worker.test.ts`, `pnpm --filter @ezra-mcp/worker test`, `pnpm --filter @ezra-mcp/site test`, `pnpm --filter @ezra-mcp/site lint`, `pnpm --filter @ezra-mcp/worker build`, `pnpm validate:docs`, `pnpm secret:scan`, `pnpm build`, `pnpm lint`, `pnpm test`, `pnpm verify`, `make verify`, local D1 migration apply, browser screenshots at 390px/768px/1280px, remote D1 migration apply, and production deploy.
+- Bead 31 validation: TDD failure for collection API/tool contracts before implementation, `pnpm --filter @ezra-mcp/worker test -- mcp.test.ts worker.test.ts`, `pnpm --filter @ezra-mcp/worker test`, `pnpm --filter @ezra-mcp/site test`, `pnpm --filter @ezra-mcp/site lint`, `pnpm --filter @ezra-mcp/worker build`, `pnpm validate:docs`, `pnpm secret:scan`, `pnpm build`, `pnpm lint`, `pnpm test`, `pnpm verify`, `make verify`, fixture fallback `make seed-build` with `apps/worker/data/` temporarily absent, local D1 migration apply, browser screenshots at 390px/768px/1280px, remote D1 migration apply, and production deploy.
 - Bead 31 live smoke: `https://ezramcp.com/health`, `/account/` collection UI markers, `/mcp/` 11-tool docs markers, remote D1 table check, and unauthenticated `/v1/collections` JSON 401. Authenticated production collection smoke was skipped because this shell had no production account session token.
+- Bead 32 validation: `make seed-build` with `apps/worker/data/` temporarily absent, full `make verify` with `apps/worker/data/` temporarily absent, JSONL parse check, and `git diff --check`.
 
 Known concern:
 - Seed generation skipped `Psalms 114:9`, `Psalms 114:10`, and `Psalms 137:10` because those refs have no WEB text in local seed inputs.

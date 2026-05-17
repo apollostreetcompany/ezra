@@ -1,0 +1,18 @@
+[
+  {
+    "ref": "John 3:16",
+    "book": "John",
+    "chapter": 3,
+    "verse": 16,
+    "topics": ["salvation"],
+    "pericopes": ["Jesus teaches Nicodemus"]
+  },
+  {
+    "ref": "Psalms 114:9",
+    "book": "Psalms",
+    "chapter": 114,
+    "verse": 9,
+    "topics": ["fixture-missing-text"],
+    "pericopes": []
+  }
+]

@@ -38,6 +38,8 @@ Local CLI/MCP:
 - Build site: `pnpm --filter @ezra-mcp/site build`.
 - Build Worker: `pnpm --filter @ezra-mcp/worker build`.
 - Run Worker locally: `pnpm --filter @ezra-mcp/worker dev`.
+- Validate seed builder locally with real ignored data when present: `make seed-build`.
+- CI seed validation falls back to committed fixture data under `apps/worker/test/fixtures/seed-data` when `apps/worker/data/` is absent.
 - Run local account/MCP E2E against an isolated D1 state: apply migrations and seed with `--persist-to /tmp/ezra-mcp-local-e2e`, start `wrangler dev --local` with `MAGIC_LINK_DEV_ECHO=true` and test-only secret values, then use a throwaway email to request a magic code, verify, create an API key, call `/v1/mcp`, and confirm usage increments.
 - Link local CLI/MCP bridge: `make link-local`.
 - CLI smoke: `make cli-status`.
@@ -70,6 +72,7 @@ Do not source `/Users/kikimac/.hermes/.env` for `wrangler deploy`; that file's C
 
 Current seed builder behavior:
 - Requires `bible_verses.json`, `bible_topics.json`, `bible_pericopes.json`, and `web_text.json`.
+- Accepts `EZRA_SEED_DATA_DIR` and `EZRA_SEED_OUT_FILE` overrides for CI fixtures and temporary validation output.
 - Excludes refs with no WEB text instead of writing empty verse rows.
 - Does not emit explicit `BEGIN TRANSACTION`/`COMMIT`; remote D1 import rejects raw transaction wrappers.
 - Stores repeated pericope names as separate `(name, verse_range)` rows.

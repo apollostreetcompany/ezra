@@ -39,6 +39,7 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 24. Bead 31 implementation must store only canonical verse references and `bible_version` for custom collections, not pasted verse text. Tags are separated into `api_bible_tags` and `global_tags`, with normalized D1 tag-index rows for lookup.
 25. Async Worker route handlers must be awaited inside the top-level `try` block; otherwise rejected handler promises bypass the JSON error mapper and surface as Cloudflare Worker 1101 exceptions.
 26. Worker deployment version `c2ee753a-4a4b-45ee-90a0-42541d76d37a` is live with the Bead 31 collection tools, collection account UI, migration `0006_verse_collections.sql`, and the async route error-handling fix.
+27. CI cannot rely on ignored `apps/worker/data/` seed inputs. `make seed-build` uses real local data when present and a tiny committed fixture otherwise, with `EZRA_SEED_DATA_DIR` and `EZRA_SEED_OUT_FILE` available for explicit seed-builder validation.
 
 ## State
 
@@ -62,10 +63,11 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - [x] Bead 28 local E2E passed: local Worker/D1 health and static site, magic-link account creation, session token issuance, API key creation, account status, MCP `tools/list`, MCP `get_verse`, free usage increment, CLI private token/key storage, and stdio MCP bridge lookup.
 - [x] Bead 29 implemented and deployed: `get_jesus_teachings(mode)` returns Jesus' beliefs, commands, or both as a curated Gospel-grounded starter set; Worker docs/site/plugin references now describe the 8-tool surface; Worker version `fed55162-cdb9-4f0a-a338-38feb2d22446` is live.
 - [x] Bead 29 committed and pushed as `23f1e05`.
-- [x] Bead 31 implemented and deployed from worktree `/Users/kikimac/ezra-mcp-collections`: custom verse collections store refs/version/tags only, expose account API routes and 3 MCP collection tools, update account UI/docs, and return JSON auth errors in production.
+- [x] Bead 31 implemented and deployed from worktree `/Users/kikimac/ezra-mcp-collections`: custom verse collections store refs/version/tags only, expose account API routes and 3 MCP collection tools, update account UI/docs, return JSON auth errors in production, and keep CI seed validation data-independent.
+- [x] Bead 32 fixed CI seed validation so GitHub Actions can run `make verify` without ignored local seed inputs.
 
 ### Now
-- No active implementation bead. Bead 31 is in final commit/handoff.
+- No active implementation bead. Bead 31 and the Bead 32 CI follow-up are in final push/CI confirmation.
 
 ### Next
 - Run a real inbox account flow and authenticated production collection create/list/get smoke once a controlled email or production API key is available.
