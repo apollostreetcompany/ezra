@@ -104,11 +104,11 @@ Before implementation starts:
 4. Risk class declared as `Low`, `Medium`, or `High`.
 
 Current bead:
-- Bead 29 - Jesus teachings mode tool.
-- Workstream: code/docs.
-- Risk: High because it adds a public MCP tool contract, though it does not change schema, auth, billing, or deployment config.
-- Agent: Primary Codex with in-thread architecture, implementation, and reviewer passes.
-- Tools: RepoPrompt, Vitest, site tests, docs validation, secret scan, full workspace verification.
+- No active implementation bead. Next candidate is Bead 30 - LLM-backed verse collection tagger design.
+- Workstream: research/docs until implementation is explicitly started.
+- Risk: High if implemented because it would add schema, ingestion, tagging provenance, and public query-contract decisions.
+- Agent: Primary Codex for product analysis; Architect -> domain Engineer -> Analyst required before implementation.
+- Tools: RepoPrompt for code maps, docs validation for process updates, and full workspace verification once code begins.
 
 ### Bead Exit Gate (Mandatory)
 

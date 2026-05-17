@@ -10,7 +10,7 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - GitHub remote `origin`: `https://github.com/apollostreetcompany/ezra.git`.
 - Production Worker is deployed; `ezramcp.com` is attached as a Worker custom domain and route, and normal DNS smoke passes from this Mac.
 - Current branch: `codex/feat/ezra-full-plugin-launch`.
-- Bead 29 risk class: High because it adds a public MCP tool contract, though it does not change schema, auth, billing, or deployment config.
+- No active implementation bead. Next candidate is Bead 30 - LLM-backed verse collection tagger design.
 
 ## Key Decisions
 1. Ezra MCP is a separate product from Bible Coder/Bibe Code; old Bibe files are process input only.
@@ -34,6 +34,7 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 19. Local account E2E validation uses isolated local D1 persistence under `/tmp/ezra-mcp-local-e2e` and does not touch production D1 or production secrets.
 20. Local Wrangler 4.87.0 cannot run the configured Worker compatibility date `2026-05-15`; use Wrangler 4.92.0+ for exact local runtime parity, or a local-only `--compatibility-date 2026-05-07` override for account/MCP smoke tests.
 21. Real prompts asking for Jesus' beliefs, commands, or both are handled by the public `get_jesus_teachings(mode)` MCP tool. The response is intentionally labeled as a curated Gospel-grounded starter set, not an exhaustive list of every saying of Jesus.
+22. The robust next layer for prompts like "all of Jesus' beliefs" should be an LLM-backed tagging pipeline for verse collections: push refs/text into a staging collection, classify them with a strict schema, store confidence/provenance/reviewer state, then publish approved tags into D1 for deterministic MCP lookup.
 
 ## State
 
@@ -56,11 +57,13 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - [x] Bead 27 landing refresh deployed: Bibe-style header rhythm, supplied Ezra portrait, benefit/how-to copy, social preview, favicon, local Browser evidence at 390px/768px/1280px, and normal `ezramcp.com` smoke checks.
 - [x] Bead 28 local E2E passed: local Worker/D1 health and static site, magic-link account creation, session token issuance, API key creation, account status, MCP `tools/list`, MCP `get_verse`, free usage increment, CLI private token/key storage, and stdio MCP bridge lookup.
 - [x] Bead 29 implemented and deployed: `get_jesus_teachings(mode)` returns Jesus' beliefs, commands, or both as a curated Gospel-grounded starter set; Worker docs/site/plugin references now describe the 8-tool surface; Worker version `fed55162-cdb9-4f0a-a338-38feb2d22446` is live.
+- [x] Bead 29 committed and pushed as `23f1e05`.
 
 ### Now
-- Bead 29 finalization: commit and push the deployed Jesus teachings tool changes.
+- Product direction: answer the real user prompt and define what Ezra needs to handle this class of request beyond a curated static starter tool.
 
 ### Next
+- Design Bead 30 as a staged LLM tagger and verse-collection publishing pipeline before implementation.
 - Add optional `www.ezramcp.com` route/DNS later if desired.
 - Run an authenticated production `get_jesus_teachings` smoke once a production API key is available in the shell or a controlled inbox login is completed.
 - Run a live account magic-link test with a real inbox before public announcement.
@@ -68,6 +71,7 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 ## Open Questions
 - UNCONFIRMED: Whether Klaviyo events are landing in the intended production list/flow.
 - UNCONFIRMED: Whether the three missing-text source refs should be repaired upstream in `/Users/kikimac/ezra-bible-data` or intentionally excluded from v1 seed output.
+- UNCONFIRMED: Whether the LLM tagger should be internal/admin-only for v1 or exposed as a paid customer feature for user-owned verse collections.
 
 ## Working Set
 - `AGENTS.md`
