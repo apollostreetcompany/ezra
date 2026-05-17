@@ -5,6 +5,11 @@ import type {
   TopicRow,
   VerseRow
 } from "./types.js";
+import {
+  createVerseCollection,
+  findVerseCollections,
+  getVerseCollection
+} from "../collections.js";
 
 export interface ToolDefinition {
   name: string;
@@ -92,6 +97,50 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
     }
   },
   {
+    name: "create_verse_collection",
+    description:
+      "Create a custom verse collection. Stores only verse references, a bible_version identifier, API.Bible tags, and global tags; it does not store verse text.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        title: { type: "string" },
+        description: { type: "string" },
+        visibility: { type: "string", enum: ["private", "unlisted", "public"], default: "private" },
+        bible_version: { type: "string", description: "Bible/API.Bible version id or abbreviation, e.g. WEB or de4e12af7f28f599-02." },
+        verse_refs: { type: "array", items: { type: "string" }, minItems: 1 },
+        api_bible_tags: { type: "array", items: { type: "string" } },
+        global_tags: { type: "array", items: { type: "string" } }
+      },
+      required: ["title", "verse_refs"]
+    }
+  },
+  {
+    name: "get_verse_collection",
+    description:
+      "Return a custom verse collection by id. Private collections are visible only to their owner; public and unlisted collections are visible by id. Returns refs and tags, not verse text.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        id: { type: "string" }
+      },
+      required: ["id"]
+    }
+  },
+  {
+    name: "find_verse_collections",
+    description:
+      "Find public and owned custom verse collections by API.Bible tag or global tag. Returns refs, bible_version, and tags, not verse text.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        tag: { type: "string" },
+        tag_source: { type: "string", enum: ["api_bible", "global"] },
+        bible_version: { type: "string" },
+        limit: { type: "integer", minimum: 1, maximum: 50, default: 20 }
+      }
+    }
+  },
+  {
     name: "get_verse",
     description: "Look up a single verse by reference (e.g. 'John 3:16').",
     inputSchema: {
@@ -134,6 +183,12 @@ export async function dispatchTool(
       return getRelatedTopics(env, args);
     case "get_jesus_teachings":
       return getJesusTeachings(env, args);
+    case "create_verse_collection":
+      return createCollectionTool(env, args);
+    case "get_verse_collection":
+      return getCollectionTool(env, args);
+    case "find_verse_collections":
+      return findCollectionsTool(env, args);
     case "get_verse":
       return getVerse(env, args);
     case "get_chapter":
@@ -144,6 +199,38 @@ export async function dispatchTool(
         message: `Unknown tool: ${name}. Call tools/list to see available tools.`,
         recoverable: false
       });
+  }
+}
+
+async function createCollectionTool(env: McpEnv, args: Record<string, unknown>): Promise<unknown> {
+  const userId = requireUserId(env);
+  try {
+    const collection = await createVerseCollection(env.DB, userId, args);
+    return { collection };
+  } catch (error) {
+    throw collectionToolError(error);
+  }
+}
+
+async function getCollectionTool(env: McpEnv, args: Record<string, unknown>): Promise<unknown> {
+  const id = requireString(args, "id");
+  const collection = await getVerseCollection(env.DB, id, env.userId);
+  if (!collection) {
+    throw toolError({
+      code: "collection_not_found",
+      message: `No accessible verse collection '${id}'.`,
+      recoverable: true
+    });
+  }
+  return { collection };
+}
+
+async function findCollectionsTool(env: McpEnv, args: Record<string, unknown>): Promise<unknown> {
+  try {
+    const collections = await findVerseCollections(env.DB, args, env.userId);
+    return { collections };
+  } catch (error) {
+    throw collectionToolError(error);
   }
 }
 
@@ -624,6 +711,50 @@ function requireString(args: Record<string, unknown>, key: string): string {
     });
   }
   return value;
+}
+
+function requireUserId(env: McpEnv): string {
+  if (!env.userId) {
+    throw toolError({
+      code: "unauthorized",
+      message: "This tool requires an authenticated Ezra MCP API key.",
+      recoverable: false
+    });
+  }
+  return env.userId;
+}
+
+function collectionToolError(error: unknown): ToolError {
+  const code = error instanceof Error ? error.message : "collection_error";
+  const recoverableCodes = new Set([
+    "title_required",
+    "bible_version_required",
+    "verse_refs_required",
+    "invalid_visibility",
+    "invalid_tag_source"
+  ]);
+  return toolError({
+    code,
+    message: collectionErrorMessage(code),
+    recoverable: recoverableCodes.has(code)
+  });
+}
+
+function collectionErrorMessage(code: string): string {
+  switch (code) {
+    case "title_required":
+      return "title is required.";
+    case "bible_version_required":
+      return "bible_version is required.";
+    case "verse_refs_required":
+      return "verse_refs must include at least one canonical reference.";
+    case "invalid_visibility":
+      return "visibility must be 'private', 'unlisted', or 'public'.";
+    case "invalid_tag_source":
+      return "tag_source must be 'api_bible' or 'global'.";
+    default:
+      return code;
+  }
 }
 
 function clampInt(value: unknown, min: number, max: number, fallback: number): number {

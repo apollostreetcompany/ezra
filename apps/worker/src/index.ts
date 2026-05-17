@@ -3,6 +3,11 @@ import {
   rateLimitResponse,
   unauthorizedResponse
 } from "./mcp/handler.js";
+import {
+  createVerseCollection,
+  findVerseCollections,
+  getVerseCollection
+} from "./collections.js";
 import type { JsonRpcRequest, JsonRpcResponse, Tier } from "./mcp/types.js";
 import { TIER_LIMITS } from "./mcp/types.js";
 
@@ -90,45 +95,58 @@ export default {
         return jsonForRequest(request, { ok: true, service: "ezra-mcp-api", version: "0.1.0" });
       }
       if (url.pathname === "/v1/mcp" && request.method === "POST") {
-        return handleMcp(request, env);
+        return await handleMcp(request, env);
       }
       if (url.pathname === "/v1/api-keys" && request.method === "POST") {
-        return handleIssueApiKey(request, env);
+        return await handleIssueApiKey(request, env);
       }
       if (url.pathname === "/v1/magic-links/request" && request.method === "POST") {
-        return handleMagicLinkRequest(request, env);
+        return await handleMagicLinkRequest(request, env);
       }
       if (url.pathname === "/v1/magic-links/verify" && request.method === "POST") {
-        return handleMagicLinkVerify(request, env);
+        return await handleMagicLinkVerify(request, env);
       }
       if (url.pathname === "/v1/checkout/public-session" && request.method === "POST") {
-        return handlePublicCheckout(request, env);
+        return await handlePublicCheckout(request, env);
       }
       if (url.pathname === "/v1/checkout/session" && request.method === "POST") {
-        return handleCheckout(request, env);
+        return await handleCheckout(request, env);
       }
       if (url.pathname === "/v1/checkout/session-status" && request.method === "GET") {
-        return handleCheckoutSessionStatus(request, env);
+        return await handleCheckoutSessionStatus(request, env);
       }
       if (url.pathname === "/v1/account/status" && request.method === "GET") {
-        return handleAccountStatus(request, env);
+        return await handleAccountStatus(request, env);
+      }
+      if (url.pathname === "/v1/collections" && request.method === "POST") {
+        return await handleCreateCollection(request, env);
+      }
+      if (url.pathname === "/v1/collections" && request.method === "GET") {
+        return await handleListCollections(request, env);
+      }
+      if (url.pathname.startsWith("/v1/collections/") && request.method === "GET") {
+        return await handleGetCollection(request, env);
       }
       if (url.pathname === "/v1/billing/portal" && request.method === "POST") {
-        return handleBillingPortal(request, env);
+        return await handleBillingPortal(request, env);
       }
       if (url.pathname === "/v1/refunds/request" && request.method === "POST") {
-        return handleRefundRequest(request, env);
+        return await handleRefundRequest(request, env);
       }
       if (url.pathname === "/v1/stripe/webhook" && request.method === "POST") {
-        return handleStripeWebhook(request, env);
+        return await handleStripeWebhook(request, env);
       }
       if (!url.pathname.startsWith("/v1/") && env.ASSETS) {
-        return env.ASSETS.fetch(request);
+        return await env.ASSETS.fetch(request);
       }
       return jsonForRequest(request, { error: "not_found" }, 404);
     } catch (error) {
       const message = error instanceof Error ? error.message : "worker_error";
-      const status = message === "unauthorized" ? 401 : message.endsWith("_required") || message === "invalid_tier" || message === "invalid_return_url" ? 400 : 500;
+      const status = message === "unauthorized"
+        ? 401
+        : message.endsWith("_required") || message === "invalid_tier" || message === "invalid_return_url" || message === "invalid_visibility" || message === "invalid_tag_source"
+          ? 400
+          : 500;
       return jsonForRequest(request, { error: message }, status);
     }
   }
@@ -158,7 +176,7 @@ async function handleMcp(request: Request, env: Env): Promise<Response> {
       );
     }
   }
-  const response = await handleJsonRpc(body, { env, upgradeUrl: upgradeUrl(env) });
+  const response = await handleJsonRpc(body, { env: { ...env, userId: auth.userId }, upgradeUrl: upgradeUrl(env) });
   return jsonRpcResponse(response, 200);
 }
 
@@ -376,6 +394,42 @@ async function handleAccountStatus(request: Request, env: Env): Promise<Response
       portal: "/v1/billing/portal"
     }
   });
+}
+
+async function handleCreateCollection(request: Request, env: Env): Promise<Response> {
+  const auth = await requireAuth(request, env);
+  const body = await readJson<Record<string, unknown>>(request);
+  const collection = await createVerseCollection(env.DB, auth.userId, body);
+  await audit(env, auth.userId, auth.deviceId, "collection_created", {
+    collectionId: collection.id,
+    visibility: collection.visibility,
+    bibleVersion: collection.bible_version,
+    verseCount: collection.verse_refs.length
+  }, new Date().toISOString());
+  return json({ collection }, 201);
+}
+
+async function handleListCollections(request: Request, env: Env): Promise<Response> {
+  const auth = await requireAuth(request, env);
+  const url = new URL(request.url);
+  const collections = await findVerseCollections(env.DB, {
+    tag: url.searchParams.get("tag") ?? undefined,
+    tag_source: url.searchParams.get("tag_source") ?? undefined,
+    bible_version: url.searchParams.get("bible_version") ?? undefined,
+    limit: url.searchParams.get("limit") ?? undefined
+  }, auth.userId);
+  return json({ collections });
+}
+
+async function handleGetCollection(request: Request, env: Env): Promise<Response> {
+  const auth = await authenticate(request, env);
+  const url = new URL(request.url);
+  const id = decodeURIComponent(url.pathname.slice("/v1/collections/".length));
+  const collection = await getVerseCollection(env.DB, id, auth?.userId);
+  if (!collection) {
+    return jsonForRequest(request, { error: "collection_not_found" }, 404);
+  }
+  return jsonForRequest(request, { collection });
 }
 
 async function handleBillingPortal(request: Request, env: Env): Promise<Response> {

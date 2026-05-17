@@ -11,6 +11,7 @@ export interface D1Database {
 
 export interface McpEnv {
   DB: D1Database;
+  userId?: string;
 }
 
 export interface TopicRow {

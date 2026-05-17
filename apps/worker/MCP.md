@@ -27,10 +27,10 @@ Anonymous calls receive a JSON-RPC result with `isError: true`, code `unauthoriz
 | Method | Notes |
 |---|---|
 | `initialize` | Returns `protocolVersion`, capabilities, and `serverInfo`. Free, does not count against quota. |
-| `tools/list` | Returns the 8 tools with their JSON Schema. Free. |
+| `tools/list` | Returns the 11 tools with their JSON Schema. Free. |
 | `tools/call` | Invokes one tool. **Counts against your monthly quota.** |
 
-## The 8 tools
+## The 11 tools
 
 | Tool | Purpose |
 |---|---|
@@ -40,6 +40,9 @@ Anonymous calls receive a JSON-RPC result with `isError: true`, code `unauthoriz
 | `find_topic(query)` | Case-insensitive substring search over topic names. |
 | `get_related_topics(topic, limit?)` | Topics that co-occur with the given topic across its verses. |
 | `get_jesus_teachings(mode?)` | Curated starter set of Jesus' beliefs, commands, or both, grounded in Gospel refs. |
+| `create_verse_collection(title, verse_refs, bible_version?, visibility?, api_bible_tags?, global_tags?)` | Create a custom collection storing refs, version, and tags only. |
+| `get_verse_collection(id)` | Return an accessible custom collection by id without verse text. |
+| `find_verse_collections(tag?, tag_source?, bible_version?, limit?)` | Find public and owned collections by API.Bible or global tag. |
 | `get_verse(ref)` | Single verse by reference, e.g. `John 3:16`. |
 | `get_chapter(book, chapter)` | All verses in a chapter, plus pericopes that touch it. |
 

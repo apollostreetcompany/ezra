@@ -47,7 +47,7 @@
   }
 }</code></pre>
 
-        <h2>The 8 tools</h2>
+        <h2>The 11 tools</h2>
         <ul>
           <li><code>get_verses_by_topic(topic, limit?)</code> — primary lookup, returns verses with refs and text</li>
           <li><code>list_topics(category?, limit?)</code> — discovery; filter by theme / story / parable</li>
@@ -55,6 +55,9 @@
           <li><code>find_topic(query)</code> — fuzzy search topic names</li>
           <li><code>get_related_topics(topic, limit?)</code> — topics that co-occur with this one</li>
           <li><code>get_jesus_teachings(mode?)</code> — Jesus' beliefs, commands, or both, grounded in Gospel refs</li>
+          <li><code>create_verse_collection(...)</code> — save refs, bible version, API.Bible tags, and global tags</li>
+          <li><code>get_verse_collection(id)</code> — return an accessible collection without stored verse text</li>
+          <li><code>find_verse_collections(tag?, tag_source?)</code> — find public and owned collections by tag</li>
           <li><code>get_verse(ref)</code> — single-verse lookup with topics and pericopes</li>
           <li><code>get_chapter(book, chapter)</code> — full chapter with per-verse topics</li>
         </ul>
@@ -79,6 +82,24 @@
   "params": {
     "name": "get_jesus_teachings",
     "arguments": { "mode": "both" }
+  }
+}</code></pre>
+
+        <h2>Custom verse collections</h2>
+        <pre class="copy-block"><code>{
+  "jsonrpc": "2.0",
+  "id": 3,
+  "method": "tools/call",
+  "params": {
+    "name": "create_verse_collection",
+    "arguments": {
+      "title": "Jesus commands",
+      "visibility": "private",
+      "bible_version": "WEB",
+      "verse_refs": ["Matthew 22:37", "John 13:34"],
+      "api_bible_tags": ["Jesus", "Commands"],
+      "global_tags": ["daily-practice"]
+    }
   }
 }</code></pre>
 
