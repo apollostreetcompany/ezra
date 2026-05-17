@@ -27,10 +27,10 @@ Anonymous calls receive a JSON-RPC result with `isError: true`, code `unauthoriz
 | Method | Notes |
 |---|---|
 | `initialize` | Returns `protocolVersion`, capabilities, and `serverInfo`. Free, does not count against quota. |
-| `tools/list` | Returns the 7 tools with their JSON Schema. Free. |
+| `tools/list` | Returns the 8 tools with their JSON Schema. Free. |
 | `tools/call` | Invokes one tool. **Counts against your monthly quota.** |
 
-## The 7 tools
+## The 8 tools
 
 | Tool | Purpose |
 |---|---|
@@ -39,6 +39,7 @@ Anonymous calls receive a JSON-RPC result with `isError: true`, code `unauthoriz
 | `get_pericope(name)` | Named story or parable with its full text. |
 | `find_topic(query)` | Case-insensitive substring search over topic names. |
 | `get_related_topics(topic, limit?)` | Topics that co-occur with the given topic across its verses. |
+| `get_jesus_teachings(mode?)` | Curated starter set of Jesus' beliefs, commands, or both, grounded in Gospel refs. |
 | `get_verse(ref)` | Single verse by reference, e.g. `John 3:16`. |
 | `get_chapter(book, chapter)` | All verses in a chapter, plus pericopes that touch it. |
 

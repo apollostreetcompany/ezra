@@ -112,7 +112,7 @@ Captured on 2026-05-16 for local account/MCP E2E:
 - Magic-link verification issued an `ezra_live_...` session token; the token value was not printed or stored in docs.
 - `POST /v1/api-keys` issued an `ezra_live_...` API key; only the prefix was recorded.
 - `GET /v1/account/status` reported the Free tier with 20 monthly calls before MCP usage.
-- Authenticated MCP `tools/list` returned 7 tools.
+- Authenticated MCP `tools/list` returned the then-current 7-tool surface before Bead 29 added `get_jesus_teachings`.
 - Authenticated MCP `get_verse` returned `John 3:16` from the local seeded D1 catalog.
 - Account usage incremented from 0/20 to 1/20 after the metered MCP `tools/call`.
 - CLI E2E saved the session token and API key privately in `/tmp/ezra-mcp-cli-e2e-config/auth.json` with mode `600` and printed no token/key value.
@@ -121,6 +121,14 @@ Captured on 2026-05-16 for local account/MCP E2E:
 
 Resolved local caveat:
 - This Mac's normal resolver now reaches `ezramcp.com`; the previous missing-host cache issue is no longer present in the latest smoke.
+
+Captured on 2026-05-17 after Bead 29:
+- `make verify` passed.
+- Worker deployed version: `fed55162-cdb9-4f0a-a338-38feb2d22446`.
+- `https://ezramcp.com/health` returned 200.
+- `https://ezramcp.com/mcp/` served the 8-tool docs and included `get_jesus_teachings`.
+- Unauthenticated `POST https://ezramcp.com/v1/mcp` returned the expected missing-key error.
+- Authenticated production `get_jesus_teachings` smoke was skipped because this shell had no `EZRA_MCP_API_KEY` or saved production API key.
 
 ## Visual Evidence
 Browser screenshots are stored in `docs/visual-evidence/`:

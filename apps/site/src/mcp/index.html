@@ -47,13 +47,14 @@
   }
 }</code></pre>
 
-        <h2>The 7 tools</h2>
+        <h2>The 8 tools</h2>
         <ul>
           <li><code>get_verses_by_topic(topic, limit?)</code> — primary lookup, returns verses with refs and text</li>
           <li><code>list_topics(category?, limit?)</code> — discovery; filter by theme / story / parable</li>
           <li><code>get_pericope(name)</code> — return a story or parable with its verses</li>
           <li><code>find_topic(query)</code> — fuzzy search topic names</li>
           <li><code>get_related_topics(topic, limit?)</code> — topics that co-occur with this one</li>
+          <li><code>get_jesus_teachings(mode?)</code> — Jesus' beliefs, commands, or both, grounded in Gospel refs</li>
           <li><code>get_verse(ref)</code> — single-verse lookup with topics and pericopes</li>
           <li><code>get_chapter(book, chapter)</code> — full chapter with per-verse topics</li>
         </ul>
@@ -69,6 +70,17 @@
       "arguments": { "topic": "Forgiveness", "limit": 5 }
     }
   }'</code></pre>
+
+        <h2>Jesus beliefs and commands</h2>
+        <pre class="copy-block"><code>{
+  "jsonrpc": "2.0",
+  "id": 2,
+  "method": "tools/call",
+  "params": {
+    "name": "get_jesus_teachings",
+    "arguments": { "mode": "both" }
+  }
+}</code></pre>
 
         <h2>Rate limits</h2>
         <ul>

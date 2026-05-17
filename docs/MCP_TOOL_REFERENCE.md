@@ -60,6 +60,16 @@ Input:
 
 Returns nearby curated topics based on shared verse refs.
 
+### `get_jesus_teachings`
+
+Input:
+
+```json
+{ "mode": "both" }
+```
+
+`mode` may be `beliefs`, `commands`, or `both`. Returns a curated starter set for Jesus' beliefs and commands, with `source_refs` and exact source verses where available.
+
 ### `get_verse`
 
 Input:

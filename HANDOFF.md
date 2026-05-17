@@ -6,7 +6,7 @@ Ezra MCP lives at `/Users/kikimac/ezra-mcp`. It is being separated from inherite
 The product plan:
 - Cloudflare Worker hosts both site and API.
 - D1 stores WEB verse text plus topic/story/parable indexes.
-- `POST /v1/mcp` exposes seven authenticated lookup tools.
+- `POST /v1/mcp` exposes eight authenticated lookup/teaching tools.
 - Magic-link login issues a private session token.
 - `POST /v1/api-keys` issues an `ezra_live_...` MCP API key.
 - Stripe Checkout upgrades users to Pro or Max.
@@ -42,12 +42,18 @@ Bead 27 was committed and pushed as `dc0ee3a`:
 - Captured Browser screenshots for landing top and pricing at 390px, 768px, and 1280px under `docs/visual-evidence/`.
 - Deployed Worker/static assets. Version: `d486f56e-efeb-4714-b184-455e06946b72`.
 
-Bead 28 is in finalization:
+Bead 28 was committed and pushed as `a94cc9f`:
 - Created local accounts with throwaway `example.test` emails against isolated local D1 state.
 - Verified local Worker health/static site, magic-link dev echo, account session creation, API key creation, account status, MCP `tools/list`, MCP `get_verse`, and Free-tier usage increment.
 - Verified the Ezra CLI login/key/status path stores tokens privately and does not print session/API key values.
 - Verified the stdio `ezra-mcp-mcp` bridge uses the saved key and returns `John 3:16`.
 - Used local-only `/tmp/ezra-mcp-local-e2e` and `/tmp/ezra-mcp-cli-e2e-config`; production D1, production secrets, and live Stripe were not touched.
+
+Bead 29 is in finalization:
+- Added `get_jesus_teachings(mode)` so clients can request Jesus' beliefs, commands, or both.
+- The response returns a curated Gospel-grounded starter set with summaries, daily-practice prompts, source refs, and hydrated exact source verses where available.
+- Updated site docs, Worker MCP docs, plugin lookup skill, and tests to describe the 8-tool surface.
+- Deployed Worker/static assets. Version: `fed55162-cdb9-4f0a-a338-38feb2d22446`.
 
 Validation passed:
 - `pnpm verify`
@@ -58,6 +64,8 @@ Validation passed:
 - Bead 27 validation: `make verify`
 - Bead 27 live smoke: normal-DNS `https://ezramcp.com/health`, refreshed home HTML, `ezra-icon.png`, and unauthenticated MCP missing-key response
 - Bead 28 validation: local account/API/MCP E2E, local CLI/MCP bridge E2E, `pnpm --filter @ezra-mcp/worker test`, `pnpm --filter @ezra-mcp/cli test`, and `pnpm --filter @ezra-mcp/mcp test`
+- Bead 29 validation: `pnpm --filter @ezra-mcp/worker test -- mcp.test.ts`, `pnpm --filter @ezra-mcp/worker test`, `pnpm --filter @ezra-mcp/site test`, `pnpm --filter @ezra-mcp/site lint`, `pnpm validate:docs`, `pnpm secret:scan`, `pnpm build`, `pnpm lint`, `pnpm test`, `pnpm verify`, `make verify`, and `git diff --check`
+- Bead 29 live smoke: `https://ezramcp.com/health`, `/mcp/` docs containing `get_jesus_teachings` and "The 8 tools", and unauthenticated `/v1/mcp` missing-key response. Authenticated production new-tool smoke was skipped because this shell had no `EZRA_MCP_API_KEY` or saved production API key.
 
 Known concern:
 - Seed generation skipped `Psalms 114:9`, `Psalms 114:10`, and `Psalms 137:10` because those refs have no WEB text in local seed inputs.

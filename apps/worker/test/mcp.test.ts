@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import worker from "../src/index.js";
 
 describe("Ezra MCP worker — /v1/mcp", () => {
-  it("handles initialize without authentication still requires auth, but tools/list returns the 7 tools", async () => {
+  it("handles initialize without authentication still requires auth, but tools/list returns the 8 tools", async () => {
     const db = new FakeD1();
     const token = await issueMcpKey(db, "usr_initer");
     const response = await rpc(db, token, { id: 1, method: "tools/list" });
@@ -12,6 +12,7 @@ describe("Ezra MCP worker — /v1/mcp", () => {
     expect((body.result?.tools as Array<{ name: string }>).map((t) => t.name).sort()).toEqual([
       "find_topic",
       "get_chapter",
+      "get_jesus_teachings",
       "get_pericope",
       "get_related_topics",
       "get_verse",
@@ -163,6 +164,60 @@ describe("Ezra MCP worker — /v1/mcp", () => {
     expect(data.topics).toEqual(["Protection", "Worship"]);
     expect(data.segments).toHaveLength(2);
     expect(data.verses.map((verse: { ref: string }) => verse.ref)).toEqual(["Revelation 7:1", "Revelation 7:9"]);
+  });
+
+  it("returns Jesus teachings separated into beliefs, commands, or both", async () => {
+    const db = new FakeD1();
+    db.verses.set("Mark 1:15", {
+      ref: "Mark 1:15", book: "Mark", chapter: 1, verse: 15,
+      text: "The time is fulfilled, and God's Kingdom is at hand! Repent, and believe in the Good News.",
+      topics: JSON.stringify(["Faith", "Repentance"]), pericopes: JSON.stringify(["Calling the Disciples"])
+    });
+    db.verses.set("Matthew 22:37", {
+      ref: "Matthew 22:37", book: "Matthew", chapter: 22, verse: 37,
+      text: "You shall love the Lord your God with all your heart, with all your soul, and with all your mind.",
+      topics: JSON.stringify(["Love", "Obedience", "Worship"]), pericopes: JSON.stringify([])
+    });
+    db.verses.set("Matthew 22:39", {
+      ref: "Matthew 22:39", book: "Matthew", chapter: 22, verse: 39,
+      text: "You shall love your neighbor as yourself.",
+      topics: JSON.stringify(["Community", "Kindness", "Love"]), pericopes: JSON.stringify([])
+    });
+    db.verses.set("John 13:34", {
+      ref: "John 13:34", book: "John", chapter: 13, verse: 34,
+      text: "A new commandment I give to you, that you love one another.",
+      topics: JSON.stringify(["Community", "Love", "Obedience"]), pericopes: JSON.stringify([])
+    });
+    const token = await issueMcpKey(db, "usr_teachings");
+
+    const response = await rpc(db, token, {
+      id: 7,
+      method: "tools/call",
+      params: { name: "get_jesus_teachings", arguments: { mode: "both" } }
+    });
+
+    const body = await response.json() as RpcResult;
+    expect(body.result?.isError).toBe(false);
+    const data = JSON.parse((body.result?.content as Array<{ text: string }>)[0].text);
+    expect(data.mode).toBe("both");
+    expect(data.scope).toContain("curated");
+    expect(data.beliefs.some((item: { title: string }) => item.title.includes("God's Kingdom"))).toBe(true);
+    expect(data.commands.some((item: { title: string }) => item.title.includes("Love God"))).toBe(true);
+    expect(data.commands.some((item: { title: string }) => item.title.includes("Love one another"))).toBe(true);
+    const kingdom = data.beliefs.find((item: { title: string }) => item.title.includes("God's Kingdom"));
+    expect(kingdom.source_verses.map((verse: { ref: string }) => verse.ref)).toContain("Mark 1:15");
+    const loveGod = data.commands.find((item: { title: string }) => item.title.includes("Love God"));
+    expect(loveGod.source_verses.map((verse: { ref: string }) => verse.ref)).toContain("Matthew 22:37");
+
+    const commandsOnly = await rpc(db, token, {
+      id: 8,
+      method: "tools/call",
+      params: { name: "get_jesus_teachings", arguments: { mode: "Commands" } }
+    });
+    const commandsBody = await commandsOnly.json() as RpcResult;
+    const commandsData = JSON.parse((commandsBody.result?.content as Array<{ text: string }>)[0].text);
+    expect(commandsData.beliefs).toBeUndefined();
+    expect(commandsData.commands.length).toBeGreaterThan(5);
   });
 });
 

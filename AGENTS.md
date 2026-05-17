@@ -104,11 +104,11 @@ Before implementation starts:
 4. Risk class declared as `Low`, `Medium`, or `High`.
 
 Current bead:
-- Bead 28 - Local account and MCP bridge end-to-end validation.
-- Workstream: ops/docs.
-- Risk: Low because it records validation evidence and local runtime caveats without changing production code, public API contracts, schema, billing, or deploy config.
-- Agent: Primary Codex with in-thread validation/review.
-- Tools: RepoPrompt, Wrangler local dev, local D1 persistence, Node fetch, Ezra CLI, Ezra MCP bridge, pnpm/Vitest.
+- Bead 29 - Jesus teachings mode tool.
+- Workstream: code/docs.
+- Risk: High because it adds a public MCP tool contract, though it does not change schema, auth, billing, or deployment config.
+- Agent: Primary Codex with in-thread architecture, implementation, and reviewer passes.
+- Tools: RepoPrompt, Vitest, site tests, docs validation, secret scan, full workspace verification.
 
 ### Bead Exit Gate (Mandatory)
 

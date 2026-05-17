@@ -50,6 +50,7 @@ The bridge reads `EZRA_MCP_API_KEY` or the saved local key.
 - `get_pericope`
 - `find_topic`
 - `get_related_topics`
+- `get_jesus_teachings`
 - `get_verse`
 - `get_chapter`
 

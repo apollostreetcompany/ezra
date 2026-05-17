@@ -34,6 +34,7 @@ const assertions = [
   [mcp.includes("/v1/mcp"), "mcp page shows endpoint"],
   [mcp.includes("Bearer"), "mcp page shows auth header"],
   [mcp.includes("get_verses_by_topic"), "mcp lists tools"],
+  [mcp.includes("get_jesus_teachings"), "mcp lists Jesus teaching tool"],
   [mcp.includes("Claude Code"), "mcp documents at least one client"],
   // Account / checkout
   [account.includes("/v1/magic-links/request"), "account requests magic links"],

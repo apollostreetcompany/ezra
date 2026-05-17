@@ -1,7 +1,7 @@
 # CONTINUITY.md - Ezra MCP
 
 ## Goal (incl. success criteria)
-Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plugin. V1 is successful when users can visit `https://ezramcp.com`, request a magic link, create an `ezra_live_...` API key, configure any MCP client, call the 7 Bible lookup tools, upgrade to Pro/Max through Stripe, manage billing, and install the repo-local Codex plugin/CLI bridge without any Bibe/Bible Coder branding or local Bible-goal surfaces.
+Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plugin. V1 is successful when users can visit `https://ezramcp.com`, request a magic link, create an `ezra_live_...` API key, configure any MCP client, call the 8 Bible lookup/teaching tools, upgrade to Pro/Max through Stripe, manage billing, and install the repo-local Codex plugin/CLI bridge without any Bibe/Bible Coder branding or local Bible-goal surfaces.
 
 ## Constraints/Assumptions
 - Repo path: `/Users/kikimac/ezra-mcp`.
@@ -10,7 +10,7 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - GitHub remote `origin`: `https://github.com/apollostreetcompany/ezra.git`.
 - Production Worker is deployed; `ezramcp.com` is attached as a Worker custom domain and route, and normal DNS smoke passes from this Mac.
 - Current branch: `codex/feat/ezra-full-plugin-launch`.
-- Bead 28 risk class: Low because it records local account/MCP validation evidence without changing production code, schema, billing, or deployment config.
+- Bead 29 risk class: High because it adds a public MCP tool contract, though it does not change schema, auth, billing, or deployment config.
 
 ## Key Decisions
 1. Ezra MCP is a separate product from Bible Coder/Bibe Code; old Bibe files are process input only.
@@ -33,11 +33,12 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 18. Worker deployment version `d486f56e-efeb-4714-b184-455e06946b72` serves the refreshed landing assets with the Ezra portrait header, social preview, and favicon.
 19. Local account E2E validation uses isolated local D1 persistence under `/tmp/ezra-mcp-local-e2e` and does not touch production D1 or production secrets.
 20. Local Wrangler 4.87.0 cannot run the configured Worker compatibility date `2026-05-15`; use Wrangler 4.92.0+ for exact local runtime parity, or a local-only `--compatibility-date 2026-05-07` override for account/MCP smoke tests.
+21. Real prompts asking for Jesus' beliefs, commands, or both are handled by the public `get_jesus_teachings(mode)` MCP tool. The response is intentionally labeled as a curated Gospel-grounded starter set, not an exhaustive list of every saying of Jesus.
 
 ## State
 
 ### Done
-- [x] Initial Ezra Worker HTTP MCP surface exists with 7 lookup tools.
+- [x] Initial Ezra Worker HTTP MCP surface started with 7 lookup tools.
 - [x] Static site exists for landing, pro, MCP docs, privacy, and terms.
 - [x] Seed SQL and ignored data inputs exist locally under `apps/worker/`.
 - [x] RepoPrompt code map built for current implementation pass.
@@ -54,12 +55,14 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - [x] Root-domain smoke passed with forced DNS resolution: health, static home, unauthenticated MCP error, and public Max checkout.
 - [x] Bead 27 landing refresh deployed: Bibe-style header rhythm, supplied Ezra portrait, benefit/how-to copy, social preview, favicon, local Browser evidence at 390px/768px/1280px, and normal `ezramcp.com` smoke checks.
 - [x] Bead 28 local E2E passed: local Worker/D1 health and static site, magic-link account creation, session token issuance, API key creation, account status, MCP `tools/list`, MCP `get_verse`, free usage increment, CLI private token/key storage, and stdio MCP bridge lookup.
+- [x] Bead 29 implemented and deployed: `get_jesus_teachings(mode)` returns Jesus' beliefs, commands, or both as a curated Gospel-grounded starter set; Worker docs/site/plugin references now describe the 8-tool surface; Worker version `fed55162-cdb9-4f0a-a338-38feb2d22446` is live.
 
 ### Now
-- Bead 28 finalization: record local E2E evidence, commit, and push branch to origin.
+- Bead 29 finalization: commit and push the deployed Jesus teachings tool changes.
 
 ### Next
 - Add optional `www.ezramcp.com` route/DNS later if desired.
+- Run an authenticated production `get_jesus_teachings` smoke once a production API key is available in the shell or a controlled inbox login is completed.
 - Run a live account magic-link test with a real inbox before public announcement.
 
 ## Open Questions
