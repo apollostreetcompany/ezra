@@ -21,3 +21,5 @@
 - When asked whether Ezra can handle a real prompt, include the actual user-facing answer before the engineering receipt. Do not make the user ask "where's the answer?"
 - In Cloudflare Worker `fetch`, returning an async handler promise from inside `try` does not let the catch block map later rejections. Use `return await handle...` for route handlers that can throw, then add production-style unauthenticated error tests.
 - Local ignored seed inputs can make `make verify` pass while GitHub Actions fails. CI-safe seed validation must use committed fixture data or another reproducible source, not only `apps/worker/data/`.
+- A Klaviyo event accepted by the API is not useful if the event properties omit the login code. Magic-link tests must inspect the outgoing provider payload for `code`, expiry, and a one-click URL, not just `delivery: "klaviyo"`.
+- The account page must not show “check your email” after an API response that indicates provider skip/failure. Server-side auth delivery should fail closed for login email.

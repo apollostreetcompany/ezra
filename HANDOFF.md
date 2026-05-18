@@ -71,6 +71,13 @@ Bead 32 is in finalization:
 - `make seed-build` uses real ignored seed data when present and committed fixture data under `apps/worker/test/fixtures/seed-data` when absent.
 - This keeps CI reproducible without committing the large generated seed or private/local data copies.
 
+Bead 33 is in finalization:
+- Fixed live magic-link email delivery payloads.
+- The Worker now sends `code`, `expiresAt`, `accountUrl`, and `magicLink` in the Klaviyo event properties.
+- The Worker returns `email_provider_not_configured` or `email_delivery_failed` instead of claiming success when live email is not actually accepted.
+- The account page reads `/account/?email=...&code=...`, verifies automatically, and clears the code from the URL after success.
+- Deployed Worker/static assets. Version: `e9a8a4c7-0455-4969-bf43-258459079f2a`.
+
 Validation passed:
 - `pnpm verify`
 - `pnpm --filter @ezra-mcp/worker seed:build`
@@ -85,11 +92,13 @@ Validation passed:
 - Bead 31 validation: TDD failure for collection API/tool contracts before implementation, `pnpm --filter @ezra-mcp/worker test -- mcp.test.ts worker.test.ts`, `pnpm --filter @ezra-mcp/worker test`, `pnpm --filter @ezra-mcp/site test`, `pnpm --filter @ezra-mcp/site lint`, `pnpm --filter @ezra-mcp/worker build`, `pnpm validate:docs`, `pnpm secret:scan`, `pnpm build`, `pnpm lint`, `pnpm test`, `pnpm verify`, `make verify`, fixture fallback `make seed-build` with `apps/worker/data/` temporarily absent, local D1 migration apply, browser screenshots at 390px/768px/1280px, remote D1 migration apply, and production deploy.
 - Bead 31 live smoke: `https://ezramcp.com/health`, `/account/` collection UI markers, `/mcp/` 11-tool docs markers, remote D1 table check, and unauthenticated `/v1/collections` JSON 401. Authenticated production collection smoke was skipped because this shell had no production account session token.
 - Bead 32 validation: `make seed-build` with `apps/worker/data/` temporarily absent, full `make verify` with `apps/worker/data/` temporarily absent, JSONL parse check, and `git diff --check`.
+- Bead 33 validation: `pnpm --filter @ezra-mcp/worker test -- worker.test.ts`, `pnpm --filter @ezra-mcp/site test`, `pnpm --filter @ezra-mcp/site lint`, `pnpm --filter @ezra-mcp/worker build`, `make verify`, `wrangler deploy --domain ezramcp.com`, production health smoke, production account/pro page marker smokes, and live magic-link request to launch Gmail returning HTTP 200 with `delivery: "klaviyo"`.
 
 Known concern:
 - Seed generation skipped `Psalms 114:9`, `Psalms 114:10`, and `Psalms 137:10` because those refs have no WEB text in local seed inputs.
 - `www.ezramcp.com` is not configured yet.
-- A real inbox account flow is still needed before public announcement to verify live email delivery and authenticated production collection creation.
+- Check `apollostreetcompany@gmail.com` for the Bead 33 email. The Worker accepted it through Klaviyo; inbox delivery and template rendering still need human confirmation.
+- A real inbox account flow is still needed before public announcement to verify the emailed code/link and authenticated production collection creation.
 
 ## Important Constraints
 - Remote origin: `https://github.com/apollostreetcompany/ezra.git`.

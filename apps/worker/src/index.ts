@@ -223,9 +223,14 @@ async function handleMagicLinkRequest(request: Request, env: Env): Promise<Respo
     .prepare("INSERT INTO magic_links (id, email, code_hash, user_id, created_at, expires_at) VALUES (?, ?, ?, ?, ?, ?)")
     .bind(`mlink_${crypto.randomUUID()}`, email, codeHash, userId, now.toISOString(), expiresAt)
     .run();
-  const delivery = env.MAGIC_LINK_DEV_ECHO === "true"
-    ? "dev_echo"
-    : (await sendKlaviyoEvent(env, {
+  if (env.MAGIC_LINK_DEV_ECHO === "true") {
+    return json({
+      ok: true,
+      delivery: "dev_echo",
+      devCode: code
+    });
+  }
+  const emailDelivery = await sendKlaviyoEvent(env, {
       email,
       metric: "Magic Link Requested",
       uniqueId: `mlink_${codeHash.slice(0, 16)}`,
@@ -233,13 +238,20 @@ async function handleMagicLinkRequest(request: Request, env: Env): Promise<Respo
       properties: {
         userId,
         site: EZRA_SITE_ID,
-        loginUrl: "https://ezramcp.com/account/"
+        code,
+        expiresAt,
+        accountUrl: DEFAULT_ACCOUNT_URL,
+        magicLink: magicLinkUrl(email, code)
       }
-    })).sent ? "klaviyo" : "email_provider_skipped";
+    });
+  if (!emailDelivery.sent) {
+    return json({
+      error: emailDelivery.skipped ? "email_provider_not_configured" : "email_delivery_failed"
+    }, emailDelivery.skipped ? 503 : 502);
+  }
   return json({
     ok: true,
-    delivery,
-    ...(env.MAGIC_LINK_DEV_ECHO === "true" ? { devCode: code } : {})
+    delivery: "klaviyo"
   });
 }
 
@@ -1008,6 +1020,13 @@ function normalizeReturnUrl(value: unknown, fallback: string): string {
   } catch {
     throw new Error("invalid_return_url");
   }
+}
+
+function magicLinkUrl(email: string, code: string): string {
+  const url = new URL(DEFAULT_ACCOUNT_URL);
+  url.searchParams.set("email", email);
+  url.searchParams.set("code", code);
+  return url.toString();
 }
 
 function required(value: string | undefined, label: string): string {

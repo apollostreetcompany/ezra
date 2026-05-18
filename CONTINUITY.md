@@ -10,7 +10,7 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - GitHub remote `origin`: `https://github.com/apollostreetcompany/ezra.git`.
 - Production Worker is deployed; `ezramcp.com` is attached as a Worker custom domain and route, and normal DNS smoke passes from this Mac.
 - Current branch: `codex/feat/bead-31-custom-verse-collections`.
-- Bead 31 risk class: High because it adds D1 schema, authenticated write APIs, MCP write/read tools, visibility rules, and public contract docs.
+- Bead 33 risk class: High because it touches auth/login delivery, account UI behavior, production Worker deployment, and launch-blocking email provider semantics.
 
 ## Key Decisions
 1. Ezra MCP is a separate product from Bible Coder/Bibe Code; old Bibe files are process input only.
@@ -40,6 +40,8 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 25. Async Worker route handlers must be awaited inside the top-level `try` block; otherwise rejected handler promises bypass the JSON error mapper and surface as Cloudflare Worker 1101 exceptions.
 26. Worker deployment version `c2ee753a-4a4b-45ee-90a0-42541d76d37a` is live with the Bead 31 collection tools, collection account UI, migration `0006_verse_collections.sql`, and the async route error-handling fix.
 27. CI cannot rely on ignored `apps/worker/data/` seed inputs. `make seed-build` uses real local data when present and a tiny committed fixture otherwise, with `EZRA_SEED_DATA_DIR` and `EZRA_SEED_OUT_FILE` available for explicit seed-builder validation.
+28. Magic-link email delivery must send the actual short-lived code and a one-click account URL in provider properties. The Worker must not return success when the email provider is missing or rejects the event.
+29. Worker deployment version `e9a8a4c7-0455-4969-bf43-258459079f2a` is live with the Bead 33 magic-link delivery fix.
 
 ## State
 
@@ -65,12 +67,14 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - [x] Bead 29 committed and pushed as `23f1e05`.
 - [x] Bead 31 implemented and deployed from worktree `/Users/kikimac/ezra-mcp-collections`: custom verse collections store refs/version/tags only, expose account API routes and 3 MCP collection tools, update account UI/docs, return JSON auth errors in production, and keep CI seed validation data-independent.
 - [x] Bead 32 fixed CI seed validation so GitHub Actions can run `make verify` without ignored local seed inputs.
+- [x] Bead 33 fixed live magic-link delivery payloads: Klaviyo receives `code`, `expiresAt`, and `magicLink`; the Worker fails closed on provider skip/reject; account page can verify one-click links.
 
 ### Now
-- No active implementation bead. Bead 31 and the Bead 32 CI follow-up are in final push/CI confirmation.
+- No active implementation bead. Bead 33 is deployed and awaiting user inbox confirmation.
 
 ### Next
-- Run a real inbox account flow and authenticated production collection create/list/get smoke once a controlled email or production API key is available.
+- Check `apollostreetcompany@gmail.com` for the new Ezra MCP email sent after the Bead 33 deploy, then use the code/link to verify.
+- Run authenticated production collection create/list/get smoke once a controlled email login succeeds.
 - Add optional `www.ezramcp.com` route/DNS later if desired.
 - Run an authenticated production `get_jesus_teachings` smoke once a production API key is available in the shell or a controlled inbox login is completed.
 - Run a live account magic-link test with a real inbox before public announcement.

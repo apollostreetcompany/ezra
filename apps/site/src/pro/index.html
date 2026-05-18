@@ -89,7 +89,7 @@
           });
           const body = await response.json();
           if (!response.ok) throw new Error(body.error || "magic_link_failed");
-          status.innerHTML = 'Magic link requested. Finish in <a href="/account/">Account</a>.';
+          status.innerHTML = 'Email sent. Open the magic link or finish in <a href="/account/">Account</a>.';
         } catch {
           status.textContent = "Magic link could not be sent.";
         }

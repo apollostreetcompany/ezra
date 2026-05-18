@@ -8,7 +8,7 @@
 - Static site build output: `apps/site/dist`.
 - Database: Cloudflare D1, database name `ezra-mcp-prod`.
 - D1 id: `13f487c0-02fc-44da-814c-252925bb59da`.
-- Current deployed Worker version: `c2ee753a-4a4b-45ee-90a0-42541d76d37a`.
+- Current deployed Worker version: `e9a8a4c7-0455-4969-bf43-258459079f2a`.
 - Package manager: pnpm.
 - Runtime: Node 22+ for local CLI/MCP bridge, Cloudflare Workers for production.
 - Wrangler 4.92.0+ is recommended for local dev parity with `compatibility_date = "2026-05-15"`.
@@ -144,6 +144,15 @@ Captured on 2026-05-17 after Bead 31:
 - Unauthenticated `POST https://ezramcp.com/v1/collections` returns JSON `401` with `{"error":"unauthorized"}`.
 - Authenticated production collection create/list/get smoke was skipped because this shell had no production account session token.
 
+Captured on 2026-05-18 after Bead 33:
+- `make verify` passed.
+- Worker deployed version: `e9a8a4c7-0455-4969-bf43-258459079f2a`.
+- `https://ezramcp.com/health` returned 200.
+- `https://ezramcp.com/account/` includes query-param magic-link verification and clears the code from the URL after successful verification.
+- `https://ezramcp.com/pro/` tells users to open the magic link or finish in Account after email delivery.
+- Live `POST /v1/magic-links/request` to the launch Gmail returned HTTP 200 with `delivery: "klaviyo"` and no code/token in the response.
+- Authenticated live completion still requires checking the inbox and using the emailed code/link.
+
 ## Visual Evidence
 Browser screenshots are stored in `docs/visual-evidence/`:
 - Landing: `bead-26-landing-390.png`, `bead-26-landing-768.png`, `bead-26-landing-1280.png`
@@ -170,4 +179,5 @@ Before deploy-affecting beads are marked complete:
 - Worker rollback: use Cloudflare Workers deployment rollback to the previous successful version.
 - Previous known-good Worker version before Bead 27: `a7071023-096d-421f-81ad-c9643026e61a`.
 - Previous known-good Worker version before Bead 31: `fed55162-cdb9-4f0a-a338-38feb2d22446`.
+- Previous known-good Worker version before Bead 33: `c2ee753a-4a4b-45ee-90a0-42541d76d37a`.
 - D1 rollback: use D1 time-travel backup/restore if a migration or seed corrupts production data.

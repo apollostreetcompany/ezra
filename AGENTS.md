@@ -104,7 +104,7 @@ Before implementation starts:
 4. Risk class declared as `Low`, `Medium`, or `High`.
 
 Current bead:
-- No active implementation bead. Bead 31 - Custom verse collections and Bead 32 - CI-safe seed validation fixture are in final handoff on branch `codex/feat/bead-31-custom-verse-collections`.
+- No active implementation bead. Bead 33 - Fix live magic-link email delivery is deployed and awaiting inbox confirmation.
 - Next high-risk implementation bead must re-run the entry gate, especially for schema, auth, public API, billing, or deployment/runtime changes.
 
 ### Bead Exit Gate (Mandatory)

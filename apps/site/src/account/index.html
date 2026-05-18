@@ -92,12 +92,14 @@
       const verifyForm = document.querySelector("#verify-form");
       const statusOutput = document.querySelector("#status-output");
       const keyOutput = document.querySelector("#api-key-output");
+      const verifyEmailInput = document.querySelector("#verify-email");
+      const verifyCodeInput = document.querySelector("#verify-code");
 
       requestForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         const status = requestForm.querySelector(".form-status");
         const email = new FormData(requestForm).get("email");
-        document.querySelector("#verify-email").value = email;
+        verifyEmailInput.value = email;
         status.textContent = "Sending magic link...";
         try {
           const response = await fetch("/v1/magic-links/request", {
@@ -107,7 +109,12 @@
           });
           const body = await response.json();
           if (!response.ok) throw new Error(body.error || "magic_link_failed");
-          status.textContent = body.devCode ? `Dev code: ${body.devCode}` : "Check your email for the code.";
+          if (body.devCode) {
+            verifyCodeInput.value = body.devCode;
+            status.textContent = `Dev code: ${body.devCode}`;
+          } else {
+            status.textContent = "Email sent. Open the magic link or paste the code below.";
+          }
         } catch {
           status.textContent = "Magic link could not be sent.";
         }
@@ -117,14 +124,32 @@
         event.preventDefault();
         const status = verifyForm.querySelector(".form-status");
         const data = new FormData(verifyForm);
+        await verifyMagicCode(data.get("email"), data.get("code"), status);
+      });
+
+      const query = new URLSearchParams(window.location.search);
+      const queryEmail = query.get("email");
+      const queryCode = query.get("code");
+      if (queryEmail) {
+        document.querySelector("#request-email").value = queryEmail;
+        verifyEmailInput.value = queryEmail;
+      }
+      if (queryCode) {
+        verifyCodeInput.value = queryCode;
+      }
+      if (queryEmail && queryCode) {
+        verifyMagicCode(queryEmail, queryCode, verifyForm.querySelector(".form-status"), true);
+      }
+
+      async function verifyMagicCode(email, code, status, replaceUrl = false) {
         status.textContent = "Verifying...";
         try {
           const response = await fetch("/v1/magic-links/verify", {
             method: "POST",
             headers: { "content-type": "application/json" },
             body: JSON.stringify({
-              email: data.get("email"),
-              code: data.get("code"),
+              email,
+              code,
               deviceName: "Ezra MCP web account"
             })
           });
@@ -132,11 +157,14 @@
           if (!response.ok || !body.token) throw new Error(body.error || "verify_failed");
           sessionToken = body.token;
           status.textContent = "Account verified.";
+          if (replaceUrl) {
+            window.history.replaceState(null, "", "/account/");
+          }
           await refreshStatus();
         } catch {
           status.textContent = "Code could not be verified.";
         }
-      });
+      }
 
       document.querySelector("#create-key").addEventListener("click", async () => {
         if (!sessionToken) {

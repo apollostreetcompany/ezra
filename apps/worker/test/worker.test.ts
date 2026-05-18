@@ -51,6 +51,86 @@ describe("Ezra MCP Cloudflare Worker — billing + account lifecycle", () => {
     expect([...db.deviceTokens.values()].some((row) => row.user_id === "usr_existing" && row.scopes.includes("account:read"))).toBe(true);
   });
 
+  it("sends live magic-link emails with the code and one-click link in Klaviyo properties", async () => {
+    const db = new FakeD1();
+    const calls: Array<{ url: string; body: string; revision: string | null }> = [];
+    globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+      calls.push({
+        url: String(input),
+        body: String(init?.body ?? ""),
+        revision: new Headers(init?.headers).get("revision")
+      });
+      return new Response(null, { status: 202 });
+    }) as typeof fetch;
+
+    const request = await worker.fetch(
+      new Request("https://ezramcp.com/v1/magic-links/request", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email: "Reader@Example.com" })
+      }),
+      env(db, { KLAVIYO_PRIVATE_API_KEY: "klaviyo_test_key" })
+    );
+
+    expect(request.status).toBe(200);
+    await expect(request.json()).resolves.toEqual({ ok: true, delivery: "klaviyo" });
+    expect(calls).toHaveLength(1);
+    expect(calls[0]!.url).toBe("https://a.klaviyo.com/api/events");
+    expect(calls[0]!.revision).toBe("2026-04-15");
+    const event = JSON.parse(calls[0]!.body) as {
+      data: {
+        attributes: {
+          profile: { data: { attributes: { email: string } } };
+          properties: { code: string; magicLink: string; expiresAt: string; accountUrl: string };
+        };
+      };
+    };
+    expect(event.data.attributes.profile.data.attributes.email).toBe("reader@example.com");
+    expect(event.data.attributes.properties.code).toMatch(/^[0-9a-f]{36}$/);
+    expect(event.data.attributes.properties.magicLink).toContain("https://ezramcp.com/account/?");
+    expect(event.data.attributes.properties.magicLink).toContain("email=reader%40example.com");
+    expect(event.data.attributes.properties.magicLink).toContain(`code=${event.data.attributes.properties.code}`);
+    expect(event.data.attributes.properties.accountUrl).toBe("https://ezramcp.com/account/");
+    expect(Date.parse(event.data.attributes.properties.expiresAt)).toBeGreaterThan(Date.now());
+
+    const verify = await worker.fetch(
+      new Request("https://ezramcp.com/v1/magic-links/verify", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email: "reader@example.com", code: event.data.attributes.properties.code })
+      }),
+      env(db)
+    );
+    expect(verify.status).toBe(200);
+  });
+
+  it("does not claim live email delivery when the provider is not configured or rejects the event", async () => {
+    const missingProvider = await worker.fetch(
+      new Request("https://ezramcp.com/v1/magic-links/request", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email: "reader@example.com" })
+      }),
+      env(new FakeD1())
+    );
+
+    expect(missingProvider.status).toBe(503);
+    await expect(missingProvider.json()).resolves.toEqual({ error: "email_provider_not_configured" });
+
+    globalThis.fetch = (async () => jsonResponse({ error: "bad key" }, 401)) as typeof fetch;
+    const rejectedProvider = await worker.fetch(
+      new Request("https://ezramcp.com/v1/magic-links/request", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email: "reader@example.com" })
+      }),
+      env(new FakeD1(), { KLAVIYO_PRIVATE_API_KEY: "klaviyo_test_key" })
+    );
+
+    expect(rejectedProvider.status).toBe(502);
+    await expect(rejectedProvider.json()).resolves.toEqual({ error: "email_delivery_failed" });
+  });
+
   it("creates public Pro and Max checkout sessions against existing email identity", async () => {
     const db = new FakeD1();
     db.users.set("usr_paid", { email: "paid@example.com", created_at: "2026-05-16T00:00:00.000Z" });

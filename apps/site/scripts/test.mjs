@@ -42,6 +42,8 @@ const assertions = [
   // Account / checkout
   [account.includes("/v1/magic-links/request"), "account requests magic links"],
   [account.includes("/v1/magic-links/verify"), "account verifies magic links"],
+  [account.includes("new URLSearchParams(window.location.search)"), "account reads magic-link query params"],
+  [account.includes("replaceState(null, \"\", \"/account/\")"), "account removes magic-link code from URL after verify"],
   [account.includes("/v1/api-keys"), "account creates API keys"],
   [account.includes("/v1/account/status"), "account reads account status"],
   [account.includes("/v1/billing/portal"), "account opens billing portal"],
