@@ -56,6 +56,28 @@
             </div>
             <pre id="status-output" class="copy-block" aria-live="polite"></pre>
           </div>
+
+          <form id="collection-form" class="signup-form">
+            <h2>Verse collection</h2>
+            <label for="collection-title">Title</label>
+            <input id="collection-title" name="title" type="text" required placeholder="Jesus commands for daily practice">
+            <label for="collection-version">Bible version</label>
+            <input id="collection-version" name="bible_version" type="text" required value="WEB">
+            <label for="collection-refs">Verse refs</label>
+            <textarea id="collection-refs" name="verse_refs" required placeholder="Matthew 22:37&#10;Matthew 22:39&#10;John 13:34"></textarea>
+            <label for="collection-api-tags">API.Bible tags</label>
+            <input id="collection-api-tags" name="api_bible_tags" type="text" placeholder="Jesus, Commands">
+            <label for="collection-global-tags">Global tags</label>
+            <input id="collection-global-tags" name="global_tags" type="text" placeholder="daily-practice, love">
+            <label for="collection-visibility">Visibility</label>
+            <select id="collection-visibility" name="visibility">
+              <option value="private">Private</option>
+              <option value="unlisted">Unlisted</option>
+              <option value="public">Public</option>
+            </select>
+            <button class="button primary" type="submit">Save collection</button>
+            <pre id="collection-output" class="copy-block" aria-live="polite"></pre>
+          </form>
         </section>
       </main>
       <footer class="footer">
@@ -70,12 +92,14 @@
       const verifyForm = document.querySelector("#verify-form");
       const statusOutput = document.querySelector("#status-output");
       const keyOutput = document.querySelector("#api-key-output");
+      const verifyEmailInput = document.querySelector("#verify-email");
+      const verifyCodeInput = document.querySelector("#verify-code");
 
       requestForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         const status = requestForm.querySelector(".form-status");
         const email = new FormData(requestForm).get("email");
-        document.querySelector("#verify-email").value = email;
+        verifyEmailInput.value = email;
         status.textContent = "Sending magic link...";
         try {
           const response = await fetch("/v1/magic-links/request", {
@@ -85,7 +109,12 @@
           });
           const body = await response.json();
           if (!response.ok) throw new Error(body.error || "magic_link_failed");
-          status.textContent = body.devCode ? `Dev code: ${body.devCode}` : "Check your email for the code.";
+          if (body.devCode) {
+            verifyCodeInput.value = body.devCode;
+            status.textContent = `Dev code: ${body.devCode}`;
+          } else {
+            status.textContent = "Email sent. Open the magic link or paste the code below.";
+          }
         } catch {
           status.textContent = "Magic link could not be sent.";
         }
@@ -95,14 +124,32 @@
         event.preventDefault();
         const status = verifyForm.querySelector(".form-status");
         const data = new FormData(verifyForm);
+        await verifyMagicCode(data.get("email"), data.get("code"), status);
+      });
+
+      const query = new URLSearchParams(window.location.search);
+      const queryEmail = query.get("email");
+      const queryCode = query.get("code");
+      if (queryEmail) {
+        document.querySelector("#request-email").value = queryEmail;
+        verifyEmailInput.value = queryEmail;
+      }
+      if (queryCode) {
+        verifyCodeInput.value = queryCode;
+      }
+      if (queryEmail && queryCode) {
+        verifyMagicCode(queryEmail, queryCode, verifyForm.querySelector(".form-status"), true);
+      }
+
+      async function verifyMagicCode(email, code, status, replaceUrl = false) {
         status.textContent = "Verifying...";
         try {
           const response = await fetch("/v1/magic-links/verify", {
             method: "POST",
             headers: { "content-type": "application/json" },
             body: JSON.stringify({
-              email: data.get("email"),
-              code: data.get("code"),
+              email,
+              code,
               deviceName: "Ezra MCP web account"
             })
           });
@@ -110,11 +157,14 @@
           if (!response.ok || !body.token) throw new Error(body.error || "verify_failed");
           sessionToken = body.token;
           status.textContent = "Account verified.";
+          if (replaceUrl) {
+            window.history.replaceState(null, "", "/account/");
+          }
           await refreshStatus();
         } catch {
           status.textContent = "Code could not be verified.";
         }
-      });
+      }
 
       document.querySelector("#create-key").addEventListener("click", async () => {
         if (!sessionToken) {
@@ -161,6 +211,34 @@
         window.location.assign(body.url);
       });
 
+      document.querySelector("#collection-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const output = document.querySelector("#collection-output");
+        if (!sessionToken) {
+          output.textContent = "Verify your email first.";
+          return;
+        }
+        const data = new FormData(event.currentTarget);
+        const refs = splitList(data.get("verse_refs"));
+        const response = await fetch("/v1/collections", {
+          method: "POST",
+          headers: {
+            authorization: `Bearer ${sessionToken}`,
+            "content-type": "application/json"
+          },
+          body: JSON.stringify({
+            title: data.get("title"),
+            visibility: data.get("visibility"),
+            bible_version: data.get("bible_version"),
+            verse_refs: refs,
+            api_bible_tags: splitList(data.get("api_bible_tags")),
+            global_tags: splitList(data.get("global_tags"))
+          })
+        });
+        const body = await response.json();
+        output.textContent = response.ok ? JSON.stringify(body.collection, null, 2) : body.error || "collection_failed";
+      });
+
       async function refreshStatus() {
         if (!sessionToken) {
           statusOutput.textContent = "Verify your email first.";
@@ -171,6 +249,13 @@
         });
         const body = await response.json();
         statusOutput.textContent = JSON.stringify(body, null, 2);
+      }
+
+      function splitList(value) {
+        return String(value || "")
+          .split(/[\n,]+/)
+          .map((item) => item.trim())
+          .filter(Boolean);
       }
     </script>
   </body>

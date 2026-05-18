@@ -1,16 +1,16 @@
 # CONTINUITY.md - Ezra MCP
 
 ## Goal (incl. success criteria)
-Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plugin. V1 is successful when users can visit `https://ezramcp.com`, request a magic link, create an `ezra_live_...` API key, configure any MCP client, call the 8 Bible lookup/teaching tools, upgrade to Pro/Max through Stripe, manage billing, and install the repo-local Codex plugin/CLI bridge without any Bibe/Bible Coder branding or local Bible-goal surfaces.
+Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plugin. V1 is successful when users can visit `https://ezramcp.com`, request a magic link, create an `ezra_live_...` API key, configure any MCP client, call the 11 Bible lookup/teaching/collection tools, upgrade to Pro/Max through Stripe, manage billing, and install the repo-local Codex plugin/CLI bridge without any Bibe/Bible Coder branding or local Bible-goal surfaces.
 
 ## Constraints/Assumptions
-- Repo path: `/Users/kikimac/ezra-mcp`.
+- Repo path: `/Users/kikimac/ezra-mcp-collections` for Bead 31 worktree; launch checkout remains `/Users/kikimac/ezra-mcp`.
 - Separate data repo: `/Users/kikimac/ezra-bible-data`.
 - Graphify is out of scope; D1 inverted indexes are the v1 query path.
 - GitHub remote `origin`: `https://github.com/apollostreetcompany/ezra.git`.
 - Production Worker is deployed; `ezramcp.com` is attached as a Worker custom domain and route, and normal DNS smoke passes from this Mac.
-- Current branch: `codex/feat/ezra-full-plugin-launch`.
-- No active implementation bead. Next candidate is Bead 30 - LLM-backed verse collection tagger design.
+- Current branch: `codex/feat/bead-31-custom-verse-collections`.
+- Bead 33 risk class: High because it touches auth/login delivery, account UI behavior, production Worker deployment, and launch-blocking email provider semantics.
 
 ## Key Decisions
 1. Ezra MCP is a separate product from Bible Coder/Bibe Code; old Bibe files are process input only.
@@ -36,6 +36,12 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 21. Real prompts asking for Jesus' beliefs, commands, or both are handled by the public `get_jesus_teachings(mode)` MCP tool. The response is intentionally labeled as a curated Gospel-grounded starter set, not an exhaustive list of every saying of Jesus.
 22. The robust next layer for prompts like "all of Jesus' beliefs" should be an LLM-backed tagging pipeline for verse collections: push refs/text into a staging collection, classify them with a strict schema, store confidence/provenance/reviewer state, then publish approved tags into D1 for deterministic MCP lookup.
 23. Custom verse collections should stay lightweight: store collection metadata plus JSON arrays for retrieval, but also maintain a small D1 inverted tag index for querying by tag, visibility, owner, and verse ref. Public/private sharing adds product and permission scope; storage itself is not the expensive part.
+24. Bead 31 implementation must store only canonical verse references and `bible_version` for custom collections, not pasted verse text. Tags are separated into `api_bible_tags` and `global_tags`, with normalized D1 tag-index rows for lookup.
+25. Async Worker route handlers must be awaited inside the top-level `try` block; otherwise rejected handler promises bypass the JSON error mapper and surface as Cloudflare Worker 1101 exceptions.
+26. Worker deployment version `c2ee753a-4a4b-45ee-90a0-42541d76d37a` is live with the Bead 31 collection tools, collection account UI, migration `0006_verse_collections.sql`, and the async route error-handling fix.
+27. CI cannot rely on ignored `apps/worker/data/` seed inputs. `make seed-build` uses real local data when present and a tiny committed fixture otherwise, with `EZRA_SEED_DATA_DIR` and `EZRA_SEED_OUT_FILE` available for explicit seed-builder validation.
+28. Magic-link email delivery must send the actual short-lived code and a one-click account URL in provider properties. The Worker must not return success when the email provider is missing or rejects the event.
+29. Worker deployment version `e9a8a4c7-0455-4969-bf43-258459079f2a` is live with the Bead 33 magic-link delivery fix.
 
 ## State
 
@@ -59,12 +65,16 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - [x] Bead 28 local E2E passed: local Worker/D1 health and static site, magic-link account creation, session token issuance, API key creation, account status, MCP `tools/list`, MCP `get_verse`, free usage increment, CLI private token/key storage, and stdio MCP bridge lookup.
 - [x] Bead 29 implemented and deployed: `get_jesus_teachings(mode)` returns Jesus' beliefs, commands, or both as a curated Gospel-grounded starter set; Worker docs/site/plugin references now describe the 8-tool surface; Worker version `fed55162-cdb9-4f0a-a338-38feb2d22446` is live.
 - [x] Bead 29 committed and pushed as `23f1e05`.
+- [x] Bead 31 implemented and deployed from worktree `/Users/kikimac/ezra-mcp-collections`: custom verse collections store refs/version/tags only, expose account API routes and 3 MCP collection tools, update account UI/docs, return JSON auth errors in production, and keep CI seed validation data-independent.
+- [x] Bead 32 fixed CI seed validation so GitHub Actions can run `make verify` without ignored local seed inputs.
+- [x] Bead 33 fixed live magic-link delivery payloads: Klaviyo receives `code`, `expiresAt`, and `magicLink`; the Worker fails closed on provider skip/reject; account page can verify one-click links.
 
 ### Now
-- Product direction: scope custom verse collections with manual tags, optional LLM suggested tags, and private/unlisted/public visibility.
+- No active implementation bead. Bead 33 is deployed and awaiting user inbox confirmation.
 
 ### Next
-- Design Bead 30 as a staged custom verse collection feature: schema, endpoints, MCP tools, account UI, visibility rules, and optional LLM tag suggestion/review.
+- Check `apollostreetcompany@gmail.com` for the new Ezra MCP email sent after the Bead 33 deploy, then use the code/link to verify.
+- Run authenticated production collection create/list/get smoke once a controlled email login succeeds.
 - Add optional `www.ezramcp.com` route/DNS later if desired.
 - Run an authenticated production `get_jesus_teachings` smoke once a production API key is available in the shell or a controlled inbox login is completed.
 - Run a live account magic-link test with a real inbox before public announcement.

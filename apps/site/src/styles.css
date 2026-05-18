@@ -772,7 +772,9 @@ label {
   color: var(--bone);
 }
 
-input {
+input,
+select,
+textarea {
   width: 100%;
   min-height: 50px;
   border: 2px solid var(--ink);
@@ -783,7 +785,14 @@ input {
   font: 700 17px/1.2 var(--body);
 }
 
-input:focus-visible {
+textarea {
+  min-height: 132px;
+  resize: vertical;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
   outline: 3px solid var(--gold);
   outline-offset: 2px;
 }
@@ -831,7 +840,8 @@ input:focus-visible {
 }
 
 #api-key-output:empty,
-#status-output:empty {
+#status-output:empty,
+#collection-output:empty {
   display: none;
 }
 
@@ -856,6 +866,11 @@ input:focus-visible {
 }
 
 @media (max-width: 520px) {
+  .account-actions .button {
+    justify-content: center;
+    width: 100%;
+  }
+
   .hero {
     gap: 24px;
   }

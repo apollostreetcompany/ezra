@@ -17,7 +17,14 @@ worker-check:
 	@if [ -f apps/worker/package.json ]; then pnpm --filter @ezra-mcp/worker lint; else echo "No worker package yet; skipping Worker check."; fi
 
 seed-build:
-	@if [ -f apps/worker/package.json ]; then pnpm --filter @ezra-mcp/worker seed:build; else echo "No worker package yet; skipping seed build."; fi
+	@if [ -f apps/worker/package.json ]; then \
+		if [ -f apps/worker/data/bible_verses.json ]; then \
+			pnpm --filter @ezra-mcp/worker seed:build; \
+		else \
+			echo "Seed inputs missing; validating seed builder with committed fixture data."; \
+			EZRA_SEED_DATA_DIR="$$PWD/apps/worker/test/fixtures/seed-data" EZRA_SEED_OUT_FILE="$${TMPDIR:-/tmp}/ezra-mcp-seed-check.sql" pnpm --filter @ezra-mcp/worker seed:build; \
+		fi; \
+	else echo "No worker package yet; skipping seed build."; fi
 
 lint:
 	@if [ -f package.json ]; then pnpm lint; else echo "No package.json yet; skipping lint."; fi

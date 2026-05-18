@@ -70,6 +70,43 @@ Input:
 
 `mode` may be `beliefs`, `commands`, or `both`. Returns a curated starter set for Jesus' beliefs and commands, with `source_refs` and exact source verses where available.
 
+### `create_verse_collection`
+
+Input:
+
+```json
+{
+  "title": "Jesus commands",
+  "visibility": "private",
+  "bible_version": "WEB",
+  "verse_refs": ["Matthew 22:37", "John 13:34"],
+  "api_bible_tags": ["Jesus", "Commands"],
+  "global_tags": ["daily-practice"]
+}
+```
+
+Creates a custom collection owned by the API-key user. Stores only verse refs, the Bible version identifier, and tags; it does not store pasted verse text.
+
+### `get_verse_collection`
+
+Input:
+
+```json
+{ "id": "vcol_..." }
+```
+
+Returns an owned, public, or unlisted collection by id. Private collections require the owner API key.
+
+### `find_verse_collections`
+
+Input:
+
+```json
+{ "tag": "Jesus", "tag_source": "api_bible", "limit": 10 }
+```
+
+Finds public and owned collections by `api_bible` or `global` tag. Unlisted collections are accessible by id but do not appear in public tag search.
+
 ### `get_verse`
 
 Input:

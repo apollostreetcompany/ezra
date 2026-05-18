@@ -15,8 +15,12 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DATA_DIR = resolve(__dirname, "..", "data");
-const OUT_FILE = resolve(__dirname, "..", "seed.sql");
+const DATA_DIR = process.env.EZRA_SEED_DATA_DIR
+  ? resolve(process.env.EZRA_SEED_DATA_DIR)
+  : resolve(__dirname, "..", "data");
+const OUT_FILE = process.env.EZRA_SEED_OUT_FILE
+  ? resolve(process.env.EZRA_SEED_OUT_FILE)
+  : resolve(__dirname, "..", "seed.sql");
 
 const VERSES_PATH = resolve(DATA_DIR, "bible_verses.json");
 const TOPICS_PATH = resolve(DATA_DIR, "bible_topics.json");
@@ -26,7 +30,7 @@ const TEXTS_PATH = resolve(DATA_DIR, "web_text.json"); // {ref: text}
 for (const p of [VERSES_PATH, TOPICS_PATH, PERICOPES_PATH, TEXTS_PATH]) {
   if (!existsSync(p)) {
     console.error(`Missing input: ${p}`);
-    console.error("Copy bible_verses.json, bible_topics.json, bible_pericopes.json, and web_text.json into apps/worker/data/");
+    console.error("Copy bible_verses.json, bible_topics.json, bible_pericopes.json, and web_text.json into apps/worker/data/, or set EZRA_SEED_DATA_DIR to a directory with those files.");
     process.exit(1);
   }
 }

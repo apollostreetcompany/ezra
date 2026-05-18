@@ -1,19 +1,19 @@
 # HANDOFF.md - Ezra MCP
 
 ## Current Context
-Ezra MCP lives at `/Users/kikimac/ezra-mcp`. It is being separated from inherited Bible Coder/Bibe Code code into its own hosted HTTP MCP product and Codex plugin.
+Ezra MCP's launch checkout lives at `/Users/kikimac/ezra-mcp`. Bead 31 work is isolated in the worktree `/Users/kikimac/ezra-mcp-collections`.
 
 The product plan:
 - Cloudflare Worker hosts both site and API.
 - D1 stores WEB verse text plus topic/story/parable indexes.
-- `POST /v1/mcp` exposes eight authenticated lookup/teaching tools.
+- `POST /v1/mcp` exposes eleven authenticated lookup/teaching/collection tools.
 - Magic-link login issues a private session token.
 - `POST /v1/api-keys` issues an `ezra_live_...` MCP API key.
 - Stripe Checkout upgrades users to Pro or Max.
 - Codex plugin installs a local `ezra-mcp-mcp` stdio bridge and provides setup skills.
 
 ## Implementation State
-Current branch: `codex/feat/ezra-full-plugin-launch`.
+Current branch for Bead 31: `codex/feat/bead-31-custom-verse-collections`.
 
 Bead 25 was committed as `32c6ebbdd903745ca2bd91fbf2f6eecc3c18f1ed`.
 
@@ -55,6 +55,29 @@ Bead 29 is in finalization:
 - Updated site docs, Worker MCP docs, plugin lookup skill, and tests to describe the 8-tool surface.
 - Deployed Worker/static assets. Version: `fed55162-cdb9-4f0a-a338-38feb2d22446`.
 
+Bead 31 is in finalization:
+- Created worktree `/Users/kikimac/ezra-mcp-collections` on `codex/feat/bead-31-custom-verse-collections`.
+- Added D1 migration `0006_verse_collections.sql` with `verse_collections` and `verse_collection_tag_index`.
+- Added account API routes for collection create/list/get and three MCP tools: `create_verse_collection`, `get_verse_collection`, `find_verse_collections`.
+- Collection storage is reference-only: title, metadata, visibility, `bible_version`, `verse_refs`, `api_bible_tags`, and `global_tags`; no pasted verse text is stored.
+- Updated account UI, MCP docs, public docs, site tests, Worker tests, and plugin lookup skill for the 11-tool surface.
+- Found and fixed a production Worker 1101 issue by awaiting async route handlers inside the top-level `try`, so auth failures become JSON errors.
+- Fixed GitHub Actions seed validation by letting `make seed-build` use committed fixture data when the ignored production seed inputs are absent.
+- Applied the remote D1 migration and redeployed Worker/static assets. Version: `c2ee753a-4a4b-45ee-90a0-42541d76d37a`.
+
+Bead 32 is in finalization:
+- GitHub Actions initially failed because `make verify` ran `seed:build` without ignored `apps/worker/data/` inputs.
+- `apps/worker/scripts/build_seed_sql.mjs` now accepts `EZRA_SEED_DATA_DIR` and `EZRA_SEED_OUT_FILE`.
+- `make seed-build` uses real ignored seed data when present and committed fixture data under `apps/worker/test/fixtures/seed-data` when absent.
+- This keeps CI reproducible without committing the large generated seed or private/local data copies.
+
+Bead 33 is in finalization:
+- Fixed live magic-link email delivery payloads.
+- The Worker now sends `code`, `expiresAt`, `accountUrl`, and `magicLink` in the Klaviyo event properties.
+- The Worker returns `email_provider_not_configured` or `email_delivery_failed` instead of claiming success when live email is not actually accepted.
+- The account page reads `/account/?email=...&code=...`, verifies automatically, and clears the code from the URL after success.
+- Deployed Worker/static assets. Version: `e9a8a4c7-0455-4969-bf43-258459079f2a`.
+
 Validation passed:
 - `pnpm verify`
 - `pnpm --filter @ezra-mcp/worker seed:build`
@@ -66,10 +89,16 @@ Validation passed:
 - Bead 28 validation: local account/API/MCP E2E, local CLI/MCP bridge E2E, `pnpm --filter @ezra-mcp/worker test`, `pnpm --filter @ezra-mcp/cli test`, and `pnpm --filter @ezra-mcp/mcp test`
 - Bead 29 validation: `pnpm --filter @ezra-mcp/worker test -- mcp.test.ts`, `pnpm --filter @ezra-mcp/worker test`, `pnpm --filter @ezra-mcp/site test`, `pnpm --filter @ezra-mcp/site lint`, `pnpm validate:docs`, `pnpm secret:scan`, `pnpm build`, `pnpm lint`, `pnpm test`, `pnpm verify`, `make verify`, and `git diff --check`
 - Bead 29 live smoke: `https://ezramcp.com/health`, `/mcp/` docs containing `get_jesus_teachings` and "The 8 tools", and unauthenticated `/v1/mcp` missing-key response. Authenticated production new-tool smoke was skipped because this shell had no `EZRA_MCP_API_KEY` or saved production API key.
+- Bead 31 validation: TDD failure for collection API/tool contracts before implementation, `pnpm --filter @ezra-mcp/worker test -- mcp.test.ts worker.test.ts`, `pnpm --filter @ezra-mcp/worker test`, `pnpm --filter @ezra-mcp/site test`, `pnpm --filter @ezra-mcp/site lint`, `pnpm --filter @ezra-mcp/worker build`, `pnpm validate:docs`, `pnpm secret:scan`, `pnpm build`, `pnpm lint`, `pnpm test`, `pnpm verify`, `make verify`, fixture fallback `make seed-build` with `apps/worker/data/` temporarily absent, local D1 migration apply, browser screenshots at 390px/768px/1280px, remote D1 migration apply, and production deploy.
+- Bead 31 live smoke: `https://ezramcp.com/health`, `/account/` collection UI markers, `/mcp/` 11-tool docs markers, remote D1 table check, and unauthenticated `/v1/collections` JSON 401. Authenticated production collection smoke was skipped because this shell had no production account session token.
+- Bead 32 validation: `make seed-build` with `apps/worker/data/` temporarily absent, full `make verify` with `apps/worker/data/` temporarily absent, JSONL parse check, and `git diff --check`.
+- Bead 33 validation: `pnpm --filter @ezra-mcp/worker test -- worker.test.ts`, `pnpm --filter @ezra-mcp/site test`, `pnpm --filter @ezra-mcp/site lint`, `pnpm --filter @ezra-mcp/worker build`, `make verify`, `wrangler deploy --domain ezramcp.com`, production health smoke, production account/pro page marker smokes, and live magic-link request to launch Gmail returning HTTP 200 with `delivery: "klaviyo"`.
 
 Known concern:
 - Seed generation skipped `Psalms 114:9`, `Psalms 114:10`, and `Psalms 137:10` because those refs have no WEB text in local seed inputs.
 - `www.ezramcp.com` is not configured yet.
+- Check `apollostreetcompany@gmail.com` for the Bead 33 email. The Worker accepted it through Klaviyo; inbox delivery and template rendering still need human confirmation.
+- A real inbox account flow is still needed before public announcement to verify the emailed code/link and authenticated production collection creation.
 
 ## Important Constraints
 - Remote origin: `https://github.com/apollostreetcompany/ezra.git`.
@@ -78,7 +107,7 @@ Known concern:
 - Keep `main` deployable and do not commit directly to `main`.
 
 ## Next Engineer Notes
-Start with `pnpm verify`. If it fails, prioritize full workspace package consistency before feature polish.
+Start from the worktree branch if continuing Bead 31: `/Users/kikimac/ezra-mcp-collections` on `codex/feat/bead-31-custom-verse-collections`. Run `pnpm verify` before edits. If it fails, prioritize full workspace package consistency before feature polish.
 
 Before launch:
 - Run a real magic-link account test with a controlled inbox.

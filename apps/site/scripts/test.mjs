@@ -35,13 +35,21 @@ const assertions = [
   [mcp.includes("Bearer"), "mcp page shows auth header"],
   [mcp.includes("get_verses_by_topic"), "mcp lists tools"],
   [mcp.includes("get_jesus_teachings"), "mcp lists Jesus teaching tool"],
+  [mcp.includes("create_verse_collection"), "mcp lists collection create tool"],
+  [mcp.includes("find_verse_collections"), "mcp lists collection search tool"],
+  [mcp.includes("The 11 tools"), "mcp shows current tool count"],
   [mcp.includes("Claude Code"), "mcp documents at least one client"],
   // Account / checkout
   [account.includes("/v1/magic-links/request"), "account requests magic links"],
   [account.includes("/v1/magic-links/verify"), "account verifies magic links"],
+  [account.includes("new URLSearchParams(window.location.search)"), "account reads magic-link query params"],
+  [account.includes("replaceState(null, \"\", \"/account/\")"), "account removes magic-link code from URL after verify"],
   [account.includes("/v1/api-keys"), "account creates API keys"],
   [account.includes("/v1/account/status"), "account reads account status"],
   [account.includes("/v1/billing/portal"), "account opens billing portal"],
+  [account.includes("/v1/collections"), "account creates verse collections"],
+  [account.includes("API.Bible tags"), "account separates API.Bible tags"],
+  [account.includes("Bible version"), "account stores bible version"],
   [success.includes("/v1/checkout/session-status"), "success page verifies checkout session"],
   [cancel.includes("No charge made"), "cancel page has concrete cancellation copy"]
 ];

@@ -51,6 +51,86 @@ describe("Ezra MCP Cloudflare Worker — billing + account lifecycle", () => {
     expect([...db.deviceTokens.values()].some((row) => row.user_id === "usr_existing" && row.scopes.includes("account:read"))).toBe(true);
   });
 
+  it("sends live magic-link emails with the code and one-click link in Klaviyo properties", async () => {
+    const db = new FakeD1();
+    const calls: Array<{ url: string; body: string; revision: string | null }> = [];
+    globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+      calls.push({
+        url: String(input),
+        body: String(init?.body ?? ""),
+        revision: new Headers(init?.headers).get("revision")
+      });
+      return new Response(null, { status: 202 });
+    }) as typeof fetch;
+
+    const request = await worker.fetch(
+      new Request("https://ezramcp.com/v1/magic-links/request", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email: "Reader@Example.com" })
+      }),
+      env(db, { KLAVIYO_PRIVATE_API_KEY: "klaviyo_test_key" })
+    );
+
+    expect(request.status).toBe(200);
+    await expect(request.json()).resolves.toEqual({ ok: true, delivery: "klaviyo" });
+    expect(calls).toHaveLength(1);
+    expect(calls[0]!.url).toBe("https://a.klaviyo.com/api/events");
+    expect(calls[0]!.revision).toBe("2026-04-15");
+    const event = JSON.parse(calls[0]!.body) as {
+      data: {
+        attributes: {
+          profile: { data: { attributes: { email: string } } };
+          properties: { code: string; magicLink: string; expiresAt: string; accountUrl: string };
+        };
+      };
+    };
+    expect(event.data.attributes.profile.data.attributes.email).toBe("reader@example.com");
+    expect(event.data.attributes.properties.code).toMatch(/^[0-9a-f]{36}$/);
+    expect(event.data.attributes.properties.magicLink).toContain("https://ezramcp.com/account/?");
+    expect(event.data.attributes.properties.magicLink).toContain("email=reader%40example.com");
+    expect(event.data.attributes.properties.magicLink).toContain(`code=${event.data.attributes.properties.code}`);
+    expect(event.data.attributes.properties.accountUrl).toBe("https://ezramcp.com/account/");
+    expect(Date.parse(event.data.attributes.properties.expiresAt)).toBeGreaterThan(Date.now());
+
+    const verify = await worker.fetch(
+      new Request("https://ezramcp.com/v1/magic-links/verify", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email: "reader@example.com", code: event.data.attributes.properties.code })
+      }),
+      env(db)
+    );
+    expect(verify.status).toBe(200);
+  });
+
+  it("does not claim live email delivery when the provider is not configured or rejects the event", async () => {
+    const missingProvider = await worker.fetch(
+      new Request("https://ezramcp.com/v1/magic-links/request", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email: "reader@example.com" })
+      }),
+      env(new FakeD1())
+    );
+
+    expect(missingProvider.status).toBe(503);
+    await expect(missingProvider.json()).resolves.toEqual({ error: "email_provider_not_configured" });
+
+    globalThis.fetch = (async () => jsonResponse({ error: "bad key" }, 401)) as typeof fetch;
+    const rejectedProvider = await worker.fetch(
+      new Request("https://ezramcp.com/v1/magic-links/request", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email: "reader@example.com" })
+      }),
+      env(new FakeD1(), { KLAVIYO_PRIVATE_API_KEY: "klaviyo_test_key" })
+    );
+
+    expect(rejectedProvider.status).toBe(502);
+    await expect(rejectedProvider.json()).resolves.toEqual({ error: "email_delivery_failed" });
+  });
+
   it("creates public Pro and Max checkout sessions against existing email identity", async () => {
     const db = new FakeD1();
     db.users.set("usr_paid", { email: "paid@example.com", created_at: "2026-05-16T00:00:00.000Z" });
@@ -181,6 +261,86 @@ describe("Ezra MCP Cloudflare Worker — billing + account lifecycle", () => {
       apiKey: { prefix: "liveprefix" },
       billing: { portal: "/v1/billing/portal" }
     });
+  });
+
+  it("creates reference-only custom verse collections with split tag sources and private visibility", async () => {
+    const db = new FakeD1();
+    const token = await issueSessionToken(db, "usr_collections", "collector@example.com");
+
+    const create = await worker.fetch(
+      new Request("https://ezramcp.com/v1/collections", {
+        method: "POST",
+        headers: {
+          authorization: `Bearer ${token}`,
+          "content-type": "application/json"
+        },
+        body: JSON.stringify({
+          title: "Jesus commands for daily practice",
+          description: "A compact list of references.",
+          visibility: "private",
+          bible_version: "de4e12af7f28f599-02",
+          verse_refs: ["Matthew 22:37", "Matthew 22:39", "John 13:34"],
+          api_bible_tags: ["Jesus", "Commands"],
+          global_tags: ["daily-practice", "love"]
+        })
+      }),
+      env(db)
+    );
+
+    expect(create.status).toBe(201);
+    const created = await create.json() as { collection: { id: string; verse_refs: string[]; bible_version: string; api_bible_tags: string[]; global_tags: string[] } };
+    expect(created.collection.bible_version).toBe("de4e12af7f28f599-02");
+    expect(created.collection.verse_refs).toEqual(["Matthew 22:37", "Matthew 22:39", "John 13:34"]);
+    expect(JSON.stringify(created)).not.toContain("You shall love");
+    const stored = db.collections.get(created.collection.id);
+    expect(stored?.verse_refs).toBe(JSON.stringify(["Matthew 22:37", "Matthew 22:39", "John 13:34"]));
+    expect(stored?.bible_version).toBe("de4e12af7f28f599-02");
+    expect(stored).not.toHaveProperty("text");
+    expect(db.collectionTags.map((tag) => `${tag.tag_source}:${tag.normalized_tag}`).sort()).toEqual([
+      "api_bible:commands",
+      "api_bible:jesus",
+      "global:daily-practice",
+      "global:love"
+    ]);
+
+    const anonymousPrivate = await worker.fetch(
+      new Request(`https://ezramcp.com/v1/collections/${created.collection.id}`),
+      env(db)
+    );
+    expect(anonymousPrivate.status).toBe(404);
+
+    const ownerGet = await worker.fetch(
+      new Request(`https://ezramcp.com/v1/collections/${created.collection.id}`, {
+        headers: { authorization: `Bearer ${token}` }
+      }),
+      env(db)
+    );
+    await expect(ownerGet.json()).resolves.toMatchObject({
+      collection: {
+        id: created.collection.id,
+        visibility: "private",
+        bible_version: "de4e12af7f28f599-02",
+        api_bible_tags: ["Jesus", "Commands"],
+        global_tags: ["daily-practice", "love"]
+      }
+    });
+  });
+
+  it("returns a JSON 401 instead of a Worker exception for unauthenticated collection writes", async () => {
+    const response = await worker.fetch(
+      new Request("https://ezramcp.com/v1/collections", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          title: "Unauthenticated collection",
+          verse_refs: ["John 3:16"]
+        })
+      }),
+      env(new FakeD1())
+    );
+
+    expect(response.status).toBe(401);
+    await expect(response.json()).resolves.toEqual({ error: "unauthorized" });
   });
 
   it("processes duplicate Stripe checkout webhooks idempotently", async () => {
@@ -318,6 +478,32 @@ interface UsageRow {
   updated_at: string;
 }
 
+interface CollectionRow {
+  id: string;
+  owner_user_id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  visibility: string;
+  bible_version: string;
+  verse_refs: string;
+  api_bible_tags: string;
+  global_tags: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface CollectionTagRow {
+  collection_id: string;
+  owner_user_id: string;
+  visibility: string;
+  tag_source: string;
+  tag: string;
+  normalized_tag: string;
+  bible_version: string;
+  created_at: string;
+}
+
 class FakeD1 {
   users = new Map<string, UserRow>();
   deviceTokens = new Map<string, DeviceTokenRow>();
@@ -327,6 +513,8 @@ class FakeD1 {
   stripeEvents = new Set<string>();
   entitlements = new Map<string, EntitlementRow>();
   usage = new Map<string, UsageRow>();
+  collections = new Map<string, CollectionRow>();
+  collectionTags: CollectionTagRow[] = [];
   auditLog: Array<{ event: string }> = [];
 
   prepare(query: string): FakeStatement {
@@ -392,10 +580,44 @@ class FakeStatement {
       const row = this.db.usage.get(`${String(this.values[0])}|${String(this.values[1])}`);
       return row ? ({ call_count: row.call_count } as T) : null;
     }
+    if (q.includes("FROM verse_collections WHERE id")) {
+      const id = String(this.values[0]);
+      const viewerUserId = String(this.values[1] ?? "");
+      const row = this.db.collections.get(id);
+      if (!row) return null;
+      if (row.owner_user_id === viewerUserId || row.visibility === "public" || row.visibility === "unlisted") {
+        return row as T;
+      }
+      return null;
+    }
     return null;
   }
 
   async all<T = Record<string, unknown>>(): Promise<{ results?: T[] }> {
+    const q = this.query;
+    if (q.includes("FROM verse_collection_tag_index")) {
+      const [normalizedTag, sourceFilter, , versionFilter, , viewerUserId, limitValue] = this.values.map((value) => String(value ?? ""));
+      const limit = Number(limitValue) || 20;
+      const ids = this.db.collectionTags
+        .filter((tag) => tag.normalized_tag === normalizedTag)
+        .filter((tag) => !sourceFilter || tag.tag_source === sourceFilter)
+        .filter((tag) => !versionFilter || tag.bible_version === versionFilter)
+        .map((tag) => tag.collection_id);
+      const rows = [...new Set(ids)]
+        .map((id) => this.db.collections.get(id))
+        .filter((row): row is CollectionRow => Boolean(row))
+        .filter((row) => row.owner_user_id === viewerUserId || row.visibility === "public")
+        .slice(0, limit);
+      return { results: rows as unknown as T[] };
+    }
+    if (q.includes("FROM verse_collections WHERE owner_user_id")) {
+      const viewerUserId = String(this.values[0] ?? "");
+      const limit = Number(this.values[1]) || 20;
+      const rows = [...this.db.collections.values()]
+        .filter((row) => row.owner_user_id === viewerUserId || row.visibility === "public")
+        .slice(0, limit);
+      return { results: rows as unknown as T[] };
+    }
     return { results: [] };
   }
 
@@ -468,6 +690,44 @@ class FakeStatement {
     }
     if (q.startsWith("INSERT INTO audit_log")) {
       this.db.auditLog.push({ event: String(this.values[3]) });
+      return { success: true };
+    }
+    if (q.startsWith("INSERT INTO verse_collections")) {
+      const [
+        id,
+        ownerUserId,
+        title,
+        slug,
+        description,
+        visibility,
+        bibleVersion,
+        verseRefs,
+        apiBibleTags,
+        globalTags,
+        createdAt,
+        updatedAt
+      ] = this.values;
+      this.db.collections.set(String(id), {
+        id: String(id),
+        owner_user_id: String(ownerUserId),
+        title: String(title),
+        slug: String(slug),
+        description: description === null ? null : String(description),
+        visibility: String(visibility),
+        bible_version: String(bibleVersion),
+        verse_refs: String(verseRefs),
+        api_bible_tags: String(apiBibleTags),
+        global_tags: String(globalTags),
+        created_at: String(createdAt),
+        updated_at: String(updatedAt)
+      });
+      return { success: true };
+    }
+    if (q.startsWith("INSERT OR IGNORE INTO verse_collection_tag_index")) {
+      const [collectionId, ownerUserId, visibility, tagSource, tag, normalizedTag, bibleVersion, createdAt] = this.values.map((value) => String(value));
+      if (!this.db.collectionTags.some((row) => row.collection_id === collectionId && row.tag_source === tagSource && row.normalized_tag === normalizedTag)) {
+        this.db.collectionTags.push({ collection_id: collectionId, owner_user_id: ownerUserId, visibility, tag_source: tagSource, tag, normalized_tag: normalizedTag, bible_version: bibleVersion, created_at: createdAt });
+      }
       return { success: true };
     }
     if (q.startsWith("INSERT INTO refund_requests")) return { success: true };

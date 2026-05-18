@@ -62,7 +62,7 @@
 
         <h2>What you get on every tier</h2>
         <ul>
-          <li>All 8 MCP tools, including Jesus' beliefs, commands, or both</li>
+          <li>All 11 MCP tools, including Jesus' teachings and custom verse collections</li>
           <li>The full Protestant canon — 31,103 verses, 1,189 chapters</li>
           <li>387 hand-curated topics across themes, stories, and parables</li>
         </ul>
@@ -89,7 +89,7 @@
           });
           const body = await response.json();
           if (!response.ok) throw new Error(body.error || "magic_link_failed");
-          status.innerHTML = 'Magic link requested. Finish in <a href="/account/">Account</a>.';
+          status.innerHTML = 'Email sent. Open the magic link or finish in <a href="/account/">Account</a>.';
         } catch {
           status.textContent = "Magic link could not be sent.";
         }

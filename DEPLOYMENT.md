@@ -8,7 +8,7 @@
 - Static site build output: `apps/site/dist`.
 - Database: Cloudflare D1, database name `ezra-mcp-prod`.
 - D1 id: `13f487c0-02fc-44da-814c-252925bb59da`.
-- Current deployed Worker version: `d486f56e-efeb-4714-b184-455e06946b72`.
+- Current deployed Worker version: `e9a8a4c7-0455-4969-bf43-258459079f2a`.
 - Package manager: pnpm.
 - Runtime: Node 22+ for local CLI/MCP bridge, Cloudflare Workers for production.
 - Wrangler 4.92.0+ is recommended for local dev parity with `compatibility_date = "2026-05-15"`.
@@ -38,6 +38,8 @@ Local CLI/MCP:
 - Build site: `pnpm --filter @ezra-mcp/site build`.
 - Build Worker: `pnpm --filter @ezra-mcp/worker build`.
 - Run Worker locally: `pnpm --filter @ezra-mcp/worker dev`.
+- Validate seed builder locally with real ignored data when present: `make seed-build`.
+- CI seed validation falls back to committed fixture data under `apps/worker/test/fixtures/seed-data` when `apps/worker/data/` is absent.
 - Run local account/MCP E2E against an isolated D1 state: apply migrations and seed with `--persist-to /tmp/ezra-mcp-local-e2e`, start `wrangler dev --local` with `MAGIC_LINK_DEV_ECHO=true` and test-only secret values, then use a throwaway email to request a magic code, verify, create an API key, call `/v1/mcp`, and confirm usage increments.
 - Link local CLI/MCP bridge: `make link-local`.
 - CLI smoke: `make cli-status`.
@@ -70,6 +72,7 @@ Do not source `/Users/kikimac/.hermes/.env` for `wrangler deploy`; that file's C
 
 Current seed builder behavior:
 - Requires `bible_verses.json`, `bible_topics.json`, `bible_pericopes.json`, and `web_text.json`.
+- Accepts `EZRA_SEED_DATA_DIR` and `EZRA_SEED_OUT_FILE` overrides for CI fixtures and temporary validation output.
 - Excludes refs with no WEB text instead of writing empty verse rows.
 - Does not emit explicit `BEGIN TRANSACTION`/`COMMIT`; remote D1 import rejects raw transaction wrappers.
 - Stores repeated pericope names as separate `(name, verse_range)` rows.
@@ -130,6 +133,26 @@ Captured on 2026-05-17 after Bead 29:
 - Unauthenticated `POST https://ezramcp.com/v1/mcp` returned the expected missing-key error.
 - Authenticated production `get_jesus_teachings` smoke was skipped because this shell had no `EZRA_MCP_API_KEY` or saved production API key.
 
+Captured on 2026-05-17 after Bead 31:
+- `make verify` passed.
+- Remote migration `0006_verse_collections.sql` applied to D1 `13f487c0-02fc-44da-814c-252925bb59da`.
+- Worker deployed version: `c2ee753a-4a4b-45ee-90a0-42541d76d37a`.
+- `https://ezramcp.com/health` returned 200.
+- `https://ezramcp.com/account/` includes the verse collection form wired to `/v1/collections`.
+- `https://ezramcp.com/mcp/` serves the 11-tool docs and includes `create_verse_collection` plus `find_verse_collections`.
+- Remote D1 contains `verse_collections` and `verse_collection_tag_index`.
+- Unauthenticated `POST https://ezramcp.com/v1/collections` returns JSON `401` with `{"error":"unauthorized"}`.
+- Authenticated production collection create/list/get smoke was skipped because this shell had no production account session token.
+
+Captured on 2026-05-18 after Bead 33:
+- `make verify` passed.
+- Worker deployed version: `e9a8a4c7-0455-4969-bf43-258459079f2a`.
+- `https://ezramcp.com/health` returned 200.
+- `https://ezramcp.com/account/` includes query-param magic-link verification and clears the code from the URL after successful verification.
+- `https://ezramcp.com/pro/` tells users to open the magic link or finish in Account after email delivery.
+- Live `POST /v1/magic-links/request` to the launch Gmail returned HTTP 200 with `delivery: "klaviyo"` and no code/token in the response.
+- Authenticated live completion still requires checking the inbox and using the emailed code/link.
+
 ## Visual Evidence
 Browser screenshots are stored in `docs/visual-evidence/`:
 - Landing: `bead-26-landing-390.png`, `bead-26-landing-768.png`, `bead-26-landing-1280.png`
@@ -140,6 +163,7 @@ Browser screenshots are stored in `docs/visual-evidence/`:
 - Pricing grid: `bead-26-pricing-390.png`, `bead-26-pricing-768.png`, `bead-26-pricing-1280.png`
 - Bead 27 refreshed landing top: `bead-27-landing-390.png`, `bead-27-landing-768.png`, `bead-27-landing-1280.png`
 - Bead 27 refreshed pricing: `bead-27-pricing-390.png`, `bead-27-pricing-768.png`, `bead-27-pricing-1280.png`
+- Bead 31 account collections: `bead-31-account-collections-390.png`, `bead-31-account-collections-768.png`, `bead-31-account-collections-1280.png`
 
 ## Deploy Preflight
 Before deploy-affecting beads are marked complete:
@@ -154,4 +178,6 @@ Before deploy-affecting beads are marked complete:
 ## Rollback Path
 - Worker rollback: use Cloudflare Workers deployment rollback to the previous successful version.
 - Previous known-good Worker version before Bead 27: `a7071023-096d-421f-81ad-c9643026e61a`.
+- Previous known-good Worker version before Bead 31: `fed55162-cdb9-4f0a-a338-38feb2d22446`.
+- Previous known-good Worker version before Bead 33: `c2ee753a-4a4b-45ee-90a0-42541d76d37a`.
 - D1 rollback: use D1 time-travel backup/restore if a migration or seed corrupts production data.

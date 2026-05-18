@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import worker from "../src/index.js";
 
 describe("Ezra MCP worker — /v1/mcp", () => {
-  it("handles initialize without authentication still requires auth, but tools/list returns the 8 tools", async () => {
+  it("handles initialize without authentication still requires auth, but tools/list returns the 11 tools", async () => {
     const db = new FakeD1();
     const token = await issueMcpKey(db, "usr_initer");
     const response = await rpc(db, token, { id: 1, method: "tools/list" });
@@ -10,12 +10,15 @@ describe("Ezra MCP worker — /v1/mcp", () => {
     const body = await response.json() as RpcResult;
     expect(body.result?.tools).toBeInstanceOf(Array);
     expect((body.result?.tools as Array<{ name: string }>).map((t) => t.name).sort()).toEqual([
+      "create_verse_collection",
       "find_topic",
+      "find_verse_collections",
       "get_chapter",
       "get_jesus_teachings",
       "get_pericope",
       "get_related_topics",
       "get_verse",
+      "get_verse_collection",
       "get_verses_by_topic",
       "list_topics"
     ]);
@@ -219,6 +222,58 @@ describe("Ezra MCP worker — /v1/mcp", () => {
     expect(commandsData.beliefs).toBeUndefined();
     expect(commandsData.commands.length).toBeGreaterThan(5);
   });
+
+  it("creates and finds custom verse collections without storing verse text", async () => {
+    const db = new FakeD1();
+    const token = await issueMcpKey(db, "usr_collection_mcp");
+
+    const createdResponse = await rpc(db, token, {
+      id: 9,
+      method: "tools/call",
+      params: {
+        name: "create_verse_collection",
+        arguments: {
+          title: "Jesus commands",
+          visibility: "public",
+          bible_version: "de4e12af7f28f599-02",
+          verse_refs: ["Matthew 22:37", "John 13:34"],
+          api_bible_tags: ["Jesus", "Commands"],
+          global_tags: ["daily-practice"]
+        }
+      }
+    });
+    const createdBody = await createdResponse.json() as RpcResult;
+    expect(createdBody.result?.isError).toBe(false);
+    const created = JSON.parse((createdBody.result?.content as Array<{ text: string }>)[0].text);
+    expect(created.collection.verse_refs).toEqual(["Matthew 22:37", "John 13:34"]);
+    expect(created.collection.bible_version).toBe("de4e12af7f28f599-02");
+    expect(JSON.stringify(created)).not.toContain("love one another");
+    expect(db.collections.get(created.collection.id)?.verse_refs).toBe(JSON.stringify(["Matthew 22:37", "John 13:34"]));
+
+    const getResponse = await rpc(db, token, {
+      id: 10,
+      method: "tools/call",
+      params: { name: "get_verse_collection", arguments: { id: created.collection.id } }
+    });
+    const getBody = await getResponse.json() as RpcResult;
+    const fetched = JSON.parse((getBody.result?.content as Array<{ text: string }>)[0].text);
+    expect(fetched.collection).toMatchObject({
+      id: created.collection.id,
+      visibility: "public",
+      api_bible_tags: ["Jesus", "Commands"],
+      global_tags: ["daily-practice"]
+    });
+    expect(fetched.collection).not.toHaveProperty("verses");
+
+    const findResponse = await rpc(db, token, {
+      id: 11,
+      method: "tools/call",
+      params: { name: "find_verse_collections", arguments: { tag: "Jesus", tag_source: "api_bible" } }
+    });
+    const findBody = await findResponse.json() as RpcResult;
+    const found = JSON.parse((findBody.result?.content as Array<{ text: string }>)[0].text);
+    expect(found.collections.map((collection: { id: string }) => collection.id)).toContain(created.collection.id);
+  });
 });
 
 interface RpcResult {
@@ -314,6 +369,32 @@ interface PericopeRow {
   topics: string;
 }
 
+interface CollectionRow {
+  id: string;
+  owner_user_id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  visibility: string;
+  bible_version: string;
+  verse_refs: string;
+  api_bible_tags: string;
+  global_tags: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface CollectionTagRow {
+  collection_id: string;
+  owner_user_id: string;
+  visibility: string;
+  tag_source: string;
+  tag: string;
+  normalized_tag: string;
+  bible_version: string;
+  created_at: string;
+}
+
 class FakeD1 {
   deviceTokensByHash = new Map<string, DeviceTokenRow>();
   usage = new Map<string, UsageRow>();
@@ -322,6 +403,8 @@ class FakeD1 {
   verses = new Map<string, VerseRow>();
   pericopes: PericopeRow[] = [];
   users = new Map<string, { email: string | null }>();
+  collections = new Map<string, CollectionRow>();
+  collectionTags: CollectionTagRow[] = [];
 
   prepare(query: string): FakeStatement {
     return new FakeStatement(this, query);
@@ -364,6 +447,16 @@ class FakeStatement {
       const row = this.db.verses.get(String(this.values[0]));
       return row ? (row as T) : null;
     }
+    if (q.includes("FROM verse_collections WHERE id")) {
+      const id = String(this.values[0]);
+      const viewerUserId = String(this.values[1] ?? "");
+      const row = this.db.collections.get(id);
+      if (!row) return null;
+      if (row.owner_user_id === viewerUserId || row.visibility === "public" || row.visibility === "unlisted") {
+        return row as T;
+      }
+      return null;
+    }
     return null;
   }
 
@@ -398,6 +491,29 @@ class FakeStatement {
       const rows = [...this.db.verses.values()].filter((v) => v.book === book && v.chapter === chapter);
       return { results: rows as unknown as T[] };
     }
+    if (q.includes("FROM verse_collection_tag_index")) {
+      const [normalizedTag, sourceFilter, , versionFilter, , viewerUserId, limitValue] = this.values.map((value) => String(value ?? ""));
+      const limit = Number(limitValue) || 20;
+      const ids = this.db.collectionTags
+        .filter((tag) => tag.normalized_tag === normalizedTag)
+        .filter((tag) => !sourceFilter || tag.tag_source === sourceFilter)
+        .filter((tag) => !versionFilter || tag.bible_version === versionFilter)
+        .map((tag) => tag.collection_id);
+      const rows = [...new Set(ids)]
+        .map((id) => this.db.collections.get(id))
+        .filter((row): row is CollectionRow => Boolean(row))
+        .filter((row) => row.owner_user_id === viewerUserId || row.visibility === "public")
+        .slice(0, limit);
+      return { results: rows as unknown as T[] };
+    }
+    if (q.includes("FROM verse_collections WHERE owner_user_id")) {
+      const viewerUserId = String(this.values[0] ?? "");
+      const limit = Number(this.values[1]) || 20;
+      const rows = [...this.db.collections.values()]
+        .filter((row) => row.owner_user_id === viewerUserId || row.visibility === "public")
+        .slice(0, limit);
+      return { results: rows as unknown as T[] };
+    }
     return { results: [] };
   }
 
@@ -420,6 +536,44 @@ class FakeStatement {
       return { success: true };
     }
     if (q.startsWith("INSERT OR IGNORE INTO users") || q.startsWith("INSERT INTO device_tokens") || q.startsWith("UPDATE users SET email")) {
+      return { success: true };
+    }
+    if (q.startsWith("INSERT INTO verse_collections")) {
+      const [
+        id,
+        ownerUserId,
+        title,
+        slug,
+        description,
+        visibility,
+        bibleVersion,
+        verseRefs,
+        apiBibleTags,
+        globalTags,
+        createdAt,
+        updatedAt
+      ] = this.values;
+      this.db.collections.set(String(id), {
+        id: String(id),
+        owner_user_id: String(ownerUserId),
+        title: String(title),
+        slug: String(slug),
+        description: description === null ? null : String(description),
+        visibility: String(visibility),
+        bible_version: String(bibleVersion),
+        verse_refs: String(verseRefs),
+        api_bible_tags: String(apiBibleTags),
+        global_tags: String(globalTags),
+        created_at: String(createdAt),
+        updated_at: String(updatedAt)
+      });
+      return { success: true };
+    }
+    if (q.startsWith("INSERT OR IGNORE INTO verse_collection_tag_index")) {
+      const [collectionId, ownerUserId, visibility, tagSource, tag, normalizedTag, bibleVersion, createdAt] = this.values.map((value) => String(value));
+      if (!this.db.collectionTags.some((row) => row.collection_id === collectionId && row.tag_source === tagSource && row.normalized_tag === normalizedTag)) {
+        this.db.collectionTags.push({ collection_id: collectionId, owner_user_id: ownerUserId, visibility, tag_source: tagSource, tag, normalized_tag: normalizedTag, bible_version: bibleVersion, created_at: createdAt });
+      }
       return { success: true };
     }
     return { success: true };

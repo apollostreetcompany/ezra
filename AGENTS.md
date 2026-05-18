@@ -104,11 +104,8 @@ Before implementation starts:
 4. Risk class declared as `Low`, `Medium`, or `High`.
 
 Current bead:
-- No active implementation bead. Next candidate is Bead 30 - LLM-backed verse collection tagger design.
-- Workstream: research/docs until implementation is explicitly started.
-- Risk: High if implemented because it would add schema, ingestion, tagging provenance, and public query-contract decisions.
-- Agent: Primary Codex for product analysis; Architect -> domain Engineer -> Analyst required before implementation.
-- Tools: RepoPrompt for code maps, docs validation for process updates, and full workspace verification once code begins.
+- No active implementation bead. Bead 33 - Fix live magic-link email delivery is deployed and awaiting inbox confirmation.
+- Next high-risk implementation bead must re-run the entry gate, especially for schema, auth, public API, billing, or deployment/runtime changes.
 
 ### Bead Exit Gate (Mandatory)
 
