@@ -1,0 +1,26 @@
+{
+  "slug": "catholic-grandmothers-04-forgiveness",
+  "mode": "catholic",
+  "audience": "grandmothers",
+  "score": 9.2,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 1.9,
+    "audience_fit": 1.5,
+    "topic_fit": 1,
+    "catholic_mode_consistency": 1.4,
+    "emotional_continuity": 1,
+    "speakability": 1,
+    "originality_no_source_copying": 1,
+    "overall_integration": 0.4
+  },
+  "strengths": [
+    "Strong self-knowledge without despair.",
+    "Forgiveness and repair are tailored to later-life family relationships.",
+    "The line from mercy to softened charity is emotionally stable."
+  ],
+  "concerns": [
+    "Catholic mode consistency is the weakest part; the prayer reads broadly Christian and could use confession, sacramental reconciliation, or Church-shaped contrition more explicitly."
+  ],
+  "grader_note": "Approved because the prayer is otherwise strong, but it is close to the concern threshold due to muted Catholic distinctives."
+}

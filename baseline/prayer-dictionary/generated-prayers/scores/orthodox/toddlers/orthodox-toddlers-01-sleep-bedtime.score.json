@@ -1,0 +1,24 @@
+{
+  "slug": "orthodox-toddlers-01-sleep-bedtime",
+  "mode": "orthodox",
+  "audience": "toddlers",
+  "score": 9.55,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 1.8,
+    "audience_fit": 1.5,
+    "topic_fit": 1.0,
+    "orthodox_mode_consistency": 1.85,
+    "emotional_continuity": 0.95,
+    "speakability": 1.0,
+    "originality_no_source_copying": 1.0,
+    "overall_integration": 0.45
+  },
+  "strengths": [
+    "The tired body versus resisting will opening gives the prayer a real baseline distinction at toddler scale.",
+    "Orthodox texture is concrete: holy Cross, angels, icons, crib-side prayer, and Paschal light are woven into bedtime care.",
+    "The movement from fussing and fear into mercy, forgiveness, guarded sleep, and waking obedience is coherent and speakable."
+  ],
+  "concerns": [],
+  "grader_note": "Approved on independent regrade. The compact toddler form limits extended reasoning, but the architecture, topic fit, and Orthodox devotional setting are strong enough to clear the >9.0 approval threshold."
+}

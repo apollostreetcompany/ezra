@@ -1,0 +1,26 @@
+{
+  "slug": "reformed-dads-01-family-submission",
+  "mode": "reformed",
+  "audience": "dads",
+  "score": 9.9,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 2.0,
+    "audience_fit": 1.5,
+    "topic_fit": 1.0,
+    "reformed_mode_consistency": 2.0,
+    "emotional_continuity": 1.0,
+    "speakability": 0.95,
+    "originality_no_source_copying": 0.95,
+    "normalization_to_10": 0.5
+  },
+  "strengths": [
+    "Very strong distinction between leadership, service, and control.",
+    "The fatherhood details are concrete and pastorally direct.",
+    "Submission is grounded under Christ's shepherding authority and covenant faithfulness."
+  ],
+  "concerns": [
+    "The middle sentence has many verbs, which slightly compresses spoken cadence."
+  ],
+  "grader_note": "Approved. The prayer fits the requested audience and Reformed mode with unusual clarity."
+}

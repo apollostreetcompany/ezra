@@ -1,0 +1,26 @@
+{
+  "slug": "catholic-toddlers-05-forgiveness",
+  "mode": "catholic",
+  "audience": "toddlers",
+  "score": 9.2,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 1.8,
+    "audience_fit": 1.5,
+    "topic_fit": 1,
+    "catholic_mode_consistency": 1.6,
+    "emotional_continuity": 0.9,
+    "speakability": 1,
+    "originality_no_source_copying": 1,
+    "overall_integration": 0.4
+  },
+  "strengths": [
+    "The sorry-without-shame distinction is strong for a toddler/caregiver context.",
+    "Concrete repair actions fit the audience well.",
+    "Mercy is practiced in the home rather than left abstract."
+  ],
+  "concerns": [
+    "Catholic mode could be more distinctive while remaining child-appropriate."
+  ],
+  "grader_note": "Approved; the prayer has enough baseline reasoning to clear the threshold, despite light Catholic markers."
+}

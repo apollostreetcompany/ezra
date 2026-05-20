@@ -1,0 +1,27 @@
+{
+  "slug": "reformed-dads-04-gratitude-praise",
+  "mode": "reformed",
+  "audience": "dads",
+  "score": 9.85,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 2.0,
+    "audience_fit": 1.45,
+    "topic_fit": 1.0,
+    "reformed_mode_consistency": 2.0,
+    "emotional_continuity": 0.95,
+    "speakability": 1.0,
+    "originality_no_source_copying": 0.95,
+    "normalization_to_10": 0.5
+  },
+  "strengths": [
+    "Strong creatureliness frame for gratitude and praise.",
+    "Self-reliance is exposed without humiliating the supplicant.",
+    "Gratitude is embodied in generosity, speech, work, and worship."
+  ],
+  "concerns": [
+    "The dad-specific fit is clear but a touch less individualized than the strongest dad prayers.",
+    "The emotional thread shifts from work to children and neighbors quickly."
+  ],
+  "grader_note": "Approved. The doctrinal consistency is excellent, with minor audience-specific and continuity deductions."
+}

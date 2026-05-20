@@ -1,0 +1,26 @@
+{
+  "slug": "catholic-dads-04-gratitude-praise",
+  "mode": "catholic",
+  "audience": "dads",
+  "score": 9.3,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 1.9,
+    "audience_fit": 1.5,
+    "topic_fit": 1,
+    "catholic_mode_consistency": 1.5,
+    "emotional_continuity": 1,
+    "speakability": 1,
+    "originality_no_source_copying": 1,
+    "overall_integration": 0.4
+  },
+  "strengths": [
+    "Gift-versus-achievement distinction is strong.",
+    "Household images give gratitude a grounded dad-specific setting.",
+    "Praise becomes visible as service, matching the baseline well."
+  ],
+  "concerns": [
+    "Catholic distinctives are quite muted; the prayer reads mostly as broad orthodox Christian devotion."
+  ],
+  "grader_note": "Approved but near the lower approved range because Catholic mode consistency lags behind the otherwise strong prayer."
+}

@@ -1,0 +1,26 @@
+{
+  "slug": "catholic-toddlers-03-healing",
+  "mode": "catholic",
+  "audience": "toddlers",
+  "score": 9.3,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 1.8,
+    "audience_fit": 1.5,
+    "topic_fit": 1,
+    "catholic_mode_consistency": 1.6,
+    "emotional_continuity": 1,
+    "speakability": 1,
+    "originality_no_source_copying": 1,
+    "overall_integration": 0.4
+  },
+  "strengths": [
+    "The prayer begins from concrete sickness without dramatizing it and keeps the child, caregivers, and room in view.",
+    "It makes a useful distinction between healing, wise medical care, and the patience needed while waiting.",
+    "The prayer is pastorally Catholic enough through Christ's welcome, healing mercy, the Holy Spirit, and the surrounding prayers of the Church."
+  ],
+  "concerns": [
+    "The sacramental healing dimension is implied rather than developed, so Catholic mode consistency is approved but not maximal."
+  ],
+  "grader_note": "Approved on independent regrade. The sample is concise because of the toddler audience, but its topic fit, continuity, and Catholic consonance justify a score above 9.0."
+}

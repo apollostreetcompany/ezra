@@ -1,0 +1,26 @@
+{
+  "slug": "reformed-teens-02-forgiveness-family",
+  "mode": "reformed",
+  "audience": "teens",
+  "score": 9.9,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 2.0,
+    "audience_fit": 1.45,
+    "topic_fit": 1.0,
+    "reformed_mode_consistency": 2.0,
+    "emotional_continuity": 1.0,
+    "speakability": 1.0,
+    "originality_no_source_copying": 0.95,
+    "normalization_to_10": 0.5
+  },
+  "strengths": [
+    "The home-conflict setup is plain, believable, and age-appropriate.",
+    "The distinction between pretending peace and seeking peace is excellent.",
+    "Forgiveness is grounded in Christ's finished work rather than emotional performance."
+  ],
+  "concerns": [
+    "Audience fit is strong, though the prayer could include one more distinctly teen-specific family pressure."
+  ],
+  "grader_note": "Approved. This is a speakable, doctrinally steady prayer with strong continuity from conflict to repair."
+}

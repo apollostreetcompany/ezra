@@ -1,0 +1,26 @@
+{
+  "slug": "reformed-teens-05-grief-healing",
+  "mode": "reformed",
+  "audience": "teens",
+  "score": 9.85,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 2.0,
+    "audience_fit": 1.45,
+    "topic_fit": 1.0,
+    "reformed_mode_consistency": 2.0,
+    "emotional_continuity": 1.0,
+    "speakability": 0.95,
+    "originality_no_source_copying": 0.95,
+    "normalization_to_10": 0.5
+  },
+  "strengths": [
+    "Treats teen grief with seriousness and restraint.",
+    "The distinction between trust and pretending grief is small is exactly on-baseline.",
+    "Union with Christ, resurrection hope, and providence are integrated without sounding abstract."
+  ],
+  "concerns": [
+    "Audience fit is sincere, though the grief examples stay fairly general."
+  ],
+  "grader_note": "Approved. A compassionate, confessionally stable prayer with no source-similarity issue."
+}

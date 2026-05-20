@@ -19,3 +19,4 @@
 - Wrangler `dev --var` values use `NAME:value` syntax in this environment; `NAME=value` is parsed as a malformed binding name and still leaves configured secrets missing.
 - WEB text may contain inline footnote markers, including in familiar verses such as `John 3:16`; E2E assertions should validate references and durable text starts instead of brittle exact substrings across footnote boundaries.
 - When asked whether Ezra can handle a real prompt, include the actual user-facing answer before the engineering receipt. Do not make the user ask "where's the answer?"
+- Do not block progress on stale sub-agent shutdown. If a redundant agent stalls, interrupt it, continue with completed replacement output, and clean up completed sessions when slots are needed.

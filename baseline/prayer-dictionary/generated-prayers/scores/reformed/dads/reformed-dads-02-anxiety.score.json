@@ -1,0 +1,26 @@
+{
+  "slug": "reformed-dads-02-anxiety",
+  "mode": "reformed",
+  "audience": "dads",
+  "score": 9.9,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 2.0,
+    "audience_fit": 1.5,
+    "topic_fit": 1.0,
+    "reformed_mode_consistency": 2.0,
+    "emotional_continuity": 1.0,
+    "speakability": 0.95,
+    "originality_no_source_copying": 0.95,
+    "normalization_to_10": 0.5
+  },
+  "strengths": [
+    "Hidden paternal worry is named with specificity and dignity.",
+    "Responsibility is cleanly distinguished from unbelieving control.",
+    "The prayer turns anxiety into providential trust and concrete action."
+  ],
+  "concerns": [
+    "The next-step list is slightly long but remains practical."
+  ],
+  "grader_note": "Approved. This is highly aligned with the fear-and-next-faithful-thing structure."
+}

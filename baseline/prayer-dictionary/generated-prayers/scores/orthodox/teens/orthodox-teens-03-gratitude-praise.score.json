@@ -1,0 +1,23 @@
+{
+  "slug": "orthodox-teens-03-gratitude-praise",
+  "mode": "orthodox",
+  "audience": "teens",
+  "score": 9.8,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 1.95,
+    "audience_fit": 1.5,
+    "topic_fit": 1.0,
+    "orthodox_mode_consistency": 1.85,
+    "emotional_continuity": 1.0,
+    "speakability": 1.0,
+    "originality_no_source_copying": 1.0
+  },
+  "strengths": [
+    "Gratitude is separated from mood and pretense clearly.",
+    "Teen contexts are broad but recognizable.",
+    "Praise becomes attention and offered gifts, which fits the baseline."
+  ],
+  "concerns": [],
+  "grader_note": "Approved; Orthodox consistency is adequate, though less specific than samples naming Jesus Prayer, icons, or Church practice more concretely."
+}

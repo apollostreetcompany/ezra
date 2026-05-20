@@ -66,6 +66,14 @@ Bead 30 created a neutral prayer-dictionary baseline:
 - The artifact contains Lewis source calibration anchors, Spurgeon-informed structures, `normal_cs_lewis`, `reformed_confessional`, and `roman_catholic` mode identifiers, plus generation and QC prompts.
 - It is intentionally not wired into Ezra runtime, MCP tools, billing, deployment, or branding.
 
+Bead 31 generated neutral prayer-dictionary samples:
+- Output root: `baseline/prayer-dictionary/generated-prayers/`.
+- Prayer files: 75 markdown files under `generated-prayers/prayers/`.
+- Score files: 75 separate `.score.json` files under `generated-prayers/scores/`.
+- Audiences: `teens`, `toddlers`, `new-mothers`, `dads`, `grandmothers`; `teens` covers teen girls and teen boys together to match the requested 75 total.
+- Modes: `catholic`, `reformed`, and `orthodox`.
+- Final score gate passed: min `9.1`, average `9.711`, max `9.95`; all 75 scores are strictly above `9.0`.
+
 Validation passed:
 - `pnpm verify`
 - `pnpm --filter @ezra-mcp/worker seed:build`

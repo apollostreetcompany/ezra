@@ -1,0 +1,23 @@
+{
+  "slug": "orthodox-teens-01-anxiety",
+  "mode": "orthodox",
+  "audience": "teens",
+  "score": 9.9,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 2.0,
+    "audience_fit": 1.5,
+    "topic_fit": 1.0,
+    "orthodox_mode_consistency": 1.9,
+    "emotional_continuity": 1.0,
+    "speakability": 1.0,
+    "originality_no_source_copying": 1.0
+  },
+  "strengths": [
+    "Teen anxieties are named without sounding patronizing.",
+    "The warning-versus-noise distinction is clean and memorable.",
+    "The next faithful thing is scaled well for a teen reader."
+  ],
+  "concerns": [],
+  "grader_note": "Excellent teen prayer: speakable, grounded, and pastorally precise."
+}

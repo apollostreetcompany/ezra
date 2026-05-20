@@ -1,0 +1,23 @@
+{
+  "slug": "orthodox-toddlers-03-healing",
+  "mode": "orthodox",
+  "audience": "toddlers",
+  "score": 9.3,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 1.7,
+    "audience_fit": 1.5,
+    "topic_fit": 1.0,
+    "orthodox_mode_consistency": 1.65,
+    "emotional_continuity": 0.95,
+    "speakability": 1.0,
+    "originality_no_source_copying": 1.0
+  },
+  "strengths": [
+    "Excellent toddler and caregiver speakability.",
+    "Concrete care details support the healing topic well.",
+    "Cross, Resurrection, Church, and home give more Orthodox texture than the other toddler samples."
+  ],
+  "concerns": [],
+  "grader_note": "Approved. The baseline architecture is simple, but the simplicity is justified by the toddler audience."
+}

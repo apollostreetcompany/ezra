@@ -1,0 +1,27 @@
+{
+  "slug": "reformed-new-mothers-03-family-submission",
+  "mode": "reformed",
+  "audience": "new-mothers",
+  "score": 9.65,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 1.95,
+    "audience_fit": 1.35,
+    "topic_fit": 1.0,
+    "reformed_mode_consistency": 1.95,
+    "emotional_continuity": 1.0,
+    "speakability": 0.95,
+    "originality_no_source_copying": 0.95,
+    "normalization_to_10": 0.5
+  },
+  "strengths": [
+    "Strong stewardship-versus-ownership distinction.",
+    "The family-life details are concrete and well suited to early motherhood.",
+    "The prayer turns household duties toward Word, prayer, repentance, joy, and providence."
+  ],
+  "concerns": [
+    "The line about honoring a husband narrows audience fit for unmarried or unsupported new mothers.",
+    "The architecture is strong but slightly more explanatory than prayed in a few places."
+  ],
+  "grader_note": "Approved. The prayer is sound and useful, with a modest audience-fit deduction for assuming a husband."
+}

@@ -1,0 +1,26 @@
+{
+  "slug": "reformed-toddlers-02-anxiety",
+  "mode": "reformed",
+  "audience": "toddlers",
+  "score": 9.65,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 1.85,
+    "audience_fit": 1.5,
+    "topic_fit": 1.0,
+    "reformed_mode_consistency": 1.85,
+    "emotional_continuity": 1.0,
+    "speakability": 1.0,
+    "originality_no_source_copying": 0.95,
+    "normalization_to_10": 0.5
+  },
+  "strengths": [
+    "The fear-as-big-in-a-small-body line is simple and effective.",
+    "The prayer includes a clear distinction: do not scold fear and do not obey it.",
+    "God's lordship and providence are expressed in toddler-accessible language."
+  ],
+  "concerns": [
+    "Reformed distinctives are present but simplified."
+  ],
+  "grader_note": "Approved. The prayer balances toddler accessibility with enough doctrine and emotional continuity."
+}

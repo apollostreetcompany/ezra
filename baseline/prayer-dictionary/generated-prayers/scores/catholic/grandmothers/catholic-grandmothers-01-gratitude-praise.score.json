@@ -1,0 +1,26 @@
+{
+  "slug": "catholic-grandmothers-01-gratitude-praise",
+  "mode": "catholic",
+  "audience": "grandmothers",
+  "score": 9.6,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 1.9,
+    "audience_fit": 1.5,
+    "topic_fit": 1,
+    "catholic_mode_consistency": 1.8,
+    "emotional_continuity": 1,
+    "speakability": 1,
+    "originality_no_source_copying": 1,
+    "overall_integration": 0.4
+  },
+  "strengths": [
+    "The nostalgia-versus-present-gratitude distinction is sharp and pastoral.",
+    "Audience fit is excellent, especially the years, meals, stories, and intercession details.",
+    "Catholic imagery appears gently through candle, communion of saints, and offered burdens."
+  ],
+  "concerns": [
+    "Catholic texture could be slightly more sacramental or liturgical without changing the voice."
+  ],
+  "grader_note": "Strong approved sample with a mature, grateful voice and a steady present-tense close."
+}

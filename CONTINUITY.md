@@ -10,7 +10,7 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - GitHub remote `origin`: `https://github.com/apollostreetcompany/ezra.git`.
 - Production Worker is deployed; `ezramcp.com` is attached as a Worker custom domain and route, and normal DNS smoke passes from this Mac.
 - Current branch: `codex/feat/ezra-full-plugin-launch`.
-- No active implementation bead. Next candidate is Bead 30 - LLM-backed verse collection tagger design.
+- No active implementation bead. Next candidate is Bead 32 - LLM-backed verse collection tagger design.
 
 ## Key Decisions
 1. Ezra MCP is a separate product from Bible Coder/Bibe Code; old Bibe files are process input only.
@@ -38,6 +38,8 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 23. Custom verse collections should stay lightweight: store collection metadata plus JSON arrays for retrieval, but also maintain a small D1 inverted tag index for querying by tag, visibility, owner, and verse ref. Public/private sharing adds product and permission scope; storage itself is not the expensive part.
 24. Prayer-dictionary baseline materials should live under root `baseline/prayer-dictionary/` as neutral future-use prompt assets, with no Ezra-specific branding, runtime changes, or MCP contract changes.
 25. Lewis voice calibration should use short source-pulled anchors from `Mere Christianity` plus structural notes rather than invented pseudo-samples, while generated prayers remain original and non-attributed.
+26. Prayer sample generation interprets "Teen Girls, Teen Boys" as one combined `teens` audience because the requested total is 75 prayers: 5 audiences x 3 denominational modes x 5 prayers.
+27. Bead 31 generated prayer samples live under `baseline/prayer-dictionary/generated-prayers/` as 75 markdown prayer files plus 75 separate score JSON files; all scores are above 9.0 after targeted toddler replacements and independent regrading.
 
 ## State
 
@@ -62,12 +64,13 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - [x] Bead 29 implemented and deployed: `get_jesus_teachings(mode)` returns Jesus' beliefs, commands, or both as a curated Gospel-grounded starter set; Worker docs/site/plugin references now describe the 8-tool surface; Worker version `fed55162-cdb9-4f0a-a338-38feb2d22446` is live.
 - [x] Bead 29 committed and pushed as `23f1e05`.
 - [x] Bead 30 completed: neutral prayer-dictionary baseline created under `baseline/prayer-dictionary/` with Lewis source calibration anchors, Spurgeon-informed prayer structures, three mode identifiers, and reusable generation/QC prompts.
+- [x] Bead 31 completed: generated 75 neutral prayer samples and 75 separate score files for Catholic, Reformed, and Orthodox modes across teens, toddlers, new mothers, dads, and grandmothers; all final scores are above 9.0.
 
 ### Now
 - No active implementation bead. Product direction remains: scope custom verse collections with manual tags, optional LLM suggested tags, and private/unlisted/public visibility.
 
 ### Next
-- Design Bead 31 as a staged custom verse collection feature: schema, endpoints, MCP tools, account UI, visibility rules, and optional LLM tag suggestion/review.
+- Design Bead 32 as a staged custom verse collection feature: schema, endpoints, MCP tools, account UI, visibility rules, and optional LLM tag suggestion/review.
 - Add optional `www.ezramcp.com` route/DNS later if desired.
 - Run an authenticated production `get_jesus_teachings` smoke once a production API key is available in the shell or a controlled inbox login is completed.
 - Run a live account magic-link test with a real inbox before public announcement.
@@ -98,5 +101,6 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - `scripts/link-local-bin.sh`
 - `handoff/beads.jsonl`
 - `baseline/prayer-dictionary/`
+- `baseline/prayer-dictionary/generated-prayers/`
 - Local E2E persistence: `/tmp/ezra-mcp-local-e2e`
 - Local CLI E2E config: `/tmp/ezra-mcp-cli-e2e-config`

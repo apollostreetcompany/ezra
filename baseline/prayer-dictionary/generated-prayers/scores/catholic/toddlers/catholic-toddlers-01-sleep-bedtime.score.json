@@ -1,0 +1,26 @@
+{
+  "slug": "catholic-toddlers-01-sleep-bedtime",
+  "mode": "catholic",
+  "audience": "toddlers",
+  "score": 9.4,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 1.8,
+    "audience_fit": 1.5,
+    "topic_fit": 1,
+    "catholic_mode_consistency": 1.7,
+    "emotional_continuity": 1,
+    "speakability": 1,
+    "originality_no_source_copying": 1,
+    "overall_integration": 0.4
+  },
+  "strengths": [
+    "The bedtime resistance is concrete and toddler-appropriate, then moves into thanks, mercy, forgiveness, and rest.",
+    "The prayer is highly speakable for a parent or caregiver at the side of a bed.",
+    "Catholic mode is visibly present through the baptized child, the Church, and natural Trinitarian address."
+  ],
+  "concerns": [
+    "The Catholic texture remains gentle rather than rich; it relies on baptism and Church language more than liturgical or sacramental imagination."
+  ],
+  "grader_note": "Approved on independent regrade. The prior blocker was too strict for toddler compression: the prayer has enough plain-reason architecture and Catholic specificity to clear the threshold."
+}

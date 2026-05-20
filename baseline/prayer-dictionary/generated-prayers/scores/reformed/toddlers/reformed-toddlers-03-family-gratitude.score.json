@@ -1,0 +1,27 @@
+{
+  "slug": "reformed-toddlers-03-family-gratitude",
+  "mode": "reformed",
+  "audience": "toddlers",
+  "score": 9.55,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 1.8,
+    "audience_fit": 1.5,
+    "topic_fit": 1.0,
+    "reformed_mode_consistency": 1.85,
+    "emotional_continuity": 0.95,
+    "speakability": 1.0,
+    "originality_no_source_copying": 0.95,
+    "normalization_to_10": 0.5
+  },
+  "strengths": [
+    "Family gratitude is concrete through meals, clothes, laughter, toys, and help.",
+    "The prayer moves gratitude into simple household obedience.",
+    "Grace, repentance, and Christ's kindness are present without overburdening the audience."
+  ],
+  "concerns": [
+    "The distinction is present but brief.",
+    "The emotional movement is somewhat simple because the prayer is intentionally short."
+  ],
+  "grader_note": "Approved. This is suitable for the audience and topic, with minor deductions for compressed architecture."
+}

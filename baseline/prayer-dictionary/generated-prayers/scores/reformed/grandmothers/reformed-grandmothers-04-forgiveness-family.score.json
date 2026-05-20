@@ -1,0 +1,26 @@
+{
+  "slug": "reformed-grandmothers-04-forgiveness-family",
+  "mode": "reformed",
+  "audience": "grandmothers",
+  "score": 9.9,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 2.0,
+    "audience_fit": 1.5,
+    "topic_fit": 1.0,
+    "reformed_mode_consistency": 2.0,
+    "emotional_continuity": 1.0,
+    "speakability": 0.95,
+    "originality_no_source_copying": 0.95,
+    "normalization_to_10": 0.5
+  },
+  "strengths": [
+    "Family history as a room is a vivid but restrained image.",
+    "Truthful memory is carefully distinguished from rehearsed resentment.",
+    "Forgiveness is framed as obedience shaped by received mercy, not denial."
+  ],
+  "concerns": [
+    "The boundary language is useful but could be slightly more concrete if revised."
+  ],
+  "grader_note": "Approved. The prayer is emotionally mature, clear, and well aligned with the charity structure."
+}

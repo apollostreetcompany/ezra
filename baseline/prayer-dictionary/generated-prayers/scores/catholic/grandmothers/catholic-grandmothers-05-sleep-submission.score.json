@@ -1,0 +1,26 @@
+{
+  "slug": "catholic-grandmothers-05-sleep-submission",
+  "mode": "catholic",
+  "audience": "grandmothers",
+  "score": 9.5,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 1.9,
+    "audience_fit": 1.5,
+    "topic_fit": 1,
+    "catholic_mode_consistency": 1.7,
+    "emotional_continuity": 1,
+    "speakability": 1,
+    "originality_no_source_copying": 1,
+    "overall_integration": 0.4
+  },
+  "strengths": [
+    "Nightly surrender is framed plainly and gently.",
+    "Audience concerns around family, memory, weakness, and waiting are well chosen.",
+    "Prayers of the Church and Christ’s mercy give a Catholic devotional frame."
+  ],
+  "concerns": [
+    "Catholic mode could be a little more textured, though it remains consistent."
+  ],
+  "grader_note": "Approved; a calm and usable bedtime prayer with strong emotional continuity."
+}

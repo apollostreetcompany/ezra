@@ -1,0 +1,23 @@
+{
+  "slug": "orthodox-new-mothers-05-forgiveness-family",
+  "mode": "orthodox",
+  "audience": "new-mothers",
+  "score": 9.8,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 2.0,
+    "audience_fit": 1.5,
+    "topic_fit": 1.0,
+    "orthodox_mode_consistency": 1.9,
+    "emotional_continuity": 1.0,
+    "speakability": 0.95,
+    "originality_no_source_copying": 1.0
+  },
+  "strengths": [
+    "Household resentment after a new baby is named with precision.",
+    "The prayer keeps forgiveness and boundaries together.",
+    "Ending with forgiveness before feeling fits the baseline well."
+  ],
+  "concerns": [],
+  "grader_note": "Strong and approved; a few list-like phrases slightly reduce speakability but not usefulness."
+}

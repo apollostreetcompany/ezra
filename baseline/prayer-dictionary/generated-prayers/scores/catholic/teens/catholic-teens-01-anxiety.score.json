@@ -1,0 +1,24 @@
+{
+  "slug": "catholic-teens-01-anxiety",
+  "mode": "catholic",
+  "audience": "teens",
+  "score": 9.8,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 2,
+    "audience_fit": 1.5,
+    "topic_fit": 1,
+    "catholic_mode_consistency": 1.9,
+    "emotional_continuity": 1,
+    "speakability": 1,
+    "originality_no_source_copying": 1,
+    "overall_integration": 0.4
+  },
+  "strengths": [
+    "Clear responsibility-versus-control distinction anchors the Lewis-informed architecture.",
+    "Teen anxiety is named concretely without condescension.",
+    "Catholic frame is present through Church, Mary, saints, grace, and Trinitarian prayer."
+  ],
+  "concerns": [],
+  "grader_note": "Excellent plain-reason movement from panic to the next faithful act; the Catholic elements support rather than decorate the prayer."
+}

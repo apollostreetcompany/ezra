@@ -1,0 +1,26 @@
+{
+  "slug": "catholic-new-mothers-03-gratitude-family",
+  "mode": "catholic",
+  "audience": "new-mothers",
+  "score": 9.5,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 1.9,
+    "audience_fit": 1.5,
+    "topic_fit": 1,
+    "catholic_mode_consistency": 1.7,
+    "emotional_continuity": 1,
+    "speakability": 1,
+    "originality_no_source_copying": 1,
+    "overall_integration": 0.4
+  },
+  "strengths": [
+    "Gratitude is separated from pressure to feel happy, which is a strong plain-reason move.",
+    "Family details are concrete and fitting for a new mother.",
+    "Virtue language and participation in Christ’s love support Catholic consistency."
+  ],
+  "concerns": [
+    "Catholic mode is present but could be more visibly liturgical or sacramental."
+  ],
+  "grader_note": "Approved; it is emotionally honest and highly usable."
+}

@@ -1,0 +1,26 @@
+{
+  "slug": "catholic-toddlers-02-anxiety-family",
+  "mode": "catholic",
+  "audience": "toddlers",
+  "score": 9.2,
+  "status": "approved",
+  "rubric": {
+    "baseline_voice_architecture": 1.8,
+    "audience_fit": 1.5,
+    "topic_fit": 1,
+    "catholic_mode_consistency": 1.6,
+    "emotional_continuity": 0.9,
+    "speakability": 1,
+    "originality_no_source_copying": 1,
+    "overall_integration": 0.4
+  },
+  "strengths": [
+    "Fear is treated gently and concretely for a small child.",
+    "The distinction between scolding fear and bringing it to Christ is effective.",
+    "Family comfort as a small shelter of the Church gives the Catholic mode a real foothold."
+  ],
+  "concerns": [
+    "Catholic distinctives remain fairly light."
+  ],
+  "grader_note": "Approved; simple, pastoral, and coherent, with enough Catholic framing to pass."
+}
