@@ -104,7 +104,8 @@ Before implementation starts:
 4. Risk class declared as `Low`, `Medium`, or `High`.
 
 Current bead:
-- No active implementation bead. Next candidate is Bead 30 - LLM-backed verse collection tagger design.
+- No active implementation bead. Most recent completed bead is Bead 30 - neutral prayer-dictionary baseline.
+- Next candidate is Bead 31 - LLM-backed verse collection tagger design.
 - Workstream: research/docs until implementation is explicitly started.
 - Risk: High if implemented because it would add schema, ingestion, tagging provenance, and public query-contract decisions.
 - Agent: Primary Codex for product analysis; Architect -> domain Engineer -> Analyst required before implementation.

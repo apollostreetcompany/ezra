@@ -12,6 +12,12 @@ The product plan:
 - Stripe Checkout upgrades users to Pro or Max.
 - Codex plugin installs a local `ezra-mcp-mcp` stdio bridge and provides setup skills.
 
+Neutral side artifact:
+- `baseline/prayer-dictionary/cs-lewis-prayer-voice-baseline.md` contains non-Ezra prayer-dictionary prompt assets.
+- The artifact uses the provided Lewis and Spurgeon PDFs plus the public Ask Ligonier prompt reference.
+- Lewis voice calibration uses short source-pulled anchors from `Mere Christianity`; generated prayers should remain original and non-attributed.
+- This baseline must not be wired into Ezra runtime, MCP tools, billing, deployment, or branding without a separate explicit bead.
+
 ## Implementation State
 Current branch: `codex/feat/ezra-full-plugin-launch`.
 
@@ -54,6 +60,11 @@ Bead 29 is in finalization:
 - The response returns a curated Gospel-grounded starter set with summaries, daily-practice prompts, source refs, and hydrated exact source verses where available.
 - Updated site docs, Worker MCP docs, plugin lookup skill, and tests to describe the 8-tool surface.
 - Deployed Worker/static assets. Version: `fed55162-cdb9-4f0a-a338-38feb2d22446`.
+
+Bead 30 created a neutral prayer-dictionary baseline:
+- Added `baseline/prayer-dictionary/cs-lewis-prayer-voice-baseline.md`.
+- The artifact contains Lewis source calibration anchors, Spurgeon-informed structures, `normal_cs_lewis`, `reformed_confessional`, and `roman_catholic` mode identifiers, plus generation and QC prompts.
+- It is intentionally not wired into Ezra runtime, MCP tools, billing, deployment, or branding.
 
 Validation passed:
 - `pnpm verify`
