@@ -14,7 +14,10 @@
     "validate:plugin": "node scripts/validate-plugin.mjs",
     "markdown:validate": "./scripts/validate-docs.sh",
     "plugin:validate": "node scripts/validate-plugin.mjs",
-    "secret:scan": "node scripts/secret-scan.mjs"
+    "secret:scan": "node scripts/secret-scan.mjs",
+    "prayer:panel:manifest": "node scripts/prayer-panel-runner.mjs manifest",
+    "prayer:panel:pilot": "node scripts/prayer-panel-runner.mjs pilot --run-id pilot-2026-05-24",
+    "prayer:panel:validate": "node scripts/prayer-panel-runner.mjs validate --run-dir baseline/prayer-dictionary/prayer-pass/runs/pilot-2026-05-24"
   },
   "devDependencies": {
     "@types/node": "^22.15.0",

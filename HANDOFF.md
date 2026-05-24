@@ -19,7 +19,7 @@ Neutral side artifact:
 - This baseline must not be wired into Ezra runtime, MCP tools, billing, deployment, or branding without a separate explicit bead.
 
 ## Implementation State
-Current branch: `codex/feat/ezra-full-plugin-launch`.
+Current branch: `codex/prayer-generation-v2`.
 
 Bead 25 was committed as `32c6ebbdd903745ca2bd91fbf2f6eecc3c18f1ed`.
 
@@ -74,6 +74,21 @@ Bead 31 generated neutral prayer-dictionary samples:
 - Modes: `catholic`, `reformed`, and `orthodox`.
 - Final score gate passed: min `9.1`, average `9.711`, max `9.95`; all 75 scores are strictly above `9.0`.
 
+Bead 32C redid the original 75 prayer samples:
+- Replaced the original 75 Catholic/Reformed/Orthodox audience prayer bodies with individually authored redrafts using more varied, prayerful phrasing.
+- Rewrote the matching 75 score JSON files for the redraft pass.
+- Preserved existing slugs, frontmatter structure, mode folders, audience folders, and imported adult SEO prayer files.
+- Refreshed the local review-app manifest to 285 total prayers after the redraft.
+- Validation gate passed: 75 prayers, 75 score files, score min `9.35`, average `9.675`, max `9.9`, exact duplicates `0`, max trigram similarity `0.08`.
+
+Bead 33 created the prayer read-aloud panel workflow:
+- Added `baseline/prayer-dictionary/prayer-pass/README.md` and `PANEL-PROMPTS.md` with the staged Hybrid Writer-style prayer workflow.
+- Added `scripts/prayer-panel-runner.mjs` plus `pnpm` and `make` targets for manifest, pilot, and validation.
+- Built the all-file `output-canonical` manifest: 2,948 prayers total, including 2,562 `365-prayers` and 386 prayer-dictionary files.
+- Ran the fixed 10-prayer pilot into `baseline/prayer-dictionary/prayer-pass/runs/pilot-2026-05-24/`.
+- Pilot hard gate passed: 10 processed, 10 accepted, 0 validation failures.
+- The runner preserves originals, reviewed rewrites, panel prompts using `embody`, panel verdict JSON, per-prayer issue lists, and run-level reports.
+
 Validation passed:
 - `pnpm verify`
 - `pnpm --filter @ezra-mcp/worker seed:build`
@@ -85,6 +100,7 @@ Validation passed:
 - Bead 28 validation: local account/API/MCP E2E, local CLI/MCP bridge E2E, `pnpm --filter @ezra-mcp/worker test`, `pnpm --filter @ezra-mcp/cli test`, and `pnpm --filter @ezra-mcp/mcp test`
 - Bead 29 validation: `pnpm --filter @ezra-mcp/worker test -- mcp.test.ts`, `pnpm --filter @ezra-mcp/worker test`, `pnpm --filter @ezra-mcp/site test`, `pnpm --filter @ezra-mcp/site lint`, `pnpm validate:docs`, `pnpm secret:scan`, `pnpm build`, `pnpm lint`, `pnpm test`, `pnpm verify`, `make verify`, and `git diff --check`
 - Bead 29 live smoke: `https://ezramcp.com/health`, `/mcp/` docs containing `get_jesus_teachings` and "The 8 tools", and unauthenticated `/v1/mcp` missing-key response. Authenticated production new-tool smoke was skipped because this shell had no `EZRA_MCP_API_KEY` or saved production API key.
+- Bead 33 validation: `node --check scripts/prayer-panel-runner.mjs`, `pnpm prayer:panel:manifest`, `pnpm prayer:panel:pilot`, `pnpm prayer:panel:validate`, `pnpm validate:docs`, `pnpm secret:scan`, and `git diff --check`.
 
 Known concern:
 - Seed generation skipped `Psalms 114:9`, `Psalms 114:10`, and `Psalms 137:10` because those refs have no WEB text in local seed inputs.

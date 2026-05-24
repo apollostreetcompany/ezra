@@ -1,0 +1,118 @@
+{
+  "artifact": {
+    "run_source": "output-canonical",
+    "artifact_id": "365-prayers-kids-12-27",
+    "status": "planned",
+    "source_path": "/Users/kikimac/.hermes/repos/apollostreetcompany/chosen-portion-landing-page/.claude/worktrees/mossy-bouncing-pancake/output-canonical/365-prayers/kids/12-27.md",
+    "relative_path": "365-prayers/kids/12-27.md",
+    "output_path": "365-prayers/kids/12-27.md",
+    "source_type": "365-prayers",
+    "lane": "kids",
+    "audience": "kids",
+    "dictionary_category": null
+  },
+  "original": "Lord, Job 8 says, can the rush grow up without mire? A plant cannot grow without dirt. I do not grow without the messy parts of life either. The hard days are part of how I become a person who knows You. Thank You for not skipping over the hard days, but using them. A clean kid is a kid who has not been growing. I want to grow, even if it means dirt.\nAmen.",
+  "rewritten": "Lord, Job 8 talks about a plant that cannot grow without the ground it grows in. I do not like hard days, but I know You can use them without wasting them.\n\nHelp me not call every hard thing bad just because it feels messy. When I am disappointed, corrected, tired, or left out, stay near to me and help me grow in the middle of it. Make me honest about what hurts and brave enough to learn what You are teaching.\n\nThank You that You do not skip over hard days or leave me alone in them. Help me grow in trust today.\n\nAmen.",
+  "issues_before": [
+    {
+      "code": "awkward_or_coined_phrase",
+      "severity": "revise",
+      "phrase": "A clean kid is a kid who has not been growing"
+    }
+  ],
+  "issues_after": [],
+  "panel_prompts": {
+    "read_aloud": "Embody Evan Brooks, a father praying with an elementary-aged child after dinner. Read this prayer aloud as if praying at dinner or bedtime. Flag anything that sounds weird in the mouth, too writerly, too clever, too specific, or not like prayer.\n\nLord, Job 8 says, can the rush grow up without mire? A plant cannot grow without dirt. I do not grow without the messy parts of life either. The hard days are part of how I become a person who knows You. Thank You for not skipping over the hard days, but using them. A clean kid is a kid who has not been growing. I want to grow, even if it means dirt.\nAmen.",
+    "pastor": "Embody Pastor Daniel Mercer, a mere-Christian pastor with broad Trinitarian instincts and a careful ear for prayer language. Check God-address, pronoun capitalization, Scripture handling, promise logic, theological claims, and whether the prayer asks rightly.\n\nLord, Job 8 says, can the rush grow up without mire? A plant cannot grow without dirt. I do not grow without the messy parts of life either. The hard days are part of how I become a person who knows You. Thank You for not skipping over the hard days, but using them. A clean kid is a kid who has not been growing. I want to grow, even if it means dirt.\nAmen.",
+    "audience": [
+      "Embody Deep believer - kids, a mature Christian in the kids lane who wants theological depth without theatrical language. Say whether you could actually borrow these words, what felt alive, what felt false, and what should become more specific rather than more generic.\n\nLord, Job 8 says, can the rush grow up without mire? A plant cannot grow without dirt. I do not grow without the messy parts of life either. The hard days are part of how I become a person who knows You. Thank You for not skipping over the hard days, but using them. A clean kid is a kid who has not been growing. I want to grow, even if it means dirt.\nAmen.",
+      "Embody New follower - kids, a newer Christian in the kids lane who needs the prayer to be clear, borrowable, and not insider-coded. Say whether you could actually borrow these words, what felt alive, what felt false, and what should become more specific rather than more generic.\n\nLord, Job 8 says, can the rush grow up without mire? A plant cannot grow without dirt. I do not grow without the messy parts of life either. The hard days are part of how I become a person who knows You. Thank You for not skipping over the hard days, but using them. A clean kid is a kid who has not been growing. I want to grow, even if it means dirt.\nAmen.",
+      "Embody Regular churchgoer - kids, a weekly churchgoer in the kids lane who wants words that sound natural when prayed aloud. Say whether you could actually borrow these words, what felt alive, what felt false, and what should become more specific rather than more generic.\n\nLord, Job 8 says, can the rush grow up without mire? A plant cannot grow without dirt. I do not grow without the messy parts of life either. The hard days are part of how I become a person who knows You. Thank You for not skipping over the hard days, but using them. A clean kid is a kid who has not been growing. I want to grow, even if it means dirt.\nAmen."
+    ]
+  },
+  "panels": {
+    "read_aloud": {
+      "persona": {
+        "name": "Evan Brooks",
+        "context": "a father praying with an elementary-aged child after dinner"
+      },
+      "verdict": "pass",
+      "awkward_phrases": [
+        "A clean kid is a kid who has not been growing"
+      ],
+      "required_fixes": [
+        "awkward_or_coined_phrase"
+      ]
+    },
+    "pastor": {
+      "persona": {
+        "name": "Pastor Daniel Mercer",
+        "context": "a mere-Christian pastor with broad Trinitarian instincts and a careful ear for prayer language"
+      },
+      "verdict": "pass",
+      "god_address_ok": true,
+      "scripture_handling_ok": true,
+      "promise_logic_ok": true,
+      "required_fixes": []
+    },
+    "audience": [
+      {
+        "persona": {
+          "type": "deep_believer",
+          "name": "Deep believer - kids",
+          "context": "a mature Christian in the kids lane who wants theological depth without theatrical language"
+        },
+        "verdict": "approve",
+        "could_borrow": true,
+        "what_landed": [
+          "keeps prayer anchored in ordinary obedience"
+        ],
+        "what_felt_false": [
+          "A clean kid is a kid who has not been growing"
+        ],
+        "make_more_specific": [],
+        "make_less_specific": []
+      },
+      {
+        "persona": {
+          "type": "new_follower",
+          "name": "New follower - kids",
+          "context": "a newer Christian in the kids lane who needs the prayer to be clear, borrowable, and not insider-coded"
+        },
+        "verdict": "approve",
+        "could_borrow": true,
+        "what_landed": [
+          "keeps prayer anchored in ordinary obedience"
+        ],
+        "what_felt_false": [
+          "A clean kid is a kid who has not been growing"
+        ],
+        "make_more_specific": [],
+        "make_less_specific": []
+      },
+      {
+        "persona": {
+          "type": "regular_churchgoer",
+          "name": "Regular churchgoer - kids",
+          "context": "a weekly churchgoer in the kids lane who wants words that sound natural when prayed aloud"
+        },
+        "verdict": "approve",
+        "could_borrow": true,
+        "what_landed": [
+          "keeps prayer anchored in ordinary obedience"
+        ],
+        "what_felt_false": [
+          "A clean kid is a kid who has not been growing"
+        ],
+        "make_more_specific": [],
+        "make_less_specific": []
+      }
+    ]
+  },
+  "gate": {
+    "passed": true,
+    "audience_approvals": 3,
+    "blockers": []
+  },
+  "reviewed_path": "/Users/kikimac/ezra-mcp/baseline/prayer-dictionary/prayer-pass/runs/pilot-2026-05-24/reviewed-output/365-prayers/kids/12-27.md"
+}

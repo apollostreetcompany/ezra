@@ -1,0 +1,125 @@
+{
+  "artifact": {
+    "run_source": "output-canonical",
+    "artifact_id": "365-prayers-young-adults-07-15",
+    "status": "planned",
+    "source_path": "/Users/kikimac/.hermes/repos/apollostreetcompany/chosen-portion-landing-page/.claude/worktrees/mossy-bouncing-pancake/output-canonical/365-prayers/young-adults/07-15.md",
+    "relative_path": "365-prayers/young-adults/07-15.md",
+    "output_path": "365-prayers/young-adults/07-15.md",
+    "source_type": "365-prayers",
+    "lane": "young-adults",
+    "audience": "young-adults",
+    "dictionary_category": null
+  },
+  "original": "Leviticus 6:13 told Aaron to keep the fire on the altar burning continually. It shall not go out. Father, I have a long habit of letting my fire go out for weeks and then trying to reignite it in one dramatic evening. You did not design my soul for that. Christ, the daily faithfulness is the wood. A few minutes of Scripture before the phone. A short prayer in the parking lot. A real Sunday with real people. Not impressive, but enough. Spirit, I am not asking for a spiritual high today. I am asking for tended embers. Save me from the cycle of collapse and grand return. Teach me the dignity of small obedience that nobody sees. Keep the fire on, Father, even when I am not burning bright. I will add the next stick — the next ordinary act of love — and trust You with the heat.\n\nAmen.",
+  "rewritten": "Father, Leviticus 6:13 says the fire on the altar was to be kept burning. It was not supposed to go out.\n\nI know the pattern of neglecting prayer for weeks and then trying to repair everything in one dramatic evening. You are not asking me for drama today. You are asking for faithfulness. A few minutes of Scripture before the phone. A short prayer before the next errand. A real Sunday with real people. A small act of love that nobody notices.\n\nThrough Your Son, bring me back without spectacle. By Your Spirit, teach me the dignity of tended embers. Keep me from confusing intensity with obedience.\n\nI will add the next stick: the next ordinary act of love, the next honest confession, the next prayer I would rather postpone. Keep the fire on, Father.\n\nAmen.",
+  "issues_before": [
+    {
+      "code": "direct_address_not_first",
+      "severity": "revise",
+      "phrase": "Leviticus 6:13 told Aaron to keep the fire on the altar burning continually. It shall not go out. Father, I have a long habit of"
+    },
+    {
+      "code": "vocative_mode_switching",
+      "severity": "revise",
+      "phrase": "Father, Christ, Spirit"
+    }
+  ],
+  "issues_after": [],
+  "panel_prompts": {
+    "read_aloud": "Embody Caleb Martin, a twenty-six-year-old praying before work with no patience for devotional filler. Read this prayer aloud as if praying at dinner or bedtime. Flag anything that sounds weird in the mouth, too writerly, too clever, too specific, or not like prayer.\n\nLeviticus 6:13 told Aaron to keep the fire on the altar burning continually. It shall not go out. Father, I have a long habit of letting my fire go out for weeks and then trying to reignite it in one dramatic evening. You did not design my soul for that. Christ, the daily faithfulness is the wood. A few minutes of Scripture before the phone. A short prayer in the parking lot. A real Sunday with real people. Not impressive, but enough. Spirit, I am not asking for a spiritual high today. I am asking for tended embers. Save me from the cycle of collapse and grand return. Teach me the dignity of small obedience that nobody sees. Keep the fire on, Father, even when I am not burning bright. I will add the next stick — the next ordinary act of love — and trust You with the heat.\n\nAmen.",
+    "pastor": "Embody Pastor Daniel Mercer, a mere-Christian pastor with broad Trinitarian instincts and a careful ear for prayer language. Check God-address, pronoun capitalization, Scripture handling, promise logic, theological claims, and whether the prayer asks rightly.\n\nLeviticus 6:13 told Aaron to keep the fire on the altar burning continually. It shall not go out. Father, I have a long habit of letting my fire go out for weeks and then trying to reignite it in one dramatic evening. You did not design my soul for that. Christ, the daily faithfulness is the wood. A few minutes of Scripture before the phone. A short prayer in the parking lot. A real Sunday with real people. Not impressive, but enough. Spirit, I am not asking for a spiritual high today. I am asking for tended embers. Save me from the cycle of collapse and grand return. Teach me the dignity of small obedience that nobody sees. Keep the fire on, Father, even when I am not burning bright. I will add the next stick — the next ordinary act of love — and trust You with the heat.\n\nAmen.",
+    "audience": [
+      "Embody Deep believer - young-adults, a mature Christian in the young-adults lane who wants theological depth without theatrical language. Say whether you could actually borrow these words, what felt alive, what felt false, and what should become more specific rather than more generic.\n\nLeviticus 6:13 told Aaron to keep the fire on the altar burning continually. It shall not go out. Father, I have a long habit of letting my fire go out for weeks and then trying to reignite it in one dramatic evening. You did not design my soul for that. Christ, the daily faithfulness is the wood. A few minutes of Scripture before the phone. A short prayer in the parking lot. A real Sunday with real people. Not impressive, but enough. Spirit, I am not asking for a spiritual high today. I am asking for tended embers. Save me from the cycle of collapse and grand return. Teach me the dignity of small obedience that nobody sees. Keep the fire on, Father, even when I am not burning bright. I will add the next stick — the next ordinary act of love — and trust You with the heat.\n\nAmen.",
+      "Embody New follower - young-adults, a newer Christian in the young-adults lane who needs the prayer to be clear, borrowable, and not insider-coded. Say whether you could actually borrow these words, what felt alive, what felt false, and what should become more specific rather than more generic.\n\nLeviticus 6:13 told Aaron to keep the fire on the altar burning continually. It shall not go out. Father, I have a long habit of letting my fire go out for weeks and then trying to reignite it in one dramatic evening. You did not design my soul for that. Christ, the daily faithfulness is the wood. A few minutes of Scripture before the phone. A short prayer in the parking lot. A real Sunday with real people. Not impressive, but enough. Spirit, I am not asking for a spiritual high today. I am asking for tended embers. Save me from the cycle of collapse and grand return. Teach me the dignity of small obedience that nobody sees. Keep the fire on, Father, even when I am not burning bright. I will add the next stick — the next ordinary act of love — and trust You with the heat.\n\nAmen.",
+      "Embody Regular churchgoer - young-adults, a weekly churchgoer in the young-adults lane who wants words that sound natural when prayed aloud. Say whether you could actually borrow these words, what felt alive, what felt false, and what should become more specific rather than more generic.\n\nLeviticus 6:13 told Aaron to keep the fire on the altar burning continually. It shall not go out. Father, I have a long habit of letting my fire go out for weeks and then trying to reignite it in one dramatic evening. You did not design my soul for that. Christ, the daily faithfulness is the wood. A few minutes of Scripture before the phone. A short prayer in the parking lot. A real Sunday with real people. Not impressive, but enough. Spirit, I am not asking for a spiritual high today. I am asking for tended embers. Save me from the cycle of collapse and grand return. Teach me the dignity of small obedience that nobody sees. Keep the fire on, Father, even when I am not burning bright. I will add the next stick — the next ordinary act of love — and trust You with the heat.\n\nAmen."
+    ]
+  },
+  "panels": {
+    "read_aloud": {
+      "persona": {
+        "name": "Caleb Martin",
+        "context": "a twenty-six-year-old praying before work with no patience for devotional filler"
+      },
+      "verdict": "pass",
+      "awkward_phrases": [],
+      "required_fixes": [
+        "direct_address_not_first",
+        "vocative_mode_switching"
+      ]
+    },
+    "pastor": {
+      "persona": {
+        "name": "Pastor Daniel Mercer",
+        "context": "a mere-Christian pastor with broad Trinitarian instincts and a careful ear for prayer language"
+      },
+      "verdict": "pass",
+      "god_address_ok": true,
+      "scripture_handling_ok": true,
+      "promise_logic_ok": true,
+      "required_fixes": []
+    },
+    "audience": [
+      {
+        "persona": {
+          "type": "deep_believer",
+          "name": "Deep believer - young-adults",
+          "context": "a mature Christian in the young-adults lane who wants theological depth without theatrical language"
+        },
+        "verdict": "approve",
+        "could_borrow": true,
+        "what_landed": [
+          "keeps prayer anchored in ordinary obedience"
+        ],
+        "what_felt_false": [
+          "Leviticus 6:13 told Aaron to keep the fire on the altar burning continually. It shall not go out. Father, I have a long habit of",
+          "Father, Christ, Spirit"
+        ],
+        "make_more_specific": [],
+        "make_less_specific": []
+      },
+      {
+        "persona": {
+          "type": "new_follower",
+          "name": "New follower - young-adults",
+          "context": "a newer Christian in the young-adults lane who needs the prayer to be clear, borrowable, and not insider-coded"
+        },
+        "verdict": "approve",
+        "could_borrow": true,
+        "what_landed": [
+          "keeps prayer anchored in ordinary obedience"
+        ],
+        "what_felt_false": [
+          "Leviticus 6:13 told Aaron to keep the fire on the altar burning continually. It shall not go out. Father, I have a long habit of",
+          "Father, Christ, Spirit"
+        ],
+        "make_more_specific": [],
+        "make_less_specific": []
+      },
+      {
+        "persona": {
+          "type": "regular_churchgoer",
+          "name": "Regular churchgoer - young-adults",
+          "context": "a weekly churchgoer in the young-adults lane who wants words that sound natural when prayed aloud"
+        },
+        "verdict": "approve",
+        "could_borrow": true,
+        "what_landed": [
+          "keeps prayer anchored in ordinary obedience"
+        ],
+        "what_felt_false": [
+          "Leviticus 6:13 told Aaron to keep the fire on the altar burning continually. It shall not go out. Father, I have a long habit of",
+          "Father, Christ, Spirit"
+        ],
+        "make_more_specific": [],
+        "make_less_specific": []
+      }
+    ]
+  },
+  "gate": {
+    "passed": true,
+    "audience_approvals": 3,
+    "blockers": []
+  },
+  "reviewed_path": "/Users/kikimac/ezra-mcp/baseline/prayer-dictionary/prayer-pass/runs/pilot-2026-05-24/reviewed-output/365-prayers/young-adults/07-15.md"
+}

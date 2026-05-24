@@ -1,0 +1,125 @@
+{
+  "artifact": {
+    "run_source": "output-canonical",
+    "artifact_id": "365-prayers-grandmothers-01-15",
+    "status": "planned",
+    "source_path": "/Users/kikimac/.hermes/repos/apollostreetcompany/chosen-portion-landing-page/.claude/worktrees/mossy-bouncing-pancake/output-canonical/365-prayers/grandmothers/01-15.md",
+    "relative_path": "365-prayers/grandmothers/01-15.md",
+    "output_path": "365-prayers/grandmothers/01-15.md",
+    "source_type": "365-prayers",
+    "lane": "grandmothers",
+    "audience": "grandmothers",
+    "dictionary_category": null
+  },
+  "original": "Do as thou hast said. 2 Samuel 7:25. David praying back to God the very promise God just made him. There is a confidence in it I have spent most of my life not quite reaching. I have prayed too politely, Father. I have edited Your promises down to what seemed reasonable for me to ask. At this age I am tired of editing. Do as You have said. About the home You have prepared. About the saints who shall reign with Him. About the new heavens and the new earth where there will be no more crying nor pain. About the kindness toward the wandering one of mine that I still trust You for, on the strength of nothing but what You have already promised. I will not invent promises You did not make, because that is its own old sin and I am not interested in adding to it. I will only stop softening the ones You did make. Let the small prayers in this house this morning have a bit of David's nerve in them. Not because I have grown bolder. Because You have been so reliable for so long that pretending otherwise has become exhausting.\n\nAmen.",
+  "rewritten": "Father, David prayed Your promise back to You: \"Do as You have said.\" I have spent many years praying politely, sometimes editing Your promises down to what seemed reasonable to ask.\n\nI do not want to invent promises You never made. Keep me from that. But I also do not want to soften the promises You did make. Do as You have said about the home You have prepared. Do as You have said about resurrection, mercy, and the day when crying and pain will be finished. Do as You have said for the wandering one I still bring to You.\n\nGive the prayers in this house a little of David's nerve today. Not because I have become impressive, but because You have been faithful for so long that pretending otherwise has become exhausting.\n\nAmen.",
+  "issues_before": [
+    {
+      "code": "direct_address_not_first",
+      "severity": "block",
+      "phrase": "Do as thou hast said. 2 Samuel 7:25. David praying back to God the very promise God just made him. There is a confidence in it I have spent most of my life not quite reaching. I have prayed too politely, Father. I have edited Your pro"
+    },
+    {
+      "code": "archaism_or_old_register",
+      "severity": "revise",
+      "phrase": "thou"
+    }
+  ],
+  "issues_after": [],
+  "panel_prompts": {
+    "read_aloud": "Embody Ruth Navarro, a lifelong believer praying at the kitchen table before calling her family. Read this prayer aloud as if praying at dinner or bedtime. Flag anything that sounds weird in the mouth, too writerly, too clever, too specific, or not like prayer.\n\nDo as thou hast said. 2 Samuel 7:25. David praying back to God the very promise God just made him. There is a confidence in it I have spent most of my life not quite reaching. I have prayed too politely, Father. I have edited Your promises down to what seemed reasonable for me to ask. At this age I am tired of editing. Do as You have said. About the home You have prepared. About the saints who shall reign with Him. About the new heavens and the new earth where there will be no more crying nor pain. About the kindness toward the wandering one of mine that I still trust You for, on the strength of nothing but what You have already promised. I will not invent promises You did not make, because that is its own old sin and I am not interested in adding to it. I will only stop softening the ones You did make. Let the small prayers in this house this morning have a bit of David's nerve in them. Not because I have grown bolder. Because You have been so reliable for so long that pretending otherwise has become exhausting.\n\nAmen.",
+    "pastor": "Embody Pastor Daniel Mercer, a mere-Christian pastor with broad Trinitarian instincts and a careful ear for prayer language. Check God-address, pronoun capitalization, Scripture handling, promise logic, theological claims, and whether the prayer asks rightly.\n\nDo as thou hast said. 2 Samuel 7:25. David praying back to God the very promise God just made him. There is a confidence in it I have spent most of my life not quite reaching. I have prayed too politely, Father. I have edited Your promises down to what seemed reasonable for me to ask. At this age I am tired of editing. Do as You have said. About the home You have prepared. About the saints who shall reign with Him. About the new heavens and the new earth where there will be no more crying nor pain. About the kindness toward the wandering one of mine that I still trust You for, on the strength of nothing but what You have already promised. I will not invent promises You did not make, because that is its own old sin and I am not interested in adding to it. I will only stop softening the ones You did make. Let the small prayers in this house this morning have a bit of David's nerve in them. Not because I have grown bolder. Because You have been so reliable for so long that pretending otherwise has become exhausting.\n\nAmen.",
+    "audience": [
+      "Embody Deep believer - grandmothers, a mature Christian in the grandmothers lane who wants theological depth without theatrical language. Say whether you could actually borrow these words, what felt alive, what felt false, and what should become more specific rather than more generic.\n\nDo as thou hast said. 2 Samuel 7:25. David praying back to God the very promise God just made him. There is a confidence in it I have spent most of my life not quite reaching. I have prayed too politely, Father. I have edited Your promises down to what seemed reasonable for me to ask. At this age I am tired of editing. Do as You have said. About the home You have prepared. About the saints who shall reign with Him. About the new heavens and the new earth where there will be no more crying nor pain. About the kindness toward the wandering one of mine that I still trust You for, on the strength of nothing but what You have already promised. I will not invent promises You did not make, because that is its own old sin and I am not interested in adding to it. I will only stop softening the ones You did make. Let the small prayers in this house this morning have a bit of David's nerve in them. Not because I have grown bolder. Because You have been so reliable for so long that pretending otherwise has become exhausting.\n\nAmen.",
+      "Embody New follower - grandmothers, a newer Christian in the grandmothers lane who needs the prayer to be clear, borrowable, and not insider-coded. Say whether you could actually borrow these words, what felt alive, what felt false, and what should become more specific rather than more generic.\n\nDo as thou hast said. 2 Samuel 7:25. David praying back to God the very promise God just made him. There is a confidence in it I have spent most of my life not quite reaching. I have prayed too politely, Father. I have edited Your promises down to what seemed reasonable for me to ask. At this age I am tired of editing. Do as You have said. About the home You have prepared. About the saints who shall reign with Him. About the new heavens and the new earth where there will be no more crying nor pain. About the kindness toward the wandering one of mine that I still trust You for, on the strength of nothing but what You have already promised. I will not invent promises You did not make, because that is its own old sin and I am not interested in adding to it. I will only stop softening the ones You did make. Let the small prayers in this house this morning have a bit of David's nerve in them. Not because I have grown bolder. Because You have been so reliable for so long that pretending otherwise has become exhausting.\n\nAmen.",
+      "Embody Regular churchgoer - grandmothers, a weekly churchgoer in the grandmothers lane who wants words that sound natural when prayed aloud. Say whether you could actually borrow these words, what felt alive, what felt false, and what should become more specific rather than more generic.\n\nDo as thou hast said. 2 Samuel 7:25. David praying back to God the very promise God just made him. There is a confidence in it I have spent most of my life not quite reaching. I have prayed too politely, Father. I have edited Your promises down to what seemed reasonable for me to ask. At this age I am tired of editing. Do as You have said. About the home You have prepared. About the saints who shall reign with Him. About the new heavens and the new earth where there will be no more crying nor pain. About the kindness toward the wandering one of mine that I still trust You for, on the strength of nothing but what You have already promised. I will not invent promises You did not make, because that is its own old sin and I am not interested in adding to it. I will only stop softening the ones You did make. Let the small prayers in this house this morning have a bit of David's nerve in them. Not because I have grown bolder. Because You have been so reliable for so long that pretending otherwise has become exhausting.\n\nAmen."
+    ]
+  },
+  "panels": {
+    "read_aloud": {
+      "persona": {
+        "name": "Ruth Navarro",
+        "context": "a lifelong believer praying at the kitchen table before calling her family"
+      },
+      "verdict": "pass",
+      "awkward_phrases": [],
+      "required_fixes": [
+        "direct_address_not_first",
+        "archaism_or_old_register"
+      ]
+    },
+    "pastor": {
+      "persona": {
+        "name": "Pastor Daniel Mercer",
+        "context": "a mere-Christian pastor with broad Trinitarian instincts and a careful ear for prayer language"
+      },
+      "verdict": "pass",
+      "god_address_ok": true,
+      "scripture_handling_ok": true,
+      "promise_logic_ok": true,
+      "required_fixes": []
+    },
+    "audience": [
+      {
+        "persona": {
+          "type": "deep_believer",
+          "name": "Deep believer - grandmothers",
+          "context": "a mature Christian in the grandmothers lane who wants theological depth without theatrical language"
+        },
+        "verdict": "approve",
+        "could_borrow": true,
+        "what_landed": [
+          "keeps prayer anchored in ordinary obedience"
+        ],
+        "what_felt_false": [
+          "Do as thou hast said. 2 Samuel 7:25. David praying back to God the very promise God just made him. There is a confidence in it I have spent most of my life not quite reaching. I have prayed too politely, Father. I have edited Your pro",
+          "thou"
+        ],
+        "make_more_specific": [],
+        "make_less_specific": []
+      },
+      {
+        "persona": {
+          "type": "new_follower",
+          "name": "New follower - grandmothers",
+          "context": "a newer Christian in the grandmothers lane who needs the prayer to be clear, borrowable, and not insider-coded"
+        },
+        "verdict": "approve",
+        "could_borrow": true,
+        "what_landed": [
+          "keeps prayer anchored in ordinary obedience"
+        ],
+        "what_felt_false": [
+          "Do as thou hast said. 2 Samuel 7:25. David praying back to God the very promise God just made him. There is a confidence in it I have spent most of my life not quite reaching. I have prayed too politely, Father. I have edited Your pro",
+          "thou"
+        ],
+        "make_more_specific": [],
+        "make_less_specific": []
+      },
+      {
+        "persona": {
+          "type": "regular_churchgoer",
+          "name": "Regular churchgoer - grandmothers",
+          "context": "a weekly churchgoer in the grandmothers lane who wants words that sound natural when prayed aloud"
+        },
+        "verdict": "approve",
+        "could_borrow": true,
+        "what_landed": [
+          "keeps prayer anchored in ordinary obedience"
+        ],
+        "what_felt_false": [
+          "Do as thou hast said. 2 Samuel 7:25. David praying back to God the very promise God just made him. There is a confidence in it I have spent most of my life not quite reaching. I have prayed too politely, Father. I have edited Your pro",
+          "thou"
+        ],
+        "make_more_specific": [],
+        "make_less_specific": []
+      }
+    ]
+  },
+  "gate": {
+    "passed": true,
+    "audience_approvals": 3,
+    "blockers": []
+  },
+  "reviewed_path": "/Users/kikimac/ezra-mcp/baseline/prayer-dictionary/prayer-pass/runs/pilot-2026-05-24/reviewed-output/365-prayers/grandmothers/01-15.md"
+}

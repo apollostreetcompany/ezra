@@ -25,6 +25,8 @@ required_files=(
   "docs/RELEASE_CHECKLIST.md"
   "docs/SITE_DEPLOYMENT.md"
   "docs/PRIVACY.md"
+  "baseline/prayer-dictionary/prayer-pass/README.md"
+  "baseline/prayer-dictionary/prayer-pass/PANEL-PROMPTS.md"
   "handoff/beads.schema.json"
   "handoff/beads.jsonl"
 )

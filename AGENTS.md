@@ -104,12 +104,13 @@ Before implementation starts:
 4. Risk class declared as `Low`, `Medium`, or `High`.
 
 Current bead:
-- No active implementation bead. Most recent completed bead is Bead 31 - neutral prayer sample generation and independent grading.
-- Next candidate is Bead 32 - LLM-backed verse collection tagger design.
-- Workstream: research/docs until implementation is explicitly started.
-- Risk: High if implemented because it would add schema, ingestion, tagging provenance, and public query-contract decisions.
-- Agent: Primary Codex for product analysis; Architect -> domain Engineer -> Analyst required before implementation.
-- Tools: RepoPrompt for code maps, docs validation for process updates, and full workspace verification once code begins.
+- No active implementation bead. Most recent completed local content-pipeline pass is Bead 33 - prayer read-aloud panel workflow and 10-prayer pilot.
+- Next prayer candidate is Bead 34 - 70-prayer calibration pass across output-canonical lanes, followed by lane-by-lane full corpus review.
+- Next product candidate remains Bead 32 - LLM-backed verse collection tagger design.
+- Workstream: docs/content pipeline until an Ezra runtime implementation is explicitly started.
+- Risk: High for LLM tagger implementation because it would add schema, ingestion, tagging provenance, and public query-contract decisions; Medium for prayer content-pipeline lanes.
+- Agent: Primary Codex for content-pipeline tooling; Architect -> domain Engineer -> Analyst required before any public API/schema/security/deploy implementation.
+- Tools: RepoPrompt for code maps, docs validation for process updates, and prayer panel runner for corpus review.
 
 ### Bead Exit Gate (Mandatory)
 

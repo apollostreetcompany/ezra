@@ -1,0 +1,125 @@
+{
+  "artifact": {
+    "run_source": "output-canonical",
+    "artifact_id": "prayer-dictionary-story-annunciation",
+    "status": "planned",
+    "source_path": "/Users/kikimac/.hermes/repos/apollostreetcompany/chosen-portion-landing-page/.claude/worktrees/mossy-bouncing-pancake/output-canonical/prayer-dictionary/story/annunciation.md",
+    "relative_path": "prayer-dictionary/story/annunciation.md",
+    "output_path": "prayer-dictionary/story/annunciation.md",
+    "source_type": "prayer-dictionary",
+    "lane": "story",
+    "audience": "dictionary-reader",
+    "dictionary_category": "story"
+  },
+  "original": "Luke 1:38 — behold, I am the servant of the Lord; let it be to me according to your word. Mary's response to the angel Gabriel after he had announced that she would conceive a son by the Holy Spirit and that he would be called the Son of the Most High. She was probably a teenager. The social consequences would be severe. She said yes anyway. Father, the response of the young woman to an unprecedented assignment is one of the most consequential yeses in history. She did not bargain. She did not ask for guarantees about the social fallout. She declared herself the servant of the Lord and accepted what came. Bless the women and men in our own time who are facing assignments that will cost them socially. Give them Mary's yes. The yes is not an endorsement of the cost; it is a trust that the One asking will hold them through the consequences. He held her. He still holds those who answer the same way.\n\nAmen.",
+  "rewritten": "Father, Mary answered the angel, \"I am the servant of the Lord; let it be to me according to Your word.\" Her yes was not vague. It had a body, a future, and a cost.\n\nTeach me that kind of trust. When obedience carries consequences I cannot manage ahead of time, keep me from bargaining for guarantees before I obey. Give courage to women and men who are facing assignments that will cost them socially, privately, or in ways no one else can see.\n\nDo not let me romanticize Mary's courage. Let me receive it as a witness. She trusted the One who called her, and You held her through what came.\n\nMake me Your servant in the next clear thing You ask.\n\nAmen.",
+  "issues_before": [
+    {
+      "code": "direct_address_not_first",
+      "severity": "revise",
+      "phrase": "Luke 1:38 — behold, I am the servant of the Lord; let it be to me accordin"
+    },
+    {
+      "code": "lowercase_divine_pronoun",
+      "severity": "revise",
+      "phrase": "lowercase divine-address pronoun after opening address"
+    }
+  ],
+  "issues_after": [],
+  "panel_prompts": {
+    "read_aloud": "Embody Thomas Bell, a Bible-study leader turning a story reflection into direct prayer. Read this prayer aloud as if praying at dinner or bedtime. Flag anything that sounds weird in the mouth, too writerly, too clever, too specific, or not like prayer.\n\nLuke 1:38 — behold, I am the servant of the Lord; let it be to me according to your word. Mary's response to the angel Gabriel after he had announced that she would conceive a son by the Holy Spirit and that he would be called the Son of the Most High. She was probably a teenager. The social consequences would be severe. She said yes anyway. Father, the response of the young woman to an unprecedented assignment is one of the most consequential yeses in history. She did not bargain. She did not ask for guarantees about the social fallout. She declared herself the servant of the Lord and accepted what came. Bless the women and men in our own time who are facing assignments that will cost them socially. Give them Mary's yes. The yes is not an endorsement of the cost; it is a trust that the One asking will hold them through the consequences. He held her. He still holds those who answer the same way.\n\nAmen.",
+    "pastor": "Embody Pastor Daniel Mercer, a mere-Christian pastor with broad Trinitarian instincts and a careful ear for prayer language. Check God-address, pronoun capitalization, Scripture handling, promise logic, theological claims, and whether the prayer asks rightly.\n\nLuke 1:38 — behold, I am the servant of the Lord; let it be to me according to your word. Mary's response to the angel Gabriel after he had announced that she would conceive a son by the Holy Spirit and that he would be called the Son of the Most High. She was probably a teenager. The social consequences would be severe. She said yes anyway. Father, the response of the young woman to an unprecedented assignment is one of the most consequential yeses in history. She did not bargain. She did not ask for guarantees about the social fallout. She declared herself the servant of the Lord and accepted what came. Bless the women and men in our own time who are facing assignments that will cost them socially. Give them Mary's yes. The yes is not an endorsement of the cost; it is a trust that the One asking will hold them through the consequences. He held her. He still holds those who answer the same way.\n\nAmen.",
+    "audience": [
+      "Embody Deep believer - story, a mature Christian in the story lane who wants theological depth without theatrical language. Say whether you could actually borrow these words, what felt alive, what felt false, and what should become more specific rather than more generic.\n\nLuke 1:38 — behold, I am the servant of the Lord; let it be to me according to your word. Mary's response to the angel Gabriel after he had announced that she would conceive a son by the Holy Spirit and that he would be called the Son of the Most High. She was probably a teenager. The social consequences would be severe. She said yes anyway. Father, the response of the young woman to an unprecedented assignment is one of the most consequential yeses in history. She did not bargain. She did not ask for guarantees about the social fallout. She declared herself the servant of the Lord and accepted what came. Bless the women and men in our own time who are facing assignments that will cost them socially. Give them Mary's yes. The yes is not an endorsement of the cost; it is a trust that the One asking will hold them through the consequences. He held her. He still holds those who answer the same way.\n\nAmen.",
+      "Embody New follower - story, a newer Christian in the story lane who needs the prayer to be clear, borrowable, and not insider-coded. Say whether you could actually borrow these words, what felt alive, what felt false, and what should become more specific rather than more generic.\n\nLuke 1:38 — behold, I am the servant of the Lord; let it be to me according to your word. Mary's response to the angel Gabriel after he had announced that she would conceive a son by the Holy Spirit and that he would be called the Son of the Most High. She was probably a teenager. The social consequences would be severe. She said yes anyway. Father, the response of the young woman to an unprecedented assignment is one of the most consequential yeses in history. She did not bargain. She did not ask for guarantees about the social fallout. She declared herself the servant of the Lord and accepted what came. Bless the women and men in our own time who are facing assignments that will cost them socially. Give them Mary's yes. The yes is not an endorsement of the cost; it is a trust that the One asking will hold them through the consequences. He held her. He still holds those who answer the same way.\n\nAmen.",
+      "Embody Regular churchgoer - story, a weekly churchgoer in the story lane who wants words that sound natural when prayed aloud. Say whether you could actually borrow these words, what felt alive, what felt false, and what should become more specific rather than more generic.\n\nLuke 1:38 — behold, I am the servant of the Lord; let it be to me according to your word. Mary's response to the angel Gabriel after he had announced that she would conceive a son by the Holy Spirit and that he would be called the Son of the Most High. She was probably a teenager. The social consequences would be severe. She said yes anyway. Father, the response of the young woman to an unprecedented assignment is one of the most consequential yeses in history. She did not bargain. She did not ask for guarantees about the social fallout. She declared herself the servant of the Lord and accepted what came. Bless the women and men in our own time who are facing assignments that will cost them socially. Give them Mary's yes. The yes is not an endorsement of the cost; it is a trust that the One asking will hold them through the consequences. He held her. He still holds those who answer the same way.\n\nAmen."
+    ]
+  },
+  "panels": {
+    "read_aloud": {
+      "persona": {
+        "name": "Thomas Bell",
+        "context": "a Bible-study leader turning a story reflection into direct prayer"
+      },
+      "verdict": "pass",
+      "awkward_phrases": [],
+      "required_fixes": [
+        "direct_address_not_first",
+        "lowercase_divine_pronoun"
+      ]
+    },
+    "pastor": {
+      "persona": {
+        "name": "Pastor Daniel Mercer",
+        "context": "a mere-Christian pastor with broad Trinitarian instincts and a careful ear for prayer language"
+      },
+      "verdict": "pass",
+      "god_address_ok": true,
+      "scripture_handling_ok": true,
+      "promise_logic_ok": true,
+      "required_fixes": []
+    },
+    "audience": [
+      {
+        "persona": {
+          "type": "deep_believer",
+          "name": "Deep believer - story",
+          "context": "a mature Christian in the story lane who wants theological depth without theatrical language"
+        },
+        "verdict": "approve",
+        "could_borrow": true,
+        "what_landed": [
+          "keeps prayer anchored in ordinary obedience"
+        ],
+        "what_felt_false": [
+          "Luke 1:38 — behold, I am the servant of the Lord; let it be to me accordin",
+          "lowercase divine-address pronoun after opening address"
+        ],
+        "make_more_specific": [],
+        "make_less_specific": []
+      },
+      {
+        "persona": {
+          "type": "new_follower",
+          "name": "New follower - story",
+          "context": "a newer Christian in the story lane who needs the prayer to be clear, borrowable, and not insider-coded"
+        },
+        "verdict": "approve",
+        "could_borrow": true,
+        "what_landed": [
+          "keeps prayer anchored in ordinary obedience"
+        ],
+        "what_felt_false": [
+          "Luke 1:38 — behold, I am the servant of the Lord; let it be to me accordin",
+          "lowercase divine-address pronoun after opening address"
+        ],
+        "make_more_specific": [],
+        "make_less_specific": []
+      },
+      {
+        "persona": {
+          "type": "regular_churchgoer",
+          "name": "Regular churchgoer - story",
+          "context": "a weekly churchgoer in the story lane who wants words that sound natural when prayed aloud"
+        },
+        "verdict": "approve",
+        "could_borrow": true,
+        "what_landed": [
+          "keeps prayer anchored in ordinary obedience"
+        ],
+        "what_felt_false": [
+          "Luke 1:38 — behold, I am the servant of the Lord; let it be to me accordin",
+          "lowercase divine-address pronoun after opening address"
+        ],
+        "make_more_specific": [],
+        "make_less_specific": []
+      }
+    ]
+  },
+  "gate": {
+    "passed": true,
+    "audience_approvals": 3,
+    "blockers": []
+  },
+  "reviewed_path": "/Users/kikimac/ezra-mcp/baseline/prayer-dictionary/prayer-pass/runs/pilot-2026-05-24/reviewed-output/prayer-dictionary/story/annunciation.md"
+}

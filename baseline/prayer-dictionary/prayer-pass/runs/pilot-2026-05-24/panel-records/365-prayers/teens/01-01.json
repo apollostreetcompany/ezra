@@ -1,0 +1,127 @@
+{
+  "artifact": {
+    "run_source": "output-canonical",
+    "artifact_id": "365-prayers-teens-01-01",
+    "status": "planned",
+    "source_path": "/Users/kikimac/.hermes/repos/apollostreetcompany/chosen-portion-landing-page/.claude/worktrees/mossy-bouncing-pancake/output-canonical/365-prayers/teens/01-01.md",
+    "relative_path": "365-prayers/teens/01-01.md",
+    "output_path": "365-prayers/teens/01-01.md",
+    "source_type": "365-prayers",
+    "lane": "teens",
+    "audience": "teens",
+    "dictionary_category": null
+  },
+  "original": "It's the first day of a year I haven't lived yet, and I'm already trying to figure out who I'm supposed to be in it. Father, before I check the group chat, before I scroll, before anyone else tells me what today is — let me hand it to You. Joshua 5:12 says the manna stopped when Israel finally ate the food of the land they'd been promised. The thing they survived on for forty years quit because something better had arrived. I think about how I survive: phone in hand, half-watched videos, a thousand little reassurances I don't actually need. Stop the manna. Feed me on something that lasts past lunch. I have classes I dread today, a person I owe a real apology to, and one decision I keep dodging. Walk through it with me, please — not the picture-perfect version, the actual one. Help me say the first true sentence of the day to whoever I meet first. Help me not perform. Receive this day from me, since I cannot keep it well on my own.\n\nAmen.",
+  "rewritten": "Father, this is the first day of a year I have not lived yet, and I am already tempted to ask everyone but You who I am supposed to be.\n\nBefore I check the group chat, before I scroll, before I start performing a version of myself, let me hand this day to You. Joshua 5 says the manna stopped when Israel began eating the food of the land You had promised. Teach me the difference between what helped me survive for a while and what You are asking me to receive now.\n\nDo not let me live on small distractions. Feed me with what lasts: truth, courage, repentance, and the ordinary grace to do the next right thing. Walk with me through the actual day, not the perfect one in my head.\n\nHelp me say the first true sentence You give me today.\n\nAmen.",
+  "issues_before": [
+    {
+      "code": "direct_address_not_first",
+      "severity": "revise",
+      "phrase": "It's the first day of a year I haven't lived yet, and I'm already trying to figure out who I'm supposed to be in it. Father, before I check the gro"
+    },
+    {
+      "code": "awkward_or_coined_phrase",
+      "severity": "revise",
+      "phrase": "Stop the manna"
+    }
+  ],
+  "issues_after": [],
+  "panel_prompts": {
+    "read_aloud": "Embody Naomi Chen, a youth volunteer reading with high-school students before small group. Read this prayer aloud as if praying at dinner or bedtime. Flag anything that sounds weird in the mouth, too writerly, too clever, too specific, or not like prayer.\n\nIt's the first day of a year I haven't lived yet, and I'm already trying to figure out who I'm supposed to be in it. Father, before I check the group chat, before I scroll, before anyone else tells me what today is — let me hand it to You. Joshua 5:12 says the manna stopped when Israel finally ate the food of the land they'd been promised. The thing they survived on for forty years quit because something better had arrived. I think about how I survive: phone in hand, half-watched videos, a thousand little reassurances I don't actually need. Stop the manna. Feed me on something that lasts past lunch. I have classes I dread today, a person I owe a real apology to, and one decision I keep dodging. Walk through it with me, please — not the picture-perfect version, the actual one. Help me say the first true sentence of the day to whoever I meet first. Help me not perform. Receive this day from me, since I cannot keep it well on my own.\n\nAmen.",
+    "pastor": "Embody Pastor Daniel Mercer, a mere-Christian pastor with broad Trinitarian instincts and a careful ear for prayer language. Check God-address, pronoun capitalization, Scripture handling, promise logic, theological claims, and whether the prayer asks rightly.\n\nIt's the first day of a year I haven't lived yet, and I'm already trying to figure out who I'm supposed to be in it. Father, before I check the group chat, before I scroll, before anyone else tells me what today is — let me hand it to You. Joshua 5:12 says the manna stopped when Israel finally ate the food of the land they'd been promised. The thing they survived on for forty years quit because something better had arrived. I think about how I survive: phone in hand, half-watched videos, a thousand little reassurances I don't actually need. Stop the manna. Feed me on something that lasts past lunch. I have classes I dread today, a person I owe a real apology to, and one decision I keep dodging. Walk through it with me, please — not the picture-perfect version, the actual one. Help me say the first true sentence of the day to whoever I meet first. Help me not perform. Receive this day from me, since I cannot keep it well on my own.\n\nAmen.",
+    "audience": [
+      "Embody Deep believer - teens, a mature Christian in the teens lane who wants theological depth without theatrical language. Say whether you could actually borrow these words, what felt alive, what felt false, and what should become more specific rather than more generic.\n\nIt's the first day of a year I haven't lived yet, and I'm already trying to figure out who I'm supposed to be in it. Father, before I check the group chat, before I scroll, before anyone else tells me what today is — let me hand it to You. Joshua 5:12 says the manna stopped when Israel finally ate the food of the land they'd been promised. The thing they survived on for forty years quit because something better had arrived. I think about how I survive: phone in hand, half-watched videos, a thousand little reassurances I don't actually need. Stop the manna. Feed me on something that lasts past lunch. I have classes I dread today, a person I owe a real apology to, and one decision I keep dodging. Walk through it with me, please — not the picture-perfect version, the actual one. Help me say the first true sentence of the day to whoever I meet first. Help me not perform. Receive this day from me, since I cannot keep it well on my own.\n\nAmen.",
+      "Embody New follower - teens, a newer Christian in the teens lane who needs the prayer to be clear, borrowable, and not insider-coded. Say whether you could actually borrow these words, what felt alive, what felt false, and what should become more specific rather than more generic.\n\nIt's the first day of a year I haven't lived yet, and I'm already trying to figure out who I'm supposed to be in it. Father, before I check the group chat, before I scroll, before anyone else tells me what today is — let me hand it to You. Joshua 5:12 says the manna stopped when Israel finally ate the food of the land they'd been promised. The thing they survived on for forty years quit because something better had arrived. I think about how I survive: phone in hand, half-watched videos, a thousand little reassurances I don't actually need. Stop the manna. Feed me on something that lasts past lunch. I have classes I dread today, a person I owe a real apology to, and one decision I keep dodging. Walk through it with me, please — not the picture-perfect version, the actual one. Help me say the first true sentence of the day to whoever I meet first. Help me not perform. Receive this day from me, since I cannot keep it well on my own.\n\nAmen.",
+      "Embody Regular churchgoer - teens, a weekly churchgoer in the teens lane who wants words that sound natural when prayed aloud. Say whether you could actually borrow these words, what felt alive, what felt false, and what should become more specific rather than more generic.\n\nIt's the first day of a year I haven't lived yet, and I'm already trying to figure out who I'm supposed to be in it. Father, before I check the group chat, before I scroll, before anyone else tells me what today is — let me hand it to You. Joshua 5:12 says the manna stopped when Israel finally ate the food of the land they'd been promised. The thing they survived on for forty years quit because something better had arrived. I think about how I survive: phone in hand, half-watched videos, a thousand little reassurances I don't actually need. Stop the manna. Feed me on something that lasts past lunch. I have classes I dread today, a person I owe a real apology to, and one decision I keep dodging. Walk through it with me, please — not the picture-perfect version, the actual one. Help me say the first true sentence of the day to whoever I meet first. Help me not perform. Receive this day from me, since I cannot keep it well on my own.\n\nAmen."
+    ]
+  },
+  "panels": {
+    "read_aloud": {
+      "persona": {
+        "name": "Naomi Chen",
+        "context": "a youth volunteer reading with high-school students before small group"
+      },
+      "verdict": "pass",
+      "awkward_phrases": [
+        "Stop the manna"
+      ],
+      "required_fixes": [
+        "direct_address_not_first",
+        "awkward_or_coined_phrase"
+      ]
+    },
+    "pastor": {
+      "persona": {
+        "name": "Pastor Daniel Mercer",
+        "context": "a mere-Christian pastor with broad Trinitarian instincts and a careful ear for prayer language"
+      },
+      "verdict": "pass",
+      "god_address_ok": true,
+      "scripture_handling_ok": true,
+      "promise_logic_ok": true,
+      "required_fixes": []
+    },
+    "audience": [
+      {
+        "persona": {
+          "type": "deep_believer",
+          "name": "Deep believer - teens",
+          "context": "a mature Christian in the teens lane who wants theological depth without theatrical language"
+        },
+        "verdict": "approve",
+        "could_borrow": true,
+        "what_landed": [
+          "keeps prayer anchored in ordinary obedience"
+        ],
+        "what_felt_false": [
+          "It's the first day of a year I haven't lived yet, and I'm already trying to figure out who I'm supposed to be in it. Father, before I check the gro",
+          "Stop the manna"
+        ],
+        "make_more_specific": [],
+        "make_less_specific": []
+      },
+      {
+        "persona": {
+          "type": "new_follower",
+          "name": "New follower - teens",
+          "context": "a newer Christian in the teens lane who needs the prayer to be clear, borrowable, and not insider-coded"
+        },
+        "verdict": "approve",
+        "could_borrow": true,
+        "what_landed": [
+          "keeps prayer anchored in ordinary obedience"
+        ],
+        "what_felt_false": [
+          "It's the first day of a year I haven't lived yet, and I'm already trying to figure out who I'm supposed to be in it. Father, before I check the gro",
+          "Stop the manna"
+        ],
+        "make_more_specific": [],
+        "make_less_specific": []
+      },
+      {
+        "persona": {
+          "type": "regular_churchgoer",
+          "name": "Regular churchgoer - teens",
+          "context": "a weekly churchgoer in the teens lane who wants words that sound natural when prayed aloud"
+        },
+        "verdict": "approve",
+        "could_borrow": true,
+        "what_landed": [
+          "keeps prayer anchored in ordinary obedience"
+        ],
+        "what_felt_false": [
+          "It's the first day of a year I haven't lived yet, and I'm already trying to figure out who I'm supposed to be in it. Father, before I check the gro",
+          "Stop the manna"
+        ],
+        "make_more_specific": [],
+        "make_less_specific": []
+      }
+    ]
+  },
+  "gate": {
+    "passed": true,
+    "audience_approvals": 3,
+    "blockers": []
+  },
+  "reviewed_path": "/Users/kikimac/ezra-mcp/baseline/prayer-dictionary/prayer-pass/runs/pilot-2026-05-24/reviewed-output/365-prayers/teens/01-01.md"
+}

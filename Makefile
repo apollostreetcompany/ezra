@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: verify validate-docs validate-plugin secret-scan worker-check seed-build lint test build dev link-local cli-help cli-status mcp-bridge-smoke live-stripe-smoke release-check
+.PHONY: verify validate-docs validate-plugin secret-scan worker-check seed-build lint test build dev link-local cli-help cli-status mcp-bridge-smoke live-stripe-smoke prayer-panel-manifest prayer-panel-pilot prayer-panel-validate release-check
 
 verify: validate-docs validate-plugin secret-scan build worker-check seed-build lint test
 
@@ -45,5 +45,14 @@ mcp-bridge-smoke:
 
 live-stripe-smoke:
 	@if [ -f /Users/kikimac/.hermes/.env ]; then set -a; source /Users/kikimac/.hermes/.env; [ -f .env.local ] && source .env.local; set +a; pnpm exec tsx scripts/live-stripe-smoke.ts; else echo "Missing /Users/kikimac/.hermes/.env with STRIPE_SECRET_KEY."; exit 1; fi
+
+prayer-panel-manifest:
+	pnpm prayer:panel:manifest
+
+prayer-panel-pilot:
+	pnpm prayer:panel:pilot
+
+prayer-panel-validate:
+	pnpm prayer:panel:validate
 
 release-check: verify mcp-bridge-smoke

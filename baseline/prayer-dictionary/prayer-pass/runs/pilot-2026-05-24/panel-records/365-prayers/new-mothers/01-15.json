@@ -1,0 +1,116 @@
+{
+  "artifact": {
+    "run_source": "output-canonical",
+    "artifact_id": "365-prayers-new-mothers-01-15",
+    "status": "planned",
+    "source_path": "/Users/kikimac/.hermes/repos/apollostreetcompany/chosen-portion-landing-page/.claude/worktrees/mossy-bouncing-pancake/output-canonical/365-prayers/new-mothers/01-15.md",
+    "relative_path": "365-prayers/new-mothers/01-15.md",
+    "output_path": "365-prayers/new-mothers/01-15.md",
+    "source_type": "365-prayers",
+    "lane": "new-mothers",
+    "audience": "new-mothers",
+    "dictionary_category": null
+  },
+  "original": "Father, David prayed in 2 Samuel 7, \"Do as Thou hast said.\" I have heard people pray big promises back to You. Today my prayer is simpler. Just keep the small ones.\n\nYou said You would not leave me. You said You would give strength to the weary. You said Your mercies are new every morning. I do not need a new miracle. I need yesterday's promises to still be true today.\n\nI trust they are.\n\nDo as You have said about my exhaustion. Do as You have said about my fears for this baby. Do as You have said about my distance from the friends I used to see every week.\n\nI am not asking for more than You promised. I am asking for that. Receive my small holding.\n\nAmen.",
+  "rewritten": "Father, David prayed, \"Do as You have said.\" I have heard people pray Your great promises back to You. Today my prayer is small, but it is still resting on what You have said.\n\nYou said You would not leave me. You said You give strength to the weary. You said Your mercies are new every morning. I do not need to invent a new promise for this day. I need yesterday's promises to still be true while I am tired.\n\nDo as You have said about my exhaustion. Do as You have said about my fears for this baby. Do as You have said about the loneliness that sometimes comes with love.\n\nI am not asking for more than You promised. I am asking for the courage to receive what You already promised.\n\nAmen.",
+  "issues_before": [
+    {
+      "code": "archaism_or_old_register",
+      "severity": "revise",
+      "phrase": "Thou"
+    }
+  ],
+  "issues_after": [],
+  "panel_prompts": {
+    "read_aloud": "Embody Grace Imani, a tired mother praying while holding a baby who may wake again soon. Read this prayer aloud as if praying at dinner or bedtime. Flag anything that sounds weird in the mouth, too writerly, too clever, too specific, or not like prayer.\n\nFather, David prayed in 2 Samuel 7, \"Do as Thou hast said.\" I have heard people pray big promises back to You. Today my prayer is simpler. Just keep the small ones.\n\nYou said You would not leave me. You said You would give strength to the weary. You said Your mercies are new every morning. I do not need a new miracle. I need yesterday's promises to still be true today.\n\nI trust they are.\n\nDo as You have said about my exhaustion. Do as You have said about my fears for this baby. Do as You have said about my distance from the friends I used to see every week.\n\nI am not asking for more than You promised. I am asking for that. Receive my small holding.\n\nAmen.",
+    "pastor": "Embody Pastor Daniel Mercer, a mere-Christian pastor with broad Trinitarian instincts and a careful ear for prayer language. Check God-address, pronoun capitalization, Scripture handling, promise logic, theological claims, and whether the prayer asks rightly.\n\nFather, David prayed in 2 Samuel 7, \"Do as Thou hast said.\" I have heard people pray big promises back to You. Today my prayer is simpler. Just keep the small ones.\n\nYou said You would not leave me. You said You would give strength to the weary. You said Your mercies are new every morning. I do not need a new miracle. I need yesterday's promises to still be true today.\n\nI trust they are.\n\nDo as You have said about my exhaustion. Do as You have said about my fears for this baby. Do as You have said about my distance from the friends I used to see every week.\n\nI am not asking for more than You promised. I am asking for that. Receive my small holding.\n\nAmen.",
+    "audience": [
+      "Embody Deep believer - new-mothers, a mature Christian in the new-mothers lane who wants theological depth without theatrical language. Say whether you could actually borrow these words, what felt alive, what felt false, and what should become more specific rather than more generic.\n\nFather, David prayed in 2 Samuel 7, \"Do as Thou hast said.\" I have heard people pray big promises back to You. Today my prayer is simpler. Just keep the small ones.\n\nYou said You would not leave me. You said You would give strength to the weary. You said Your mercies are new every morning. I do not need a new miracle. I need yesterday's promises to still be true today.\n\nI trust they are.\n\nDo as You have said about my exhaustion. Do as You have said about my fears for this baby. Do as You have said about my distance from the friends I used to see every week.\n\nI am not asking for more than You promised. I am asking for that. Receive my small holding.\n\nAmen.",
+      "Embody New follower - new-mothers, a newer Christian in the new-mothers lane who needs the prayer to be clear, borrowable, and not insider-coded. Say whether you could actually borrow these words, what felt alive, what felt false, and what should become more specific rather than more generic.\n\nFather, David prayed in 2 Samuel 7, \"Do as Thou hast said.\" I have heard people pray big promises back to You. Today my prayer is simpler. Just keep the small ones.\n\nYou said You would not leave me. You said You would give strength to the weary. You said Your mercies are new every morning. I do not need a new miracle. I need yesterday's promises to still be true today.\n\nI trust they are.\n\nDo as You have said about my exhaustion. Do as You have said about my fears for this baby. Do as You have said about my distance from the friends I used to see every week.\n\nI am not asking for more than You promised. I am asking for that. Receive my small holding.\n\nAmen.",
+      "Embody Regular churchgoer - new-mothers, a weekly churchgoer in the new-mothers lane who wants words that sound natural when prayed aloud. Say whether you could actually borrow these words, what felt alive, what felt false, and what should become more specific rather than more generic.\n\nFather, David prayed in 2 Samuel 7, \"Do as Thou hast said.\" I have heard people pray big promises back to You. Today my prayer is simpler. Just keep the small ones.\n\nYou said You would not leave me. You said You would give strength to the weary. You said Your mercies are new every morning. I do not need a new miracle. I need yesterday's promises to still be true today.\n\nI trust they are.\n\nDo as You have said about my exhaustion. Do as You have said about my fears for this baby. Do as You have said about my distance from the friends I used to see every week.\n\nI am not asking for more than You promised. I am asking for that. Receive my small holding.\n\nAmen."
+    ]
+  },
+  "panels": {
+    "read_aloud": {
+      "persona": {
+        "name": "Grace Imani",
+        "context": "a tired mother praying while holding a baby who may wake again soon"
+      },
+      "verdict": "pass",
+      "awkward_phrases": [],
+      "required_fixes": [
+        "archaism_or_old_register"
+      ]
+    },
+    "pastor": {
+      "persona": {
+        "name": "Pastor Daniel Mercer",
+        "context": "a mere-Christian pastor with broad Trinitarian instincts and a careful ear for prayer language"
+      },
+      "verdict": "pass",
+      "god_address_ok": true,
+      "scripture_handling_ok": true,
+      "promise_logic_ok": true,
+      "required_fixes": []
+    },
+    "audience": [
+      {
+        "persona": {
+          "type": "deep_believer",
+          "name": "Deep believer - new-mothers",
+          "context": "a mature Christian in the new-mothers lane who wants theological depth without theatrical language"
+        },
+        "verdict": "approve",
+        "could_borrow": true,
+        "what_landed": [
+          "keeps prayer anchored in ordinary obedience"
+        ],
+        "what_felt_false": [
+          "Thou"
+        ],
+        "make_more_specific": [],
+        "make_less_specific": []
+      },
+      {
+        "persona": {
+          "type": "new_follower",
+          "name": "New follower - new-mothers",
+          "context": "a newer Christian in the new-mothers lane who needs the prayer to be clear, borrowable, and not insider-coded"
+        },
+        "verdict": "approve",
+        "could_borrow": true,
+        "what_landed": [
+          "keeps prayer anchored in ordinary obedience"
+        ],
+        "what_felt_false": [
+          "Thou"
+        ],
+        "make_more_specific": [],
+        "make_less_specific": []
+      },
+      {
+        "persona": {
+          "type": "regular_churchgoer",
+          "name": "Regular churchgoer - new-mothers",
+          "context": "a weekly churchgoer in the new-mothers lane who wants words that sound natural when prayed aloud"
+        },
+        "verdict": "approve",
+        "could_borrow": true,
+        "what_landed": [
+          "keeps prayer anchored in ordinary obedience"
+        ],
+        "what_felt_false": [
+          "Thou"
+        ],
+        "make_more_specific": [],
+        "make_less_specific": []
+      }
+    ]
+  },
+  "gate": {
+    "passed": true,
+    "audience_approvals": 3,
+    "blockers": []
+  },
+  "reviewed_path": "/Users/kikimac/ezra-mcp/baseline/prayer-dictionary/prayer-pass/runs/pilot-2026-05-24/reviewed-output/365-prayers/new-mothers/01-15.md"
+}

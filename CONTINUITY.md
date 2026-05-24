@@ -9,7 +9,7 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - Graphify is out of scope; D1 inverted indexes are the v1 query path.
 - GitHub remote `origin`: `https://github.com/apollostreetcompany/ezra.git`.
 - Production Worker is deployed; `ezramcp.com` is attached as a Worker custom domain and route, and normal DNS smoke passes from this Mac.
-- Current branch: `codex/feat/ezra-full-plugin-launch`.
+- Current branch: `codex/prayer-generation-v2`.
 - No active implementation bead. Next candidate is Bead 32 - LLM-backed verse collection tagger design.
 
 ## Key Decisions
@@ -40,6 +40,11 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 25. Lewis voice calibration should use short source-pulled anchors from `Mere Christianity` plus structural notes rather than invented pseudo-samples, while generated prayers remain original and non-attributed.
 26. Prayer sample generation interprets "Teen Girls, Teen Boys" as one combined `teens` audience because the requested total is 75 prayers: 5 audiences x 3 denominational modes x 5 prayers.
 27. Bead 31 generated prayer samples live under `baseline/prayer-dictionary/generated-prayers/` as 75 markdown prayer files plus 75 separate score JSON files; all scores are above 9.0 after targeted toddler replacements and independent regrading.
+28. Bead 32A adds a temporary prayer swipe-review Worker at `https://prayer-swipe-review.ryan-borker.workers.dev` backed by D1 `prayer-swipe-review-db` for accept/reject/feedback capture; it is isolated from the production Ezra MCP Worker and does not change public MCP contracts.
+29. A Hermes cron watchdog `d19b23e76f12` checks every 2 hours for a stable `SEO-Articles` branch and non-destructively imports prayer/score files into `baseline/prayer-dictionary/generated-prayers/` when stable.
+30. The prayer swipe directory now includes 285 total prayers after importing 210 Chosen Portion SEO-derived adult prayers from the landing-page repo: 200 Bible-lesson prayers across 10 denomination/tradition folders plus 10 mere-Christian blog-topic prayers.
+31. Bead 32C replaces the original 75 Catholic/Reformed/Orthodox audience prayer samples and matching score files with individually authored redrafts; score floor is 9.35, exact duplicate count is 0, and max trigram similarity is 0.08.
+32. Bead 33 implements a staged prayer read-aloud panel workflow for the 2,948-file Chosen Portion `output-canonical` corpus: source files stay untouched, reviewed prayers land in a parallel output tree, divine-address pronouns are capitalized, and the hard-gated 10-prayer pilot passed validation.
 
 ## State
 
@@ -65,11 +70,16 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - [x] Bead 29 committed and pushed as `23f1e05`.
 - [x] Bead 30 completed: neutral prayer-dictionary baseline created under `baseline/prayer-dictionary/` with Lewis source calibration anchors, Spurgeon-informed prayer structures, three mode identifiers, and reusable generation/QC prompts.
 - [x] Bead 31 completed: generated 75 neutral prayer samples and 75 separate score files for Catholic, Reformed, and Orthodox modes across teens, toddlers, new mothers, dads, and grandmothers; all final scores are above 9.0.
+- [x] Bead 32C completed: redid the original 75 prayer samples and 75 score files as individually authored, higher-variety redrafts without touching imported adult SEO prayers.
+- [x] Bead 33 completed: created the prayer read-aloud panel workflow, all-file output-canonical manifest, panel prompt templates, one-command runner targets, and a validated 10-prayer pilot.
 
 ### Now
-- No active implementation bead. Product direction remains: scope custom verse collections with manual tags, optional LLM suggested tags, and private/unlisted/public visibility.
+- Bead 32A expanded as a fast ops review surface: mobile-usable prayer swipe page and D1-backed review logging live at `https://prayer-swipe-review.ryan-borker.workers.dev`, now with 285 prayers.
+- `SEO-Articles` branch watchdog cron remains scheduled every 2 hours and will import generated prayer/score files non-destructively when the branch appears stable.
+- No active implementation bead. Most recent local content-pipeline pass is Bead 33 - prayer read-aloud panel workflow and 10-prayer pilot.
 
 ### Next
+- Run Bead 34 as the 70-prayer calibration pass: 10 prayers per `365-prayers` audience plus representative dictionary samples, then inspect lane-level diffs before full corpus review.
 - Design Bead 32 as a staged custom verse collection feature: schema, endpoints, MCP tools, account UI, visibility rules, and optional LLM tag suggestion/review.
 - Add optional `www.ezramcp.com` route/DNS later if desired.
 - Run an authenticated production `get_jesus_teachings` smoke once a production API key is available in the shell or a controlled inbox login is completed.
@@ -99,8 +109,10 @@ Build Ezra MCP as a separate hosted Cloudflare Worker MCP product plus Codex plu
 - `scripts/validate-docs.sh`
 - `scripts/validate-plugin.mjs`
 - `scripts/link-local-bin.sh`
+- `scripts/prayer-panel-runner.mjs`
 - `handoff/beads.jsonl`
 - `baseline/prayer-dictionary/`
 - `baseline/prayer-dictionary/generated-prayers/`
+- `baseline/prayer-dictionary/prayer-pass/`
 - Local E2E persistence: `/tmp/ezra-mcp-local-e2e`
 - Local CLI E2E config: `/tmp/ezra-mcp-cli-e2e-config`

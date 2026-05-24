@@ -1,0 +1,110 @@
+[
+  {
+    "artifact_id": "365-prayers-toddlers-01-15",
+    "relative_path": "365-prayers/toddlers/01-15.md",
+    "gate_passed": true,
+    "issues_before": [
+      "direct_address_not_first"
+    ],
+    "issues_after": [],
+    "reviewed_path": "baseline/prayer-dictionary/prayer-pass/runs/pilot-2026-05-24/reviewed-output/365-prayers/toddlers/01-15.md"
+  },
+  {
+    "artifact_id": "365-prayers-kids-12-27",
+    "relative_path": "365-prayers/kids/12-27.md",
+    "gate_passed": true,
+    "issues_before": [
+      "awkward_or_coined_phrase"
+    ],
+    "issues_after": [],
+    "reviewed_path": "baseline/prayer-dictionary/prayer-pass/runs/pilot-2026-05-24/reviewed-output/365-prayers/kids/12-27.md"
+  },
+  {
+    "artifact_id": "365-prayers-teens-01-01",
+    "relative_path": "365-prayers/teens/01-01.md",
+    "gate_passed": true,
+    "issues_before": [
+      "direct_address_not_first",
+      "awkward_or_coined_phrase"
+    ],
+    "issues_after": [],
+    "reviewed_path": "baseline/prayer-dictionary/prayer-pass/runs/pilot-2026-05-24/reviewed-output/365-prayers/teens/01-01.md"
+  },
+  {
+    "artifact_id": "365-prayers-young-adults-07-15",
+    "relative_path": "365-prayers/young-adults/07-15.md",
+    "gate_passed": true,
+    "issues_before": [
+      "direct_address_not_first",
+      "vocative_mode_switching"
+    ],
+    "issues_after": [],
+    "reviewed_path": "baseline/prayer-dictionary/prayer-pass/runs/pilot-2026-05-24/reviewed-output/365-prayers/young-adults/07-15.md"
+  },
+  {
+    "artifact_id": "365-prayers-new-mothers-01-15",
+    "relative_path": "365-prayers/new-mothers/01-15.md",
+    "gate_passed": true,
+    "issues_before": [
+      "archaism_or_old_register"
+    ],
+    "issues_after": [],
+    "reviewed_path": "baseline/prayer-dictionary/prayer-pass/runs/pilot-2026-05-24/reviewed-output/365-prayers/new-mothers/01-15.md"
+  },
+  {
+    "artifact_id": "365-prayers-grandmothers-01-15",
+    "relative_path": "365-prayers/grandmothers/01-15.md",
+    "gate_passed": true,
+    "issues_before": [
+      "direct_address_not_first",
+      "archaism_or_old_register"
+    ],
+    "issues_after": [],
+    "reviewed_path": "baseline/prayer-dictionary/prayer-pass/runs/pilot-2026-05-24/reviewed-output/365-prayers/grandmothers/01-15.md"
+  },
+  {
+    "artifact_id": "365-prayers-dads-03-22",
+    "relative_path": "365-prayers/dads/03-22.md",
+    "gate_passed": true,
+    "issues_before": [
+      "direct_address_not_first",
+      "awkward_or_coined_phrase"
+    ],
+    "issues_after": [],
+    "reviewed_path": "baseline/prayer-dictionary/prayer-pass/runs/pilot-2026-05-24/reviewed-output/365-prayers/dads/03-22.md"
+  },
+  {
+    "artifact_id": "prayer-dictionary-theme-anxiety",
+    "relative_path": "prayer-dictionary/theme/anxiety.md",
+    "gate_passed": true,
+    "issues_before": [
+      "direct_address_not_first",
+      "commentary_first_opening",
+      "lowercase_divine_pronoun"
+    ],
+    "issues_after": [],
+    "reviewed_path": "baseline/prayer-dictionary/prayer-pass/runs/pilot-2026-05-24/reviewed-output/prayer-dictionary/theme/anxiety.md"
+  },
+  {
+    "artifact_id": "prayer-dictionary-story-annunciation",
+    "relative_path": "prayer-dictionary/story/annunciation.md",
+    "gate_passed": true,
+    "issues_before": [
+      "direct_address_not_first",
+      "lowercase_divine_pronoun"
+    ],
+    "issues_after": [],
+    "reviewed_path": "baseline/prayer-dictionary/prayer-pass/runs/pilot-2026-05-24/reviewed-output/prayer-dictionary/story/annunciation.md"
+  },
+  {
+    "artifact_id": "prayer-dictionary-parable-parable-of-the-dragnet",
+    "relative_path": "prayer-dictionary/parable/parable-of-the-dragnet.md",
+    "gate_passed": true,
+    "issues_before": [
+      "awkward_or_coined_phrase",
+      "lowercase_divine_pronoun"
+    ],
+    "issues_after": [],
+    "reviewed_path": "baseline/prayer-dictionary/prayer-pass/runs/pilot-2026-05-24/reviewed-output/prayer-dictionary/parable/parable-of-the-dragnet.md"
+  }
+]
